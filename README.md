@@ -3,7 +3,9 @@
 
 
 # Movie Critics
+
 Type: Information Management System
+
 Brief Description: 
 A movie recommendation system that is modernized and friendly to use.
 
