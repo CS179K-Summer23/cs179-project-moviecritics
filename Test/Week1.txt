@@ -1,10 +1,30 @@
 Actionable Tasks:
 
-1.
+1. Create an initial recommendation based on user survey (BackEnd)
+Test case: Make sure all movies recommended are matching the genres of interests.
+
+2. Use release dates as the ranking algorithm for sorting movies and shows in a particular order (Backend)
+Test case: Verify ranking by release dates and rating.
 
 
-2.
+3. Send ratings of each movie and show from data sets (Backend)
+Test Case: Verify data from backend to data displaying in frontend.
 
+4. Create survey for user preference profile (Frontend)
+Test Case: Verify questions are being displayed and stored into the database.
 
-3.
+5. Create an account database (Frontend)
+Test case: Verify on google firebase by looking at the new row of an account being created.
+
+6. Display ratings of each movie and show in UI (Frontend)
+Test case: Verify rating from UI matches data from backend
+
+7. Display ranking from sort algorithm (frontend)
+Test case: Verify titles are displayed in accurate order 
+
+8. Use ratings as the ranking algorithm for sorting movies and shows in a particular order (Backend)
+
+9. Encoding certain categorical variables (Backend)
+Test Case: Verify each categorical variable displays a number
+
 
