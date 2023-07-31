@@ -5,15 +5,15 @@
 # Movie Critics
 Type: Information Management System
 Brief Description: 
-A movie recommendation system, I guess o_0
+A movie recommendation system
 
 
 
 # Team Members:
-Harsh Patel, Email
-Roz Teves, rteve002@ucr.edu 
-Rahul Sharma, rshar073@ucr.edu
-Riya Patel, Rpate161@ucr.edu
+[Harsh Patel](https://github.com/hp6164), Email: hpate064@ucr.edu
+[Roz Teves](https://github.com/CC-Sev), rteve002@ucr.edu 
+[Rahul Sharma](https://github.com/RS99), rshar073@ucr.edu
+[Riya Patel](https://github.com/Patelriyaaa), Rpate161@ucr.edu
 
 # Technologoies:
 - VS code
