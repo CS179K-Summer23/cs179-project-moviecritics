@@ -11,9 +11,13 @@ A movie recommendation system that is modernized and friendly to use.
 
 # Team Members:
 [Harsh Patel](https://github.com/hp6164), Email: hpate064@ucr.edu
+
 [Roz Teves](https://github.com/CC-Sev), Email: rteve002@ucr.edu 
+
 [Rahul Sharma](https://github.com/RS99), Email: rshar073@ucr.edu
+
 [Riya Patel](https://github.com/Patelriyaaa), Email: Rpate161@ucr.edu
+
 
 # Technologoies:
 - VS code
