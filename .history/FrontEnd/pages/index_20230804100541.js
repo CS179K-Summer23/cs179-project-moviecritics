@@ -57,7 +57,7 @@ export default function Home() {
         User Preference Survey
       </Button>
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle sx={{ textAlign: "center" }}>Movie Genre Survey</DialogTitle>
+        <DialogTitle sx={{ textAlign: "center" }}>Movie Genre Sur</DialogTitle>
         <DialogContent sx={{ minWidth: 400, minHeight: 250, borderRadius: 20, p: 2 }}>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
             <FormGroup>
