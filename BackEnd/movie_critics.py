@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 
 class MovieAnalyzer:
     def __init__(self, csv_path):
@@ -69,19 +70,30 @@ if __name__ == "__main__":
             self.analyzer = MovieAnalyzer(self.movie_csv_path)
             
         def run(self):
-            print("-----Top 30 Films based on ratings-----")
-            top_movies_by_rating_df = self.analyzer.get_top_movies_by_rating_df()
-            self.analyzer.display_top_movies_table(top_movies_by_rating_df)
+            print("Welcome to Movie Analyzer!")
 
-            print("\n-----Top 30 Films based on profits-----")
-            top_movies_by_profit_df = self.analyzer.get_top_movies_by_profit_df()
-            self.analyzer.display_top_movies_table(top_movies_by_profit_df)
+            choice = input("Enter 'rating', 'profits', or 'revenue' to see the top 30 films based on your choice: ")
+            if choice.lower() == 'rating':
+                top_movies_df = self.analyzer.get_top_movies_by_rating_df()
+            elif choice.lower() == 'profits':
+                top_movies_df = self.analyzer.get_top_movies_by_profit_df()
+            elif choice.lower() == 'revenue':
+                top_movies_df = self.analyzer.get_top_movies_by_revenue_df()
+            else:
+                print("Invalid choice. Exiting...")
+                return
 
-            print("\n-----Top 30 Films based on revenue-----")
-            top_movies_by_revenue_df = self.analyzer.get_top_movies_by_revenue_df()
-            self.analyzer.display_top_movies_table(top_movies_by_revenue_df)
+            json_output = top_movies_df.to_json(orient='records', default_handler=str)
+            formatted_output = json_output.replace('},{', '},\n{')
 
-            self.analyzer.save_to_csv()
+            print(formatted_output)
+
+            save_choice = input("Do you want to save the formatted output to a file? (yes/no): ")
+            if save_choice.lower() == 'yes':
+                file_name = input("Enter the file name (including .json extension): ")
+                with open(file_name, 'w') as json_file:
+                    json_file.write(formatted_output)
+                print("Formatted output saved to", file_name)
 
     app = MovieAnalyzerApp()
     app.run()
