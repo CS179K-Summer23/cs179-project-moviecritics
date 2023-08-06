@@ -2,6 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { ThemeProvider } from "@mui/material/styles";
 import App from "./app.js";
+import MovieshowerFromInterests from "./interestsFromSurvey.js";
 import AccountCreation from "./accountCreation.js";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
         <meta name="description" content="Portfolio" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="" />
+        <MovieshowerFromInterests />
         <AccountCreation />
     </>
   );
