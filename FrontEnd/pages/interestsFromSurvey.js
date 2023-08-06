@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,7 +7,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 
 
 const lightTheme = createTheme({
@@ -15,6 +14,10 @@ const lightTheme = createTheme({
     mode: 'light',
   },
 });
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    backgroundColor: theme.palette.common.black
+  }));
 
 
 const jsonfile = [
@@ -37,14 +40,15 @@ export default function MovieshowerFromInterests() {
         <ThemeProvider theme={lightTheme}>
             <CssBaseline />
             <TableContainer>
-                <Table>
+                <Table stickyHeader >
+                <caption>Generated from UserSurvey</caption>
                     <TableHead>
-                        <TableRow>
+                        <StyledTableRow>
                             <TableCell>Rank</TableCell>
                             <TableCell>Movie</TableCell>
                             <TableCell>Genre</TableCell>
                             <TableCell>Rating</TableCell>
-                        </TableRow>
+                        </StyledTableRow>
                     </TableHead>
                     <TableBody>
                       {jsonfile.map((list, index) => (
