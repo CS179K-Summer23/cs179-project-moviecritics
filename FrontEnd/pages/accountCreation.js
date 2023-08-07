@@ -12,7 +12,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function AccountCreation() {
+export default function AccountCreation({onSuccess}) {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -40,6 +40,11 @@ export default function AccountCreation() {
       const res = await axios.post('http://localhost:5000/signup', formData);
       console.log(res);
       alert(res.data);
+      if (res.data && res.status === 200) {
+        if(onSuccess){
+          onSuccess();
+        }
+      }
     } catch (err) {
       console.error(err);
     }
