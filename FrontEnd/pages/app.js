@@ -1,8 +1,15 @@
 import * as React from "react";
-
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import AccountCreation from "./accountCreation";
 
 export default function App(){
       return (
-        <h2>Test</h2>   
+        <Router>
+          <Switch>
+            <Route path ="/">
+              
+            </Route>
+          </Switch>
+        </Router> 
       );  
 }

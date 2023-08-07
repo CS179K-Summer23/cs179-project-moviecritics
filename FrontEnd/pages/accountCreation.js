@@ -26,6 +26,10 @@ export default function AccountCreation() {
       ...formData,
       [event.target.id]: event.target.value,
     });
+  };
+
+  const CreateAccountAction = async (event) => {
+    event.preventDefault();
 
     if (formData.password !== formData.repassword) {
       console.log("Passwords do not match");
@@ -39,7 +43,6 @@ export default function AccountCreation() {
     } catch (err) {
       console.error(err);
     }
-
   };
 
   return (
