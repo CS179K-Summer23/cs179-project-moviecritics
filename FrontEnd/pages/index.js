@@ -3,6 +3,8 @@ import * as ReactDOM from "react-dom/client";
 import { ThemeProvider } from "@mui/material/styles";
 import App from "./app.js";
 import MovieRating from "./MovieRating.js";
+import MovieshowerFromInterests from "./interestsFromSurvey.js";
+import AccountCreation from "./accountCreation.js";
 
 export default function Home() {
   return (
@@ -12,9 +14,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="" />
         <MovieRating />
-        
+        <MovieshowerFromInterests />
+        <AccountCreation />
     </>
   );
 }
-
-

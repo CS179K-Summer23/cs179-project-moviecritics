@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "proxy": "http://localhost:5000/",
   "scripts": {
     "start": "node index.js",
+    "start-backend": "cd backend && env/bin/flask run --no-debugger",
     "build": "react-scripts build",
     "dev": "next dev"
   },
@@ -17,6 +19,7 @@
     "@mui/material": "^5.14.3",
     "@mui/styled-engine-sc": "^5.12.0",
     "@mui/x-data-grid": "^6.11.0",
+    "axios": "^1.4.0",
     "next": "^13.4.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
