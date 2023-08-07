@@ -25,6 +25,24 @@ def signup():
     print(user)
     return 'Signup Successful'
 
+@app.route('/usersurvey', methods=['POST'])
+def usersurvey():
+    genrelist = request.get_json()
+    
+    print(genrelist)
+    genrelist = ""
+    if(genrelist.get('Adventure')) : genrelist =+ "Adventure,"
+    if(genrelist.get('Adventure')) : genrelist =+ "Adventure,"
+    if(genrelist.get('Adventure')) : genrelist =+ "Adventure,"
+    if(genrelist.get('Adventure')) : genrelist =+ "Adventure,"
+    if(genrelist.get('Adventure')) : genrelist =+ "Adventure,"
+    if(genrelist.get('Adventure')) : genrelist =+ "Adventure,"
+    genrelist = genrelist[:-1]
+    #call Roz function, 
+
+
+    return #json 
+
 # Route for seeing a data
 @app.route('/data')
 def get_time():

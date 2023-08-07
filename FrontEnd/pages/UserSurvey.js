@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import axios from "axios";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import {
   Button,
@@ -13,6 +14,8 @@ import {
   Box,
 } from "@mui/material";
 
+var jsonfile = {Sample : '123'};
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -24,7 +27,8 @@ const theme = createTheme({
   },
 });
 
-export default function UserSurveyApp() {
+export default function UserSurveyApp({onSuccess}) {
+
   const [open, setOpen] = useState(true);
   const [preferences, setPreferences] = useState({
     Adventure: false,
@@ -46,15 +50,33 @@ export default function UserSurveyApp() {
     });
   };
 
-  const handleSubmit = () => {
-    const selectedCount = Object.values(preferences).filter(Boolean).length;
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
+    const selectedCount = Object.values(preferences).filter(Boolean).length;
+    var genres; 
     if (selectedCount === 5) {
+      console.log(genres);
       console.log(preferences);
       setOpen(false);
     } else {
       // Display error message
       alert("Please select exactly 5 movie genres.");
+    }
+
+    try {
+      const res = await axios.post('http://localhost:5000/usersurvey', preferences);
+      jsonfile = res.data;
+
+      console.log(res);
+      alert(res.data);
+      if (res.data && res.status === 200) {
+        if(onSuccess){
+          onSuccess();
+        }
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
