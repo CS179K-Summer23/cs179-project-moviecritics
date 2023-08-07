@@ -5,6 +5,7 @@ import App from "./app.js";
 import MovieRating from "./MovieRating.js";
 import MovieshowerFromInterests from "./interestsFromSurvey.js";
 import AccountCreation from "./accountCreation.js";
+import UserSurveyApp from "./UserSurvey.js";
 
 export default function Home() {
   return (
@@ -13,9 +14,12 @@ export default function Home() {
         <meta name="description" content="Portfolio" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="" />
-        <MovieRating />
-        <MovieshowerFromInterests />
         <AccountCreation />
+        <UserSurveyApp />
+        <MovieshowerFromInterests />
+        <MovieRating />
+        
+     
     </>
   );
 }

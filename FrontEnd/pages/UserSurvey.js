@@ -24,7 +24,7 @@ const theme = createTheme({
   },
 });
 
-export default function Home() {
+export default function UserSurveyApp() {
   const [open, setOpen] = useState(true);
   const [preferences, setPreferences] = useState({
     Adventure: false,
