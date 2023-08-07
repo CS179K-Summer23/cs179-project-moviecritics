@@ -14,6 +14,7 @@ export default function Home() {
   const [accountCreated, setAccountCreated] = useState(false);
 
   const [surveySubmitted, setSurveySubmitted] = useState(false);
+ // const [jsonfilevar, setjsonfilevar] = useState(null);
 
   const handleAccountCreationSuccess = () => {
     setAccountCreated(true);
@@ -22,6 +23,8 @@ export default function Home() {
   const handlesurverySubmit = () => {
     setSurveySubmitted(true);
   };
+
+
   return (
     <>
     
@@ -36,12 +39,12 @@ export default function Home() {
         {/* If Account is created, show UserSurvey */}
         {accountCreated && (
           <>
-            <UserSurveyApp jsonfile onSuccess={handlesurverySubmit} />
+            <UserSurveyApp  onSuccess={handlesurverySubmit} /*setjsonfilevar={setjsonfilevar} */ />
           </>
         )}
         {accountCreated && surveySubmitted && (
           <>
-            <MovieshowerFromInterests jsonfile/>
+            <MovieshowerFromInterests /*jsonfile={jsonfilevar}*/ />
           </>
         )}
         {/* <MovieshowerFromInterests />

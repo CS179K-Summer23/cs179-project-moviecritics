@@ -27,7 +27,7 @@ const theme = createTheme({
   },
 });
 
-export default function UserSurveyApp({onSuccess}, props) {
+export default function UserSurveyApp({onSuccess}) {
 
   const [open, setOpen] = useState(true);
   const [preferences, setPreferences] = useState({
@@ -68,7 +68,7 @@ export default function UserSurveyApp({onSuccess}, props) {
       console.log(res);
       console.log('Hi');
       console.log(jsonfile);
-      props = jsonfile;
+      //setjsonfilevar(res.data);
       alert(res.data);
       if (res.data && res.status === 200) {
         if(onSuccess){
