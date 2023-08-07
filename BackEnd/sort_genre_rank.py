@@ -5,7 +5,7 @@ csv_file = 'movies.csv'
 
 def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25):
     movies_list = []
-    with open(csv_file, 'r', newline='') as file:
+    with open(csv_file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             movie_title = row['title']
@@ -29,8 +29,10 @@ def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25):
 if __name__ == "__main__":
     user_genres = input("Enter genres (Seperate gnenres by commas): ")
     user_genres = [genre.strip().lower() for genre in user_genres.split(",")]
+    print(user_genres)
     if 1 <= len(user_genres) <= 5:
         movies_data = top25_by_genre(csv_file, user_genres)
+        #print(movies_data)
         if movies_data:
             json_data = json.dumps(movies_data, indent=2)
             print(json_data)

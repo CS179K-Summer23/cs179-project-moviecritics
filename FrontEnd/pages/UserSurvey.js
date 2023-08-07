@@ -14,7 +14,7 @@ import {
   Box,
 } from "@mui/material";
 
-var jsonfile = {Sample : '123'};
+export var jsonfile = {Sample : '123'};
 
 const theme = createTheme({
   palette: {
@@ -27,16 +27,16 @@ const theme = createTheme({
   },
 });
 
-export default function UserSurveyApp({onSuccess}) {
+export default function UserSurveyApp({onSuccess}, props) {
 
   const [open, setOpen] = useState(true);
   const [preferences, setPreferences] = useState({
     Adventure: false,
     Animation: false,
-    Biogrphy: false,
+    Biography: false,
     Comedy: false,
     Crime: false,
-    Documentry: false,
+    Documentary: false,
     Horror: false,
     Mystery: false,
     Thriller: false,
@@ -54,9 +54,7 @@ export default function UserSurveyApp({onSuccess}) {
     event.preventDefault();
 
     const selectedCount = Object.values(preferences).filter(Boolean).length;
-    var genres; 
     if (selectedCount === 5) {
-      console.log(genres);
       console.log(preferences);
       setOpen(false);
     } else {
@@ -67,8 +65,10 @@ export default function UserSurveyApp({onSuccess}) {
     try {
       const res = await axios.post('http://localhost:5000/usersurvey', preferences);
       jsonfile = res.data;
-
       console.log(res);
+      console.log('Hi');
+      console.log(jsonfile);
+      props = jsonfile;
       alert(res.data);
       if (res.data && res.status === 200) {
         if(onSuccess){
@@ -118,8 +118,8 @@ export default function UserSurveyApp({onSuccess}) {
   sx={{ fontSize: 20, my: 1 }}
 />
 <FormControlLabel
-  control={<Checkbox checked={preferences.Documentry} onChange={handlePreferenceChange} name="Documentry" />}
-  label="Documentry"
+  control={<Checkbox checked={preferences.Documentary} onChange={handlePreferenceChange} name="Documentary" />}
+  label="Documentary"
   sx={{ fontSize: 20, my: 1 }}
 />
 <FormControlLabel

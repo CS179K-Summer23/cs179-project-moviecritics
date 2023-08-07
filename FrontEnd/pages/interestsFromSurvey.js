@@ -20,7 +20,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   }));
 
 
-const jsonfile = [
+const jsonfile1 = [
     {id :1,  Movie:'Movie1',   Genre: 'Genre(s)', Rating: 10.0},
     {id :2,  Movie: 'Movie2',  Genre: 'Genre(s)', Rating: 9.9 },
     {id :3,  Movie: 'Movie3',  Genre: 'Genre(s)', Rating: 9.8 },
@@ -34,7 +34,10 @@ const jsonfile = [
    
 ];
 
-export default function MovieshowerFromInterests() {
+
+export default function MovieshowerFromInterests(jsonfile) {
+  console.log('this is jsonfile')
+  console.log(jsonfile)
   return (
     <>
         <ThemeProvider theme={lightTheme}>
