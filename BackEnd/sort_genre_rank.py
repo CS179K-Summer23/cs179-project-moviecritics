@@ -1,27 +1,31 @@
 import csv
 import json
 
-csv_file = 'movies.csv'
+csv_file = 'movies_db.csv'
 
 def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25):
     movies_list = []
-    with open(csv_file, 'r', newline='', encoding='utf-8') as file:
+    with open(csv_file, 'r', newline='') as file:
         reader = csv.DictReader(file)
+        print("this is reader")
+        print(reader)
         for row in reader:
             movie_title = row['title']
             movie_genres = row['genres'].split('-')
             vote_count = float(row['vote_count'])
             vote_average = float(row['vote_average'])
+            movie_rating = row['Rated']
             if any(genre.strip().lower() in target_genres for genre in movie_genres) and vote_count > min_vote_count:
                 movie_info = {
                     'title': movie_title,
                     'genres': movie_genres,
                     'vote_count': vote_count,
-                    'vote_average': vote_average
+                    'vote_average': vote_average,
+                    'Rated': movie_rating
                 }
                 movies_list.append(movie_info)
         
-        # Sort movies by vote_average in descending order
+        # Sort
         sorted_movies = sorted(movies_list, key=lambda x: x['vote_average'], reverse=True)
         
         return sorted_movies[:limit]
