@@ -4,6 +4,18 @@ import { useState } from "react";
 import { Button, Box, TextField } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import styled from "styled-components";
+
+//use this with variant="outlined"
+const StyledInput = styled(TextField)`
+  width: 100%;
+  & .MuiOutlinedInput-notchedOutline {
+    border-color: white;
+  }
+  & .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: blue;
+  }
+`;
 
 
 const darkTheme = createTheme({
@@ -61,7 +73,7 @@ export default function AccountCreation({onSuccess}) {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: 'lightblue',
+          backgroundColor: 'black',
           align: 'center',
           width: '400px',
           borderRadius: 8,
@@ -71,19 +83,21 @@ export default function AccountCreation({onSuccess}) {
         
       >
         <form onSubmit={CreateAccountAction}>
-          <h1>Create Your Account</h1>
+          <h1  >Create Your Account</h1>
           <p></p>
-          <TextField id="name" label="Name" required onChange={handleChange} />
+          <StyledInput id="name" label="Name"  variant="outlined" required onChange={handleChange} />
           <p></p>
-          <TextField id="age" label="Age" required onChange={handleChange} />
+          <StyledInput id="age" label="Age" required onChange={handleChange} />
           <p></p>
-          <TextField id="email" label="Email" required onChange={handleChange} />
+          <StyledInput id="email" label="Email" required onChange={handleChange} />
           <p></p>
-          <TextField id="password" label="Password" type="password" required onChange={handleChange} />
+          <StyledInput id="password" label="Password" type="password" required onChange={handleChange} />
           <p></p>
-          <TextField id="repassword" label="Re-Enter-Password" type="password" required onChange={handleChange} />
+          <StyledInput id="repassword" label="Re-Enter-Password" type="password" required onChange={handleChange} />
           <p></p>
-          <Button variant="contained" type="submit">Create Account</Button>
+          <Button variant="contained" type="submit" alignItems='center' >Create Account</Button>
+          <p></p>
+          <Button variant="contained" type="submit" alignItems='center' >Already, Have an Account, Login Here</Button>
           <p></p>
         </form>
       </Box>

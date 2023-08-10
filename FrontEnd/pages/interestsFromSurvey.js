@@ -20,7 +20,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   }));
 
 
-const jsonfile = [
+const jsonfile1 = [
     {id :1,  Movie:'Movie1',   Genre: 'Genre(s)', Rating: 10.0},
     {id :2,  Movie: 'Movie2',  Genre: 'Genre(s)', Rating: 9.9 },
     {id :3,  Movie: 'Movie3',  Genre: 'Genre(s)', Rating: 9.8 },
@@ -35,7 +35,8 @@ const jsonfile = [
 ];
 
 
-export default function MovieshowerFromInterests() {
+export default function MovieshowerFromInterests({jsonfile}) {
+  console.log('\n\n\n')
   console.log('this is jsonfile')
   console.log(jsonfile)
   return (
@@ -49,19 +50,21 @@ export default function MovieshowerFromInterests() {
                         <StyledTableRow>
                             <TableCell>Rank</TableCell>
                             <TableCell>Movie</TableCell>
-                            <TableCell>Genre</TableCell>
+                            <TableCell>Genre(s)</TableCell>
                             <TableCell>Rating</TableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                      {jsonfile.map((list, index) => (
+                      {jsonfile.map((list, index) => {
+                        console.log(list);
+                        return(
                         <TableRow key={index}>
-                            <TableCell>{list.id}</TableCell>
-                            <TableCell>{list.Movie}</TableCell>
-                            <TableCell>{list.Genre}</TableCell>
-                            <TableCell>{list.Rating}</TableCell>
+                            <TableCell>{index+1}</TableCell>
+                            <TableCell>{list.title}</TableCell>
+                            <TableCell>{list.genres}</TableCell>
+                            <TableCell>{list.vote_average}</TableCell>
                         </TableRow>
-                      ))}
+                      )})}
                     </TableBody>
                 </Table>
             </TableContainer>

@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import { styled, useTheme } from "@mui/material/styles";
-import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -116,12 +115,66 @@ export default function Home() {
   return (
     <>
       <ThemeProvider theme={customTheme}>
-        <Box sx={{ display: "flex"}}>
+        <Box sx={{ display: "flex" }}>
+          <CssBaseline />
+          <AppBar position="fixed" color={"secondary"} open={open}>
+            <Toolbar  >
+              <IconButton
+                color="primary"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{ mr: 2, ...(open && { display: "none" }) }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" noWrap component="div">
+                MovieCritics
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              "& .MuiDrawer-paper": {
+                width: drawerWidth,
+                boxSizing: "border-box",
+              },
+            }}
+            variant="persistent"
+            anchor="left"
+            open={open}
+            color="secondary"
+          >
+            <DrawerHeader>
+              <IconButton color="secondary" onClick={handleDrawerClose}>
+                <CloseIcon color="primary" />
+                {theme.direction === "ltr"}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+            <List>
+              {["Home", "Suggestions", "MovieDB", "PlaceHolder"].map(
+                (text, index) => (
+                  <ListItem key={text} disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        {index % 2 === 0 ? (
+                          <DescriptionIcon />
+                        ) : (
+                          <DescriptionIcon />
+                        )}
+                      </ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItemButton>
+                  </ListItem>
+                )
+              )}
+            </List>
+            <Divider />
+          </Drawer>
           <Main open={open}>
-            { accountForm==='' && <LaunchPage setAccountForm={setAccountForm} />}
-            {accountForm==='create'  && !accountCreated && (<><AccountCreation onSuccess={handleAccountCreationSuccess} /> </>)}
-            {accountForm==='login'}
-
             {/* If Account is created, show UserSurvey */}
             {accountCreated && (
               <>
