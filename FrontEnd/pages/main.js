@@ -88,6 +88,8 @@ export default function MainApp({jsonfile}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const [page, setpage] = React.useState(0);
+
   const handleDrawerOpen = () => {
     if(!accountCreated){setOpen(true)};
   };
@@ -146,7 +148,7 @@ export default function MainApp({jsonfile}) {
             <Divider />
             <List>
                   <ListItem key="Home" disablePadding>
-                    <ListItemButton>
+                    <ListItemButton >
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
@@ -154,15 +156,15 @@ export default function MainApp({jsonfile}) {
                     </ListItemButton>
                   </ListItem>
                   <ListItem key="Suggestions" disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={() => (setpage(1))}>
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
                       <ListItemText primary="Suggestions" />
                     </ListItemButton>
                   </ListItem>
-                  <ListItem key="MovieDB}"disablePadding>
-                    <ListItemButton>
+                  <ListItem key="MovieDB"disablePadding>
+                    <ListItemButton onClick={() => (setpage(2))}>
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
@@ -170,7 +172,7 @@ export default function MainApp({jsonfile}) {
                     </ListItemButton>
                   </ListItem>
                   <ListItem key="PlaceHolder" disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={() => (setpage(3))}>
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
@@ -182,7 +184,10 @@ export default function MainApp({jsonfile}) {
             <Divider />
           </Drawer>
           <Main open={open}>
-            {/* { <MovieshowerFromInterests jsonfile={jsonfile} /> } */}
+            {page === 0 }
+            {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
+            {page===2  }
+            {page===3 }
           </Main>
         </Box>
       </ThemeProvider>

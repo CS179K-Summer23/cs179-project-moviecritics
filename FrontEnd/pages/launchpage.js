@@ -29,13 +29,13 @@ const darkTheme = createTheme({
   },
 });
 
-export default function LaunchPage({setjsonfile}) {
+export default function LaunchPage({setjsonfile, setsurveySubmitted}) {
 
   const [buttonstate, setbuttonstate] = useState(0);
 
   const [accountCreated, setAccountCreated] = useState(false);
 
-  const [surveySubmitted, setSurveySubmitted] = useState(false);
+ 
  // const [jsonfilevar, setjsonfilevar] = useState(null);
 
   const handleAccountCreationSuccess = () => {

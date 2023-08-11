@@ -97,19 +97,12 @@ export default function Home() {
     setOpen(false);
   };
  
+  const [surveySubmitted, setSurveySubmitted] = useState(false);
   const [jsonfile, setjsonfile] = useState({});
   
   const [accountCreated, setAccountCreated] = useState(false);
-  const [surveySubmitted, setSurveySubmitted] = useState(false);
  // const [jsonfilevar, setjsonfilevar] = useState(null);
 
-  const handleAccountCreationSuccess = () => {
-    setAccountCreated(true);
-  };
-
-  const handlesurverySubmit = () => {
-    setSurveySubmitted(true);
-  };
 
   const [formData, setFormData] = useState({
     name: "",
@@ -128,8 +121,8 @@ export default function Home() {
         <Box sx={{ display: "flex"}}>
         <Main open={open}>
             
-            {/* {  <LaunchPage setjsonfile={setjsonfile} /> } */}
-           {<MainApp jsonfile={jsonfile} />}
+            {surveySubmitted===false && <LaunchPage setjsonfile={setjsonfile} setSurveySubmitted={setSurveySubmitted} /> }
+           {surveySubmitted===true && <MainApp  jsonfile={jsonfile} />}
           
         
 
