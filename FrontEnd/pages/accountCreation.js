@@ -24,6 +24,8 @@ const darkTheme = createTheme({
   },
 });
 
+const regex = /^[0-9\b]+$/;
+
 export default function AccountCreation({onSuccess}) {
   const [formData, setFormData] = useState({
     name: "",
@@ -43,9 +45,21 @@ export default function AccountCreation({onSuccess}) {
   const CreateAccountAction = async (event) => {
     event.preventDefault();
 
+
+    if(regex.test(formData.age.target.value) === false || formData.age.length === 0)
+    {
+      console.log('Not a valid age')
+    }
+
+
     if (formData.password !== formData.repassword) {
       console.log("Passwords do not match");
       return;
+    }
+
+    if(formData.email.indexOf('@') === -1 )
+    {
+      console.log("email must be valid");
     }
 
     try {
