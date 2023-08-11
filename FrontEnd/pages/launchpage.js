@@ -29,7 +29,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function LaunchPage({setjsonfile, setsurveySubmitted}) {
+export default function LaunchPage({setjsonfile, setSurveySubmitted}) {
 
   const [buttonstate, setbuttonstate] = useState(0);
 
