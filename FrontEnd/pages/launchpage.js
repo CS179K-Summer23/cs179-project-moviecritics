@@ -62,24 +62,20 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted}) {
     <ThemeProvider theme={darkTheme}>
     <CssBaseline />
 
-      <Box
+      <Box  display="flex" justifyContent="center" alignItems="center"
         sx={{
           display:'flex',
-          marginTop: 8,
-          marginLeft:'auto',
+          marginTop: '10%',
+          marginLeft:'45%',
           marginRight:'auto',
+          marginBottom:'auto',
           justifyContent: 'flex-reverse',
-          display: 'flex',
           flexDirection: 'column',
           backgroundColor: 'black',
           align: 'center',
           width: '400px',
           borderRadius: 3,
-          marginLeft:'auto',
-          marginRight:'auto',
-          marginBottom:'auto',
           overflow:'hidden',
-          width:'400px'
         }}
         
       >
@@ -107,28 +103,11 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted}) {
       </Button>
     </form>
       </Box>
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          backgroundColor: 'black',
-          align: 'center',
-          width: '400px',
-          borderRadius: 8,
-          marginLeft:'auto',
-          marginRight:'auto',
-          marginBottom:'auto'
-        }}
-        
-      >
         
         {buttonstate===1 && !accountCreated && (<><AccountCreation onSuccess={handleAccountCreationSuccess} /> </>)}
         {buttonstate===1 && accountCreated && (<><UserSurveyApp  setjsonfile={setjsonfile}  onSuccess={handlesurverySubmit} /></>) }
         {buttonstate===2}
         
-      </Box>
       </ThemeProvider>
     </>
   );

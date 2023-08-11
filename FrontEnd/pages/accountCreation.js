@@ -83,15 +83,18 @@ export default function AccountCreation({onSuccess}) {
 
       <Box
         sx={{
-          marginTop: 8,
-          display: 'flex',
+          display:'flex',
+          marginTop: '10%',
+          marginLeft:'45%',
+          marginRight:'auto',
+          marginBottom:'auto',
+          justifyContent: 'flex-reverse',
           flexDirection: 'column',
           backgroundColor: 'black',
           align: 'center',
           width: '400px',
-          borderRadius: 8,
-          marginLeft:'auto',
-          marginRight:'auto',
+          borderRadius: 3,
+          overflow:'hidden',
         }}
         
       >
