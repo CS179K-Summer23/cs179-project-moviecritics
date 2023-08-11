@@ -24,7 +24,7 @@ const darkTheme = createTheme({
   },
 });
 
-const regex = /^[0-9\b]+$/;
+// const regex = /^[0-9\b]+$/;
 
 export default function AccountCreation({onSuccess}) {
   const [formData, setFormData] = useState({
@@ -46,10 +46,10 @@ export default function AccountCreation({onSuccess}) {
     event.preventDefault();
 
 
-    if(regex.test(formData.age.target.value) === false || formData.age.length === 0)
-    {
-      console.log('Not a valid age')
-    }
+    // if(regex.test(formData.age.target.value) === false || formData.age.length === 0)
+    // {
+      // console.log('Not a valid age')
+    // }
 
 
     if (formData.password !== formData.repassword) {
