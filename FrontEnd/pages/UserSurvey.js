@@ -13,21 +13,18 @@ import {
   FormGroup,
   Box,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
-export var jsonfile = {Sample : '123'};
+//export var jsonfile = { Sample: "123" };
 
-const theme = createTheme({
+const darkTheme = createTheme({
   palette: {
-    primary: {
-      main: "#1976d2", // Blue color for primary elements
-    },
-    secondary: {
-      main: "#d32f2f", // Red color for secondary elements
-    },
+    mode: 'dark',
   },
 });
 
-export default function UserSurveyApp({onSuccess}) {
+export default function UserSurveyApp({ onSuccess, setjsonfile }) {
+  const [loading, setloading] = useState(false);
 
   const [open, setOpen] = useState(true);
   const [preferences, setPreferences] = useState({
@@ -51,7 +48,7 @@ export default function UserSurveyApp({onSuccess}) {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    //event.preventDefault();
 
     const selectedCount = Object.values(preferences).filter(Boolean).length;
     if (selectedCount === 5) {
@@ -63,15 +60,21 @@ export default function UserSurveyApp({onSuccess}) {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/usersurvey', preferences);
-      jsonfile = res.data;
+      setloading(true);
+      const res = await axios.post(
+        "http://localhost:5000/usersurvey",
+        preferences
+      );
+      const jsonfileresult = res.data;
       console.log(res);
-      console.log('Hi');
-      console.log(jsonfile);
+      console.log("Hi");
+      console.log(jsonfileresult);
+      setloading(false);
+      setjsonfile(jsonfileresult);
       //setjsonfilevar(res.data);
       alert(res.data);
       if (res.data && res.status === 200) {
-        if(onSuccess){
+        if (onSuccess) {
           onSuccess();
         }
       }
@@ -81,73 +84,146 @@ export default function UserSurveyApp({onSuccess}) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+      {loading === true && (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      )}
+      <Button variant="contained"  onClick={() => setOpen(true)}>
         User Preference Survey
       </Button>
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle sx={{ textAlign: "center", marginBottom: "-16px", fontSize: "20px" }}>
+        <DialogTitle
+          sx={{ textAlign: "center", marginBottom: "-16px", fontSize: "20px" }}
+        >
           Movie Genre Survey
         </DialogTitle>
         <DialogContent sx={{ minHeight: 250, borderRadius: 20, p: 2 }}>
-       < FormGroup>
-<FormControlLabel
-  control={<Checkbox checked={preferences.Adventure} onChange={handlePreferenceChange} name="Adventure" />}
-  label="Adventure"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-<FormControlLabel
-  control={<Checkbox checked={preferences.Animation} onChange={handlePreferenceChange} name="Animation" />}
-  label="Animation"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-<FormControlLabel
-  control={<Checkbox checked={preferences.Biogrphy} onChange={handlePreferenceChange} name="Biogrphy" />}
-  label="Biography"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-<FormControlLabel
-  control={<Checkbox checked={preferences.Comedy} onChange={handlePreferenceChange} name="Comedy" />}
-  label="Comedy"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-<FormControlLabel
-  control={<Checkbox checked={preferences.Crime} onChange={handlePreferenceChange} name="Crime" />}
-  label="Crime"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-<FormControlLabel
-  control={<Checkbox checked={preferences.Documentary} onChange={handlePreferenceChange} name="Documentary" />}
-  label="Documentary"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-<FormControlLabel
-  control={<Checkbox checked={preferences.Horror} onChange={handlePreferenceChange} name="Horror" />}
-  label="Horror"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-<FormControlLabel
-  control={<Checkbox checked={preferences.Mystery} onChange={handlePreferenceChange} name="Mystery" />}
-  label="Mystery"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-  <FormControlLabel
-  control={<Checkbox checked={preferences.Thriller} onChange={handlePreferenceChange} name="Thriller" />}
-  label="Thriller"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-<FormControlLabel
-  control={<Checkbox checked={preferences.War} onChange={handlePreferenceChange} name="War" />}
-  label="War"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-</FormGroup>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.Adventure}
+                  onChange={handlePreferenceChange}
+                  name="Adventure"
+                />
+              }
+              label="Adventure"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.Animation}
+                  onChange={handlePreferenceChange}
+                  name="Animation"
+                />
+              }
+              label="Animation"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.Biogrphy}
+                  onChange={handlePreferenceChange}
+                  name="Biogrphy"
+                />
+              }
+              label="Biography"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.Comedy}
+                  onChange={handlePreferenceChange}
+                  name="Comedy"
+                />
+              }
+              label="Comedy"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.Crime}
+                  onChange={handlePreferenceChange}
+                  name="Crime"
+                />
+              }
+              label="Crime"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.Documentary}
+                  onChange={handlePreferenceChange}
+                  name="Documentary"
+                />
+              }
+              label="Documentary"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.Horror}
+                  onChange={handlePreferenceChange}
+                  name="Horror"
+                />
+              }
+              label="Horror"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.Mystery}
+                  onChange={handlePreferenceChange}
+                  name="Mystery"
+                />
+              }
+              label="Mystery"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.Thriller}
+                  onChange={handlePreferenceChange}
+                  name="Thriller"
+                />
+              }
+              label="Thriller"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={preferences.War}
+                  onChange={handlePreferenceChange}
+                  name="War"
+                />
+              }
+              label="War"
+              sx={{ fontSize: 20, my: 1 }}
+            />
+          </FormGroup>
 
-          <Box sx={{ textAlign: "center", fontSize: "14px", color: "gray", mt: 2 }}>
+          <Box
+            sx={{ textAlign: "center", fontSize: "14px", color: "gray", mt: 2 }}
+          >
             * Please select at least 5 and at most 5 movie genres.
           </Box>
-          <Button variant="contained" color="secondary" onClick={handleSubmit} sx={{ textAlign: "center", mt: 3 }}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            sx={{ textAlign: "center", mt: 3 }}
+          >
             Submit
           </Button>
         </DialogContent>

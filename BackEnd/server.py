@@ -51,6 +51,16 @@ def signup():
     email = user.get('email')
     password = user.get('password')
     age = user.get('age')
+    #Check if email is being used already
+    
+    #curr = app.cursor()
+    #curr.execute("SELECT * FROM "user" WHERE email EQUALS)
+    #data = curr.fetchall()
+    #if(len(data) != 0)
+    #{
+    #    return 'Email is being used, try Login or a different email'
+    #}
+
     newUser = User(name = name, email = email, password = password, age = age)
     db.session.add(newUser)
     db.session.commit()

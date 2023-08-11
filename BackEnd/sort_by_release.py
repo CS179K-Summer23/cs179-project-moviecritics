@@ -1,7 +1,7 @@
 import csv
 import json
 
-csv_filename = "movies.csv"
+csv_filename = "movies_db.csv"
 
 def todays_hottest(csv_file, target_genres, min_vote_count=1000, limit=10):
     movies_list = []

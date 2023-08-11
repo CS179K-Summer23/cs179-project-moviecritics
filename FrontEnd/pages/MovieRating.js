@@ -82,7 +82,7 @@ const jsonfile = [
   },
 ];
 
-export default function MovieshowerFromInterests() {
+export default function MovieRatings() {
   return (
     <>
       <ThemeProvider theme={lightTheme}>
