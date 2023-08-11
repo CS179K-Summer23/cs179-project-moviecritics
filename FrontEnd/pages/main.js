@@ -22,6 +22,7 @@ import UserSurveyApp from "./UserSurvey";
 import MovieshowerFromInterests from "./interestsFromSurvey";
 import CloseIcon from '@mui/icons-material/Close';
 import LaunchPage from "./launchpage";
+import MovieRatings from "./MovieRating";
 
 const drawerWidth = 240;
 
@@ -171,23 +172,23 @@ export default function MainApp({jsonfile}) {
                       <ListItemText primary="MovieDB" />
                     </ListItemButton>
                   </ListItem>
-                  <ListItem key="PlaceHolder" disablePadding>
+                  <ListItem key="MovieRatings" disablePadding>
                     <ListItemButton onClick={() => (setpage(3))}>
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary="PlaceHolder" />
+                      <ListItemText primary="MovieRatings" />
                     </ListItemButton>
                   </ListItem>
            
             </List>
             <Divider />
           </Drawer>
-          <Main open={open}>
+          <Main open={open} >
             {page === 0 }
             {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
             {page===2  }
-            {page===3 }
+            {page===3 && <MovieRatings /> }
           </Main>
         </Box>
       </ThemeProvider>
