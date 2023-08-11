@@ -16,12 +16,13 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DescriptionIcon from "@mui/icons-material/Description";
-import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
 import MovieshowerFromInterests from "./interestsFromSurvey";
 import CloseIcon from '@mui/icons-material/Close';
-import LaunchPage from "./homepage";
+import LaunchPage from "./launchpage";
+import MainApp from "./main";
 
 const drawerWidth = 240;
 
@@ -70,7 +71,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-const customTheme = createMuiTheme({
+const customTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: { main: "#F8F9FA" },
@@ -97,11 +98,8 @@ export default function Home() {
   };
  
   const [jsonfile, setjsonfile] = useState({});
-
-  const [accountForm, setAccountForm] = useState('');
   
   const [accountCreated, setAccountCreated] = useState(false);
-
   const [surveySubmitted, setSurveySubmitted] = useState(false);
  // const [jsonfilevar, setjsonfilevar] = useState(null);
 
@@ -113,29 +111,30 @@ export default function Home() {
     setSurveySubmitted(true);
   };
 
+  const [formData, setFormData] = useState({
+    name: "",
+    age: "",
+    email: "",
+    password: "",
+    repassword: "",
+    suggestions: "",
+  });
+
+
+
   return (
     <>
       <ThemeProvider theme={customTheme}>
         <Box sx={{ display: "flex"}}>
-          <Main open={open}>
-            { accountForm==='' && <LaunchPage setAccountForm={setAccountForm} />}
-            {accountForm==='create'  && !accountCreated && (<><AccountCreation onSuccess={handleAccountCreationSuccess} /> </>)}
-            {accountForm==='login'}
+        <Main open={open}>
+            
+            {/* {  <LaunchPage setjsonfile={setjsonfile} /> } */}
+           {<MainApp jsonfile={jsonfile} />}
+          
+        
 
-            {/* If Account is created, show UserSurvey */}
-            {accountCreated && (
-              <>
-                <UserSurveyApp setjsonfile={setjsonfile}  onSuccess={handlesurverySubmit} /*setjsonfilevar={setjsonfilevar} */ />
-              </> 
-            )}
-            {accountCreated && surveySubmitted && (
-              <>
-                <MovieshowerFromInterests jsonfile={jsonfile} /*jsonfile={jsonfilevar}*/ />
-              </>
-            )}
-            {/* <MovieshowerFromInterests />
-            <MovieRating /> */}
-          </Main>
+                  
+         </Main>
         </Box>
       </ThemeProvider>
     </>

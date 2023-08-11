@@ -13,21 +13,19 @@ import {
   FormGroup,
   Box,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
 //export var jsonfile = { Sample: "123" };
 
-const theme = createTheme({
+const darkTheme = createTheme({
   palette: {
-    primary: {
-      main: "#1976d2", // Blue color for primary elements
-    },
-    secondary: {
-      main: "#d32f2f", // Red color for secondary elements
-    },
+    mode: 'dark',
   },
 });
 
 export default function UserSurveyApp({ onSuccess, setjsonfile }) {
+  const [loading, setloading] = useState(false);
+
   const [open, setOpen] = useState(true);
   const [preferences, setPreferences] = useState({
     Adventure: false,
@@ -50,7 +48,7 @@ export default function UserSurveyApp({ onSuccess, setjsonfile }) {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    //event.preventDefault();
 
     const selectedCount = Object.values(preferences).filter(Boolean).length;
     if (selectedCount === 5) {
@@ -62,6 +60,7 @@ export default function UserSurveyApp({ onSuccess, setjsonfile }) {
     }
 
     try {
+      setloading(true);
       const res = await axios.post(
         "http://localhost:5000/usersurvey",
         preferences
@@ -70,6 +69,7 @@ export default function UserSurveyApp({ onSuccess, setjsonfile }) {
       console.log(res);
       console.log("Hi");
       console.log(jsonfileresult);
+      setloading(false);
       setjsonfile(jsonfileresult);
       //setjsonfilevar(res.data);
       alert(res.data);
@@ -84,9 +84,14 @@ export default function UserSurveyApp({ onSuccess, setjsonfile }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+      {loading === true && (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      )}
+      <Button variant="contained"  onClick={() => setOpen(true)}>
         User Preference Survey
       </Button>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -216,7 +221,6 @@ export default function UserSurveyApp({ onSuccess, setjsonfile }) {
           </Box>
           <Button
             variant="contained"
-            color="secondary"
             onClick={handleSubmit}
             sx={{ textAlign: "center", mt: 3 }}
           >

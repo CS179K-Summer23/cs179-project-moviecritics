@@ -55,8 +55,7 @@ export default function MovieshowerFromInterests({jsonfile}) {
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                      {jsonfile.map((list, index) => {
-                        console.log(list);
+                      {jsonfile1.map((list, index) => {
                         return(
                         <TableRow key={index}>
                             <TableCell>{index+1}</TableCell>

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import { Button } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
@@ -15,12 +16,12 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DescriptionIcon from "@mui/icons-material/Description";
-import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
 import MovieshowerFromInterests from "./interestsFromSurvey";
 import CloseIcon from '@mui/icons-material/Close';
-import LaunchPage from "./homepage";
+import LaunchPage from "./launchpage";
 
 const drawerWidth = 240;
 
@@ -69,7 +70,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-const customTheme = createMuiTheme({
+const customTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: { main: "#F8F9FA" },
@@ -83,34 +84,22 @@ const customTheme = createMuiTheme({
   },
 });
 
-export default function Home() {
+export default function MainApp({jsonfile}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
-    if(accountCreated){setOpen(true)};
+    if(!accountCreated){setOpen(true)};
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
   };
- 
-  const [jsonfile, setjsonfile] = useState({});
-
-  const [accountForm, setAccountForm] = useState('');
   
   const [accountCreated, setAccountCreated] = useState(false);
 
-  const [surveySubmitted, setSurveySubmitted] = useState(false);
  // const [jsonfilevar, setjsonfilevar] = useState(null);
 
-  const handleAccountCreationSuccess = () => {
-    setAccountCreated(true);
-  };
-
-  const handlesurverySubmit = () => {
-    setSurveySubmitted(true);
-  };
 
   return (
     <>
@@ -131,6 +120,7 @@ export default function Home() {
               <Typography variant="h6" noWrap component="div">
                 MovieCritics
               </Typography>
+              <Button sx={{ marginLeft: "auto" }} >Log Out</Button>
             </Toolbar>
           </AppBar>
           <Drawer
@@ -155,39 +145,44 @@ export default function Home() {
             </DrawerHeader>
             <Divider />
             <List>
-              {["Home", "Suggestions", "MovieDB", "PlaceHolder"].map(
-                (text, index) => (
-                  <ListItem key={text} disablePadding>
+                  <ListItem key="Home" disablePadding>
                     <ListItemButton>
                       <ListItemIcon>
-                        {index % 2 === 0 ? (
                           <DescriptionIcon />
-                        ) : (
-                          <DescriptionIcon />
-                        )}
                       </ListItemIcon>
-                      <ListItemText primary={text} />
+                      <ListItemText primary="Home" />
                     </ListItemButton>
                   </ListItem>
-                )
-              )}
+                  <ListItem key="Suggestions" disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Suggestions" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem key="MovieDB}"disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="MovieDB" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem key="PlaceHolder" disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="PlaceHolder" />
+                    </ListItemButton>
+                  </ListItem>
+           
             </List>
             <Divider />
           </Drawer>
           <Main open={open}>
-            {/* If Account is created, show UserSurvey */}
-            {accountCreated && (
-              <>
-                <UserSurveyApp setjsonfile={setjsonfile}  onSuccess={handlesurverySubmit} /*setjsonfilevar={setjsonfilevar} */ />
-              </> 
-            )}
-            {accountCreated && surveySubmitted && (
-              <>
-                <MovieshowerFromInterests jsonfile={jsonfile} /*jsonfile={jsonfilevar}*/ />
-              </>
-            )}
-            {/* <MovieshowerFromInterests />
-            <MovieRating /> */}
+            {/* { <MovieshowerFromInterests jsonfile={jsonfile} /> } */}
           </Main>
         </Box>
       </ThemeProvider>

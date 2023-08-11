@@ -72,7 +72,6 @@ export default function AccountCreation({onSuccess}) {
           marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
           backgroundColor: 'black',
           align: 'center',
           width: '400px',
@@ -95,9 +94,9 @@ export default function AccountCreation({onSuccess}) {
           <p></p>
           <StyledInput id="repassword" label="Re-Enter-Password" type="password" required onChange={handleChange} />
           <p></p>
-          <Button variant="contained" type="submit" alignItems='center' >Create Account</Button>
+          <Button variant="contained" type="submit" >Create Account</Button>
           <p></p>
-          <Button variant="contained" type="submit" alignItems='center' >Already, Have an Account, Login Here</Button>
+          <Button variant="contained" type="submit"  >Already, Have an Account, Login Here</Button>
           <p></p>
         </form>
       </Box>
