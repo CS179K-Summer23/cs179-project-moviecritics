@@ -27,18 +27,26 @@ const theme = createTheme({
 export default function Home() {
   const [open, setOpen] = useState(true);
   const [preferences, setPreferences] = useState({
-    Adventure: false,
-    Animation: false,
-    Biogrphy: false,
-    Comedy: false,
-    Crime: false,
-    Documentry: false,
-    Horror: false,
-    Mystery: false,
-    Thriller: false,
-    War: false,
+    Action: false,
+    Adventure: false,  
+    Animation: false,           
+    Comedy: false,             
+    Crime: false,              
+    Documentary: false,         
+    Drama: false,           
+    Family: false,              
+    Fantasy: false,             
+    History: false,             
+    Horror: false,             
+    Music: false,               
+    Mystery: false,            
+    Romance: false,            
+    ScienceFiction: false,     
+    TVMovie:  false,            
+    Thriller: false,           
+    War: false,                 
+    Western: false,             
   });
-
   const handlePreferenceChange = (event) => {
     setPreferences({
       ...preferences,
@@ -70,6 +78,11 @@ export default function Home() {
         </DialogTitle>
         <DialogContent sx={{ minHeight: 250, borderRadius: 20, p: 2 }}>
        < FormGroup>
+       <FormControlLabel
+  control={<Checkbox checked={preferences.Action} onChange={handlePreferenceChange} name="Action" />}
+  label="Action"
+  sx={{ fontSize: 20, my: 1 }}
+/>
 <FormControlLabel
   control={<Checkbox checked={preferences.Adventure} onChange={handlePreferenceChange} name="Adventure" />}
   label="Adventure"
@@ -78,11 +91,6 @@ export default function Home() {
 <FormControlLabel
   control={<Checkbox checked={preferences.Animation} onChange={handlePreferenceChange} name="Animation" />}
   label="Animation"
-  sx={{ fontSize: 20, my: 1 }}
-/>
-<FormControlLabel
-  control={<Checkbox checked={preferences.Biogrphy} onChange={handlePreferenceChange} name="Biogrphy" />}
-  label="Biography"
   sx={{ fontSize: 20, my: 1 }}
 />
 <FormControlLabel
@@ -101,13 +109,53 @@ export default function Home() {
   sx={{ fontSize: 20, my: 1 }}
 />
 <FormControlLabel
+  control={<Checkbox checked={preferences.Drama} onChange={handlePreferenceChange} name="Drama" />}
+  label="Drama"
+  sx={{ fontSize: 20, my: 1 }}
+/>
+<FormControlLabel
+  control={<Checkbox checked={preferences.Family} onChange={handlePreferenceChange} name="Family" />}
+  label="Family"
+  sx={{ fontSize: 20, my: 1 }}
+/>
+<FormControlLabel
+  control={<Checkbox checked={preferences.Fantasy} onChange={handlePreferenceChange} name="Fantasy" />}
+  label="Fantasy"
+  sx={{ fontSize: 20, my: 1 }}
+/>
+<FormControlLabel
+  control={<Checkbox checked={preferences.History} onChange={handlePreferenceChange} name="History" />}
+  label="History"
+  sx={{ fontSize: 20, my: 1 }}
+/>
+<FormControlLabel
   control={<Checkbox checked={preferences.Horror} onChange={handlePreferenceChange} name="Horror" />}
   label="Horror"
   sx={{ fontSize: 20, my: 1 }}
 />
 <FormControlLabel
+  control={<Checkbox checked={preferences.Music} onChange={handlePreferenceChange} name="Music" />}
+  label="Music"
+  sx={{ fontSize: 20, my: 1 }}
+/>
+<FormControlLabel
   control={<Checkbox checked={preferences.Mystery} onChange={handlePreferenceChange} name="Mystery" />}
   label="Mystery"
+  sx={{ fontSize: 20, my: 1 }}
+/>
+<FormControlLabel
+  control={<Checkbox checked={preferences.Romance} onChange={handlePreferenceChange} name="Romance" />}
+  label="Romance"
+  sx={{ fontSize: 20, my: 1 }}
+/>
+<FormControlLabel
+  control={<Checkbox checked={preferences.ScienceFiction} onChange={handlePreferenceChange} name="Science Fiction" />}
+  label="science Fiction"
+  sx={{ fontSize: 20, my: 1 }}
+/>
+<FormControlLabel
+  control={<Checkbox checked={preferences.TvMovie} onChange={handlePreferenceChange} name="TV Movie" />}
+  label="TV movie"
   sx={{ fontSize: 20, my: 1 }}
 />
   <FormControlLabel
@@ -118,6 +166,11 @@ export default function Home() {
 <FormControlLabel
   control={<Checkbox checked={preferences.War} onChange={handlePreferenceChange} name="War" />}
   label="War"
+  sx={{ fontSize: 20, my: 1 }}
+/>
+<FormControlLabel
+  control={<Checkbox checked={preferences.western} onChange={handlePreferenceChange} name="Western" />}
+  label="Western"
   sx={{ fontSize: 20, my: 1 }}
 />
 </FormGroup>
