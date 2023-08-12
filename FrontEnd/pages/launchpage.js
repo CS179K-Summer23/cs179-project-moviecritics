@@ -9,6 +9,7 @@ import styled from "styled-components";
 import Link from "@mui/material";
 import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
+import LoginPage from "./LoginPage";
 
 
 //use this with variant="outlined"
@@ -45,6 +46,11 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted}) {
   const handlesurverySubmit = () => {
     setSurveySubmitted(true);
   };
+  const handleLoginPageSuccess = () => {
+    setAccountCreated(true);
+  };
+  
+  
     
       const onSubmit = e => {
         e.preventDefault();
@@ -55,6 +61,7 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted}) {
           console.log("Login Account");
         }
       };
+
 
   
   return (
@@ -103,13 +110,13 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted}) {
       </Button>
     </form>
       </Box>
+      
         
-        {buttonstate===1 && !accountCreated && (<><AccountCreation onSuccess={handleAccountCreationSuccess} /> </>)}
-        {buttonstate===1 && accountCreated && (<><UserSurveyApp  setjsonfile={setjsonfile}  onSuccess={handlesurverySubmit} /></>) }
-        {buttonstate===2}
-        
+      {buttonstate === 1 && !accountCreated && ( <AccountCreation onSuccess={handleAccountCreationSuccess} />)}
+      {buttonstate === 1 && accountCreated && ( <UserSurveyApp setjsonfile={setjsonfile} onSuccess={handlesurverySubmit} /> )}
+      {buttonstate === 2 && !accountCreated && ( <LoginPage onSuccess={handleLoginPageSuccess} /> )} 
       </ThemeProvider>
     </>
-  );
+  )
 }
 
