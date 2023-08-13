@@ -1,3 +1,4 @@
 FrontEnd/node_modules
 FrontEnd/.next/
 BackEnd/__pycache__/
+FrontEnd/package-lock.json

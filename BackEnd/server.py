@@ -12,7 +12,7 @@ csv_filename = "movies_db.csv"
 
 def todays_hottest(csv_file, target_genres, min_vote_count=1000, limit=10):
     movies_list = []
-    with open(csv_file, 'r', newline='') as file:
+    with open(csv_file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             movie_title = row['title']
@@ -102,10 +102,11 @@ def signup():
     return 'Signup Successful'
 
 @app.route('/login', methods=['POST'])
-def signup():
+def login():
     user = request.get_json()
     email = user.get('email')
     password = user.get('password')
+    result = True
     #Check if email is being used already
     
     #curr = app.cursor()
@@ -116,11 +117,8 @@ def signup():
     #    return 'Email is being used, try Login or a different email'
     #}
 
-    newUser = User(name = name, email = email, password = password, age = age)
-    db.session.add(newUser)
-    db.session.commit()
-    print(user)
-    return 'Signup Successful'
+    print(result)
+    return 'Login Successful'
 
 @app.route('/usersurvey', methods=['POST'])
 def usersurvey():
@@ -129,33 +127,69 @@ def usersurvey():
     print(genrelist)
     glist = ""
 
+    if(genrelist.get('Action')) : glist += "Action,"
     if(genrelist.get('Adventure')) : glist += "Adventure,"
     if(genrelist.get('Animation')) : glist += "Animation,"
-    if(genrelist.get('Biography')) : glist += "Biography,"
     if(genrelist.get('Comedy')) : glist += "Comedy,"
     if(genrelist.get('Crime')) : glist += "Crime,"
     if(genrelist.get('Documentary')) : glist += "Documentary,"
+    if(genrelist.get('Drama')) : glist += "Drama,"
+    if(genrelist.get('Family')) : glist += "Family,"
+    if(genrelist.get('Fantasy')) : glist += "Fantasy,"
+    if(genrelist.get('History')) : glist += "History,"
     if(genrelist.get('Horror')) : glist += "Horror,"
+    if(genrelist.get('Music')) : glist += "Music,"
     if(genrelist.get('Mystery')) : glist += "Mystery,"
+    if(genrelist.get('Romance')) : glist += "Romance,"
+    if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
+    if(genrelist.get('TVMovie')) : glist += "TVMovie,"
     if(genrelist.get('Thriller')) : glist += "Thriller,"
     if(genrelist.get('War')) : glist += "War,"
+    if(genrelist.get('Western')) : glist += "Western,"
+
+
+    glist = glist[:-1]
+    #genrelist_str = json.dumps(glist)
+    glist = [genre.strip().lower() for genre in glist.split(",")]
+    result = top25_by_genre('movies_db.csv', glist)
+   
+    return result
+
+@app.route('/movieratings', methods=['POST'])
+def movieratings():
+    genrelist = request.get_json()
+    
+    print(genrelist)
+    glist = ""
+
+    if(genrelist.get('Action')) : glist += "Action,"
+    if(genrelist.get('Adventure')) : glist += "Adventure,"
+    if(genrelist.get('Animation')) : glist += "Animation,"
+    if(genrelist.get('Comedy')) : glist += "Comedy,"
+    if(genrelist.get('Crime')) : glist += "Crime,"
+    if(genrelist.get('Documentary')) : glist += "Documentary,"
+    if(genrelist.get('Drama')) : glist += "Drama,"
+    if(genrelist.get('Family')) : glist += "Family,"
+    if(genrelist.get('Fantasy')) : glist += "Fantasy,"
+    if(genrelist.get('History')) : glist += "History,"
+    if(genrelist.get('Horror')) : glist += "Horror,"
+    if(genrelist.get('Music')) : glist += "Music,"
+    if(genrelist.get('Mystery')) : glist += "Mystery,"
+    if(genrelist.get('Romance')) : glist += "Romance,"
+    if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
+    if(genrelist.get('TVMovie')) : glist += "TVMovie,"
+    if(genrelist.get('Thriller')) : glist += "Thriller,"
+    if(genrelist.get('War')) : glist += "War,"
+    if(genrelist.get('Western')) : glist += "Western,"
 
 
     glist = glist[:-1]
     print(glist)
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
-    print('79')
     print(glist)
-    result = top25_by_genre('movies.csv', glist)
-    
-    print('59')
-    #result_str = result.decode('utf-8')
-    
-    print('61')
-
-    #call Roz function, 
-    #result = subprocess.check_output(["python", "sort_genre_rank.py", glist])
+    result = todays_hottest("movies.csv",glist)
+   
     print (result)
     return result
 

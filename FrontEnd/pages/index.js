@@ -84,9 +84,9 @@ export default function Home() {
 
   const [surveySubmitted, setSurveySubmitted] = useState(false);
   const [jsonfile, setjsonfile] = useState({});
+  const [jsonfile2, setjsonfile2] = useState({});
 
   const [accountCreated, setAccountCreated] = useState(false);
-  // const [jsonfilevar, setjsonfilevar] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -102,8 +102,8 @@ export default function Home() {
       <ThemeProvider theme={customTheme}>
         <Box sx={{ display: "flex" }}>
           <Main open={open}>
-            {surveySubmitted === false && (<LaunchPage setjsonfile={setjsonfile} setSurveySubmitted={setSurveySubmitted}/> )}
-            {surveySubmitted === true && <MainApp jsonfile={jsonfile} />}
+            {surveySubmitted === false && (<LaunchPage setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} setSurveySubmitted={setSurveySubmitted}/> )}
+            {surveySubmitted === true && <MainApp jsonfile={jsonfile} jsonfile2={jsonfile2} />}
           </Main>
         </Box>
       </ThemeProvider>

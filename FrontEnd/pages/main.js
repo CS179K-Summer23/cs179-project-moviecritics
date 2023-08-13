@@ -85,7 +85,7 @@ const customTheme = createTheme({
   },
 });
 
-export default function MainApp({jsonfile}) {
+export default function MainApp({jsonfile, jsonfile2}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -188,7 +188,7 @@ export default function MainApp({jsonfile}) {
             {page === 0 }
             {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
             {page===2 && <PaginationApp />  }
-            {page===3 && <MovieRatings /> }
+            {page===3 && <MovieRatings jsonfile2={jsonfile2}/> }
           </Main>
         </Box>
       </ThemeProvider>

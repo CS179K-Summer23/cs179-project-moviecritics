@@ -30,15 +30,13 @@ const darkTheme = createTheme({
   },
 });
 
-export default function LaunchPage({setjsonfile, setSurveySubmitted}) {
+export default function LaunchPage({setjsonfile, setSurveySubmitted, setjsonfile2}) {
 
   const [buttonstate, setbuttonstate] = useState(0);
   const [onLogin, setonLogin] = useState(false)
   const [accountCreated, setAccountCreated] = useState(false);
   
 
- 
- // const [jsonfilevar, setjsonfilevar] = useState(null);
 
   const handleLoginSuccess = () => {
     setonLogin(true);
@@ -111,7 +109,7 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted}) {
       </Box>
         
         {buttonstate===1 && !accountCreated && (<><AccountCreation onSuccess={handleAccountCreationSuccess} /> </>)}
-        {buttonstate===1 && accountCreated && (<><UserSurveyApp  setjsonfile={setjsonfile}  onSuccess={handlesurverySubmit} /></>) }
+        {buttonstate===1 && accountCreated && (<><UserSurveyApp  setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} onSuccess={handlesurverySubmit} /></>) }
         {buttonstate===2 && (<> <Login onLogin={handleLoginSuccess} /> </>)}
         {buttonstate==3}
         

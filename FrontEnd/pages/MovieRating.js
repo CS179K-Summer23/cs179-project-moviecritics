@@ -82,7 +82,9 @@ const jsonfile = [
   },
 ];
 
-export default function MovieRatings() {
+export default function MovieRatings({jsonfile2}) {
+  console.log('break');
+  console.log(jsonfile2);
   return (
     <>
       <ThemeProvider theme={lightTheme}>
@@ -94,19 +96,25 @@ export default function MovieRatings() {
               <StyledTableRow>
                 <TableCell>Rank</TableCell>
                 <TableCell>Movie Title</TableCell>
-                <TableCell>Revenue</TableCell>
+                <TableCell>Genres</TableCell>
                 <TableCell>Release Date</TableCell>
+                <TableCell>Votes</TableCell>
+                <TableCell>Rating</TableCell>
               </StyledTableRow>
             </TableHead>
             <TableBody>
-              {jsonfile.map((movie, index) => (
+              {jsonfile2.map((movie, index) => {
+                return(
                 <TableRow key={index}>
-                  <TableCell>{movie.id}</TableCell>
-                  <TableCell>{movie.Movie}</TableCell>
-                  <TableCell>{movie.Revenue}</TableCell>
-                  <TableCell>{movie.ReleaseDate}</TableCell>
+                  <TableCell>{index}</TableCell>
+                  <TableCell>{movie.title}</TableCell>
+                  <TableCell>{movie.genres}</TableCell>
+                  <TableCell>{movie.vote_count}</TableCell>
+                  <TableCell>{movie.vote_average}</TableCell>
+                  <TableCell>{movie.release_date}</TableCell>
                 </TableRow>
-              ))}
+                );
+                })}
             </TableBody>
           </Table>
         </TableContainer>

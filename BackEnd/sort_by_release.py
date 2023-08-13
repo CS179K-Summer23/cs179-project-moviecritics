@@ -1,11 +1,11 @@
 import csv
 import json
 
-csv_filename = "movies_db.csv"
+csv_filename = 'movies_db.csv'
 
 def todays_hottest(csv_file, target_genres, min_vote_count=1000, limit=10):
     movies_list = []
-    with open(csv_file, 'r', newline='') as file:
+    with open(csv_file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             movie_title = row['title']
