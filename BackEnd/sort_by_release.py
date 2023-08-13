@@ -13,7 +13,7 @@ def todays_hottest(csv_file, target_genres, min_vote_count=1000, limit=10):
             vote_count = float(row['vote_count'])
             vote_average = float(row['vote_average'])
             release_date_str = row['release_date']
-            
+          
             ## Check for non-empty release_date
             if release_date_str:
                 # Extract the year from the release_date
@@ -22,7 +22,7 @@ def todays_hottest(csv_file, target_genres, min_vote_count=1000, limit=10):
                 except ValueError:
                     release_year = None
 
-                if (release_year == 2022 or release_year == 2023) and any(genre.strip().lower() in target_genres for genre in movie_genres) and vote_count > min_vote_count:
+                if (release_year == 2023 or release_year == 2022 or release_year == 2021 or release_year == 2020 or release_year == 2019 or release_year == 2018) and any(genre.strip().lower() in target_genres for genre in movie_genres) and vote_count > min_vote_count:
                     movie_info = {
                         'title': movie_title,
                         'genres': movie_genres,

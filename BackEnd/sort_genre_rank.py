@@ -5,7 +5,7 @@ csv_file = 'movies_db.csv'
 
 def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25):
     movies_list = []
-    with open(csv_file, 'r', newline='') as file:
+    with open(csv_file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         print("this is reader")
         print(reader)
