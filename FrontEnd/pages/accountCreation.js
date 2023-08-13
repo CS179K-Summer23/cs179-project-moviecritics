@@ -61,6 +61,7 @@ export default function AccountCreation({onSuccess}) {
     if(formData.email.indexOf('@') === -1 )
     {
       console.log("email must be valid");
+      return;
     }
 
     try {
