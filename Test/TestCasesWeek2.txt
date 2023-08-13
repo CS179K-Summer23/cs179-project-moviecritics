@@ -1,0 +1,40 @@
+﻿Old Actionable Tasks:
+(The data is being shown in console.log, just have to transition to the table.
+
+
+1. Display ratings of each movie and show in UI (Frontend)
+Test case: Verify rating from UI matches data from backend. Verify that the table is shown in the UI.
+
+
+2. Display ranking from sort algorithm (frontend)
+Test case: Verify titles are displayed in accurate order. Verify that the table is shown in the UI.
+
+
+
+
+New Actionable tasks
+
+
+3. Filter out movies that have a 18+ rating or any explicit content (BackEnd)
+Test case: Make sure there is not a movie that is adult rated, is shown in the dataframe.
+
+
+4. Make a UI dashboard (FrontEnd)
+Test case: Make sure all button and links are not bringing the page to a 404 error
+
+
+5. Display movie list suggestions with age restriction (Frontend)
+Test case: Have a user that is under 18 see suggestions that is not adult rated. Make sure there is not a movie that has explicit content.
+Testcase2: Another user over 18, should have no restriction, should be able to see entire movie list
+
+
+6. Send Entire Movie database (with titles, genres, rating) (backend)
+Test case: Make sure that number of json objects match the number of rows in the dataset that is being used.
+
+
+7. Display Entire Movie database (Front End)
+Test case: validate the number of movies match the dataset 
+
+
+8. Add columns in postgresql database to have a column of suggested movies (Backend)
+Test case: verify after user survey that the suggested movies are also showing in the database.

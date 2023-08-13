@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "proxy": "http://localhost:5000/",
   "scripts": {
     "start": "node index.js",
+    "start-backend": "cd backend && env/bin/flask run --no-debugger",
     "build": "react-scripts build",
     "dev": "next dev"
   },
@@ -14,11 +16,20 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.3",
+    "@mui/styled-engine-sc": "^5.12.0",
+    "@mui/x-data-grid": "^6.11.0",
+    "axios": "^1.4.0",
     "next": "^13.4.12",
+    "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "^5.0.1"
+    "react-router-dom": "^6.14.2",
+    "react-scripts": "^5.0.1",
+    "react-scrollbars-custom": "^4.1.1",
+    "react-virtualized": "^9.22.5",
+    "styled-components": "^5.3.11"
   },
   "browserslist": {
     "production": [
