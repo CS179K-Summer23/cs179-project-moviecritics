@@ -84,7 +84,7 @@ export default function AccountCreation({onSuccess}) {
       <Box
         sx={{
           display:'flex',
-          marginTop: '10%',
+          marginTop: '5%',
           marginLeft:'45%',
           marginRight:'auto',
           marginBottom:'auto',
@@ -112,8 +112,6 @@ export default function AccountCreation({onSuccess}) {
           <StyledInput id="repassword" label="Re-Enter-Password" type="password" required onChange={handleChange} />
           <p></p>
           <Button variant="contained" type="submit" >Create Account</Button>
-          <p></p>
-          <Button variant="contained" type="submit"  >Already, Have an Account, Login Here</Button>
           <p></p>
         </form>
       </Box>

@@ -22,6 +22,7 @@ const darkTheme = createTheme({
 });
 
 export default function Login({ onLogin }) {
+  const [onlogin, setonlogin] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -41,6 +42,10 @@ export default function Login({ onLogin }) {
       const res = await axios.post("http://localhost:5000/login", formData);
       console.log(res);
       alert(res.data);
+      if(res.data === true)
+      {
+        setonlogin(true);
+      }
       if (res.data && res.status === 200) {
         if (onLogin) {
           onLogin(); // Call the callback function passed to the component
@@ -92,10 +97,6 @@ export default function Login({ onLogin }) {
             <p></p>
             <Button variant="contained" type="submit">
               Login
-            </Button>
-            <p></p>
-            <Button variant="contained" onClick={onLogin}>
-              Don't have an account? Sign Up
             </Button>
             <p></p>
           </form>
