@@ -23,7 +23,7 @@ import MovieshowerFromInterests from "./interestsFromSurvey";
 import CloseIcon from '@mui/icons-material/Close';
 import LaunchPage from "./launchpage";
 import MovieRatings from "./MovieRating";
-
+import PaginationApp from "./Pagination";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -187,7 +187,7 @@ export default function MainApp({jsonfile}) {
           <Main open={open} >
             {page === 0 }
             {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
-            {page===2  }
+            {page===2 && <PaginationApp />  }
             {page===3 && <MovieRatings /> }
           </Main>
         </Box>

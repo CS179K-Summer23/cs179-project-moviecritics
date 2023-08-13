@@ -1,8 +1,8 @@
-
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from models import db, User
 import datetime
+from movie_critics import MovieAnalyzerApp
 #from sort_genre_rank import top25_by_genre
 #import subprocess
 import json
@@ -85,6 +85,7 @@ def usersurvey():
     if(genrelist.get('Thriller')) : glist += "Thriller,"
     if(genrelist.get('War')) : glist += "War,"
 
+
     glist = glist[:-1]
     print(glist)
     #genrelist_str = json.dumps(glist)
@@ -103,6 +104,28 @@ def usersurvey():
     print('Hi')
     print (result)
     return result
+
+# Route to fetch top movies based on choice and display as JSON
+@app.route('/pagination', methods=['POST'])
+def get_top_movies():
+    data = request.json  # Get JSON data from the request
+    choice = data.get("choice")
+    n = int(data.get("n", 30))
+
+    analyzer = MovieAnalyzerApp("movies_db.csv")
+
+    if choice == "rating":
+        top_movies_df = analyzer.get_top_movies_by_rating_df(n)
+    elif choice == "profits":
+        top_movies_df = analyzer.get_top_movies_by_profit_df(n)
+    elif choice == "revenue":
+        top_movies_df = analyzer.get_top_movies_by_revenue_df(n)
+    else:
+        return jsonify({"error": "Invalid choice"}), 400
+
+    records = top_movies_df.to_dict(orient="records")
+    print(records)
+    return jsonify(records)
 
 
 # Route for seeing a data
