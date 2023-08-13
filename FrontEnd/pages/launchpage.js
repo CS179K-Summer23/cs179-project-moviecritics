@@ -77,7 +77,7 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted, setjsonfile
           flexDirection: 'column',
           backgroundColor: 'black',
           align: 'center',
-          width: '400px',
+          width: '500px',
           borderRadius: 3,
           overflow:'hidden',
         }}
@@ -99,7 +99,7 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted, setjsonfile
         name="btn2"
         value="login"
         style={{
-          marginLeft:'auto', //ALLIGN THIS LATER
+          marginLeft:'auto',
           
         }}
       >

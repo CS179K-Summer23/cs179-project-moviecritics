@@ -6,15 +6,16 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import styled from "styled-components";
 
-//use this with variant="outlined"
+
 const StyledInput = styled(TextField)`
-  width: 100%;
+  width: 80%;
   & .MuiOutlinedInput-notchedOutline {
     border-color: white;
   }
   & .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: blue;
   }
+  align: 'center';
 `;
 
 
@@ -82,6 +83,7 @@ export default function AccountCreation({onSuccess}) {
     <CssBaseline />
 
       <Box
+        alignItems={"center"}
         sx={{
           display:'flex',
           marginTop: '5%',
@@ -92,7 +94,7 @@ export default function AccountCreation({onSuccess}) {
           flexDirection: 'column',
           backgroundColor: 'black',
           align: 'center',
-          width: '400px',
+          width: '500px',
           borderRadius: 3,
           overflow:'hidden',
         }}

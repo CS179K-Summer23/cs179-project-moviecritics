@@ -6,13 +6,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 import styled from "styled-components";
 
 const StyledInput = styled(TextField)`
-  width: 100%;
+  width: 80%;
   & .MuiOutlinedInput-notchedOutline {
     border-color: white;
   }
   & .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: blue;
   }
+  align: 'center';
 `;
 
 const darkTheme = createTheme({
@@ -62,9 +63,10 @@ export default function Login({ onLogin }) {
         <CssBaseline />
 
         <Box
+          alignItems={"center"}
           sx={{
             display: "flex",
-            marginTop: "10%",
+            marginTop: "5%",
             marginLeft: "45%",
             marginRight: "auto",
             marginBottom: "auto",
@@ -72,7 +74,7 @@ export default function Login({ onLogin }) {
             flexDirection: "column",
             backgroundColor: "black",
             align: "center",
-            width: "400px",
+            width: "500px",
             borderRadius: 3,
             overflow: "hidden",
           }}

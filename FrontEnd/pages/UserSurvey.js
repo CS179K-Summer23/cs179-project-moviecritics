@@ -100,8 +100,8 @@ export default function UserSurveyApp({ onSuccess, setjsonfile, setjsonfile2 }) 
         <Box
           sx={{
             display: "flex",
-            marginTop: "30%",
-            marginLeft: "50%",
+            marginTop: "1%",
+            marginLeft: "54%",
             marginRight: "auto",
             marginBottom: "auto",
           }}
