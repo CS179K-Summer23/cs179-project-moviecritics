@@ -39,6 +39,7 @@ export default function MovieshowerFromInterests({ jsonfile }) {
     <>
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
+        <h1>___________Suggestions Based on Ratings</h1>
         <Box
           sx={{
             marginTop: 8,

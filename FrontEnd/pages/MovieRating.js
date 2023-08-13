@@ -150,6 +150,7 @@ export default function MovieRatings({ jsonfile2 }) {
     <>
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
+        <h1>___________Suggestions Based on ReleaseDate</h1>
         <Box
           sx={{
             marginTop: 8,

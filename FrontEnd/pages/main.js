@@ -24,6 +24,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import LaunchPage from "./launchpage";
 import MovieRatings from "./MovieRating";
 import PaginationApp from "./Pagination";
+import ProfilePage from "./profile";
+import HomeAccount from "./homeaccount";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -149,7 +151,7 @@ export default function MainApp({jsonfile, jsonfile2}) {
             <Divider />
             <List>
                   <ListItem key="Home" disablePadding>
-                    <ListItemButton >
+                    <ListItemButton onClick={() => (setpage(0))}>
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
@@ -172,12 +174,20 @@ export default function MainApp({jsonfile, jsonfile2}) {
                       <ListItemText primary="MovieDB" />
                     </ListItemButton>
                   </ListItem>
-                  <ListItem key="MovieRatings" disablePadding>
+                  <ListItem key="LatestMovies" disablePadding>
                     <ListItemButton onClick={() => (setpage(3))}>
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary="MovieRatings" />
+                      <ListItemText primary="LatestMovies" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem key="Profile" disablePadding>
+                    <ListItemButton onClick={() => (setpage(4))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Profile" />
                     </ListItemButton>
                   </ListItem>
            
@@ -185,10 +195,11 @@ export default function MainApp({jsonfile, jsonfile2}) {
             <Divider />
           </Drawer>
           <Main open={open} >
-            {page === 0 }
+            {page === 0 && <HomeAccount /> }
             {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
             {page===2 && <PaginationApp />  }
             {page===3 && <MovieRatings jsonfile2={jsonfile2}/> }
+            {page===4 && <ProfilePage />}
           </Main>
         </Box>
       </ThemeProvider>
