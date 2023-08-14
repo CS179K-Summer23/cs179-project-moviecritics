@@ -46,14 +46,12 @@ def todays_hottest(csv_filename, target_genres, min_vote_count=1000, limit=25):
         return sorted_movies[:limit]
 
 def top25_by_genre(csv_file, target_genres, age, min_vote_count=1000, limit=25):
-    print('This is the age: ')
-    print(age)
     movies_list = []
     with open(csv_file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             movie_title = row['title']
-            movie_genres = row['genres'].split('-')
+            movie_genres = row['genres']  
             vote_count = float(row['vote_count'])
             vote_average = float(row['vote_average'])
             movie_rating = row['Rated']
@@ -61,10 +59,10 @@ def top25_by_genre(csv_file, target_genres, age, min_vote_count=1000, limit=25):
             if age is not None and age < 13 and movie_rating == 'PG-13':
                 continue
             
-            if any(genre.strip().lower() in target_genres for genre in movie_genres) and vote_count > min_vote_count:
+            if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')):
                 movie_info = {
                     'title': movie_title,
-                    'genres': movie_genres,
+                    'genres': movie_genres, 
                     'vote_count': vote_count,
                     'vote_average': vote_average,
                     'Rated': movie_rating
