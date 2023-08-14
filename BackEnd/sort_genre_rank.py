@@ -9,7 +9,7 @@ def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25, age=N
         reader = csv.DictReader(file)
         for row in reader:
             movie_title = row['title']
-            movie_genres = row['genres'].split('-')
+            movie_genres = row['genres']  
             vote_count = float(row['vote_count'])
             vote_average = float(row['vote_average'])
             movie_rating = row['Rated']
@@ -17,10 +17,10 @@ def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25, age=N
             if age is not None and age < 13 and movie_rating == 'PG-13':
                 continue
             
-            if any(genre.strip().lower() in target_genres for genre in movie_genres) and vote_count > min_vote_count:
+            if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')):
                 movie_info = {
                     'title': movie_title,
-                    'genres': movie_genres,
+                    'genres': movie_genres, 
                     'vote_count': vote_count,
                     'vote_average': vote_average,
                     'Rated': movie_rating
@@ -41,6 +41,9 @@ if __name__ == "__main__":
         movies_data = top25_by_genre(csv_file, user_genres, age=user_age)
         
         if movies_data:
+            for movie in movies_data:
+                movie['genres'] = '-'.join(movie['genres'].split('-'))
+            
             json_data = json.dumps(movies_data, indent=2)
             print(json_data)
         else:
