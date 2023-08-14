@@ -106,19 +106,14 @@ def login():
     user = request.get_json()
     email = user.get('email')
     password = user.get('password')
-    result = True
-    #Check if email is being used already
-    
-    #curr = app.cursor()
-    #curr.execute("SELECT * FROM "user" WHERE email EQUALS)
-    #data = curr.fetchall()
-    #if(len(data) != 0)
-    #{
-    #    return 'Email is being used, try Login or a different email'
-    #}
 
-    print(result)
-    return 'Login Successful'
+    if email is None or email == "" or password is None or password == "":
+        return 'False', 400
+
+    user = User.query.filter_by(email=email, password=password).first()
+    if user is not None:
+        return 'Login Successful'
+    return 'Invalid Username or password', 400
 
 @app.route('/usersurvey', methods=['POST'])
 def usersurvey():
