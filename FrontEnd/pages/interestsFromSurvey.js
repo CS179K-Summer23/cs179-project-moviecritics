@@ -64,6 +64,7 @@ export default function MovieshowerFromInterests({ jsonfile }) {
                   <TableCell>Rating</TableCell>
                   <TableCell>Watched?</TableCell>
                   <TableCell>Review?</TableCell>
+                  <TableCell>Rated</TableCell>
                 </StyledTableRow>
               </TableHead>
               <TableBody>
@@ -76,6 +77,7 @@ export default function MovieshowerFromInterests({ jsonfile }) {
                       <TableCell>{list.vote_average}</TableCell>
                       <TableCell></TableCell>
                       <TableCell></TableCell>
+                      <TableCell>{list.Rated}</TableCell>
                     </TableRow>
                   );
                 })}

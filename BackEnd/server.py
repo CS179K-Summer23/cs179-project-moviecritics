@@ -45,9 +45,11 @@ def todays_hottest(csv_filename, target_genres, min_vote_count=1000, limit=25):
         
         return sorted_movies[:limit]
 
-def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25, age=None):
+def top25_by_genre(csv_file, target_genres, age, min_vote_count=1000, limit=25):
+    print('This is the age: ')
+    print(age)
     movies_list = []
-    with open(csv_file, 'r', newline='') as file:
+    with open(csv_file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             movie_title = row['title']
@@ -90,6 +92,9 @@ def signup():
     email = user.get('email')
     password = user.get('password')
     age = user.get('age')
+    global globalage 
+    globalage = int(age)
+ 
     #Check if email is being used already
     
     #curr = app.cursor()
@@ -128,14 +133,10 @@ def login():
 @app.route('/usersurvey', methods=['POST'])
 def usersurvey():
     genrelist = request.get_json()
-    user_age = request.get_int('age')
     
     print(genrelist)
     glist = ""
     
-    print(user_age)
-    age = 0
-
     if(genrelist.get('Action')) : glist += "Action,"
     if(genrelist.get('Adventure')) : glist += "Adventure,"
     if(genrelist.get('Animation')) : glist += "Animation,"
@@ -156,20 +157,19 @@ def usersurvey():
     if(genrelist.get('War')) : glist += "War,"
     if(genrelist.get('Western')) : glist += "Western,"
 
-    if(user_age.get(age)) : glist += age
-
     glist = glist[:-1]
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
-    result = top25_by_genre('movies_db.csv', glist, age)
-   
+
+    result = top25_by_genre('movies_db.csv', glist, globalage)
+    print('This is the result')
+    print(result)
     return result
 
 @app.route('/movieratings', methods=['POST'])
 def movieratings():
     genrelist = request.get_json()
     
-    print(genrelist)
     glist = ""
 
     if(genrelist.get('Action')) : glist += "Action,"
@@ -194,13 +194,13 @@ def movieratings():
 
 
     glist = glist[:-1]
-    print(glist)
+    
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
-    print(glist)
+   
     result = todays_hottest('movies_db.csv',glist)
    
-    print (result)
+
     return result
 
 # Route to fetch top movies based on choice and display as JSON
