@@ -7,12 +7,14 @@ from movie_critics import MovieAnalyzerApp
 #import subprocess
 import json
 import csv 
+import datetime
+
 
 csv_filename = "movies_db.csv"
 
-def todays_hottest(csv_file, target_genres, min_vote_count=1000, limit=10):
+def todays_hottest(csv_filename, target_genres, min_vote_count=1000, limit=25):
     movies_list = []
-    with open(csv_file, 'r', newline='', encoding='utf-8') as file:
+    with open(csv_filename, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             movie_title = row['title']
@@ -21,15 +23,15 @@ def todays_hottest(csv_file, target_genres, min_vote_count=1000, limit=10):
             vote_average = float(row['vote_average'])
             release_date_str = row['release_date']
           
-            ## Check for non-empty release_date
             if release_date_str:
-                # Extract the year from the release_date
                 try:
-                    release_year = int(release_date_str.split('-')[0])
+                    release_date = datetime.datetime.strptime(release_date_str, '%Y-%m-%d')
                 except ValueError:
-                    release_year = None
+                    release_date = None
 
-                if (release_year == 2023 or release_year == 2022 or release_year == 2021 or release_year == 2020 or release_year == 2019 or release_year == 2018) and any(genre.strip().lower() in target_genres for genre in movie_genres) and vote_count > min_vote_count:
+                current_date = datetime.datetime.now()
+
+                if release_date and release_date <= current_date and any(genre.strip().lower() in target_genres for genre in movie_genres) and vote_count > min_vote_count:
                     movie_info = {
                         'title': movie_title,
                         'genres': movie_genres,
@@ -38,32 +40,35 @@ def todays_hottest(csv_file, target_genres, min_vote_count=1000, limit=10):
                         'release_date': release_date_str
                     }
                     movies_list.append(movie_info)
-        
-        # Sort movies by vote_count in descending order
-        sorted_movies = sorted(movies_list, key=lambda x: x['vote_average'], reverse=True)
+
+        sorted_movies = sorted(movies_list, key=lambda x: x['release_date'], reverse=True)
         
         return sorted_movies[:limit]
 
-def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25):
+def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25, age=None):
     movies_list = []
-    csv_file = 'movies_db.csv'
-    with open(csv_file, 'r', newline='', encoding='utf-8') as file:
+    with open(csv_file, 'r', newline='') as file:
         reader = csv.DictReader(file)
         for row in reader:
             movie_title = row['title']
             movie_genres = row['genres'].split('-')
             vote_count = float(row['vote_count'])
             vote_average = float(row['vote_average'])
+            movie_rating = row['Rated']
+            
+            if age is not None and age < 13 and movie_rating == 'PG-13':
+                continue
+            
             if any(genre.strip().lower() in target_genres for genre in movie_genres) and vote_count > min_vote_count:
                 movie_info = {
                     'title': movie_title,
                     'genres': movie_genres,
                     'vote_count': vote_count,
-                    'vote_average': vote_average
+                    'vote_average': vote_average,
+                    'Rated': movie_rating
                 }
                 movies_list.append(movie_info)
-        print(31)
-        # Sort movies by vote_average in descending order
+        
         sorted_movies = sorted(movies_list, key=lambda x: x['vote_average'], reverse=True)
         
         return sorted_movies[:limit]
@@ -123,9 +128,13 @@ def login():
 @app.route('/usersurvey', methods=['POST'])
 def usersurvey():
     genrelist = request.get_json()
+    user_age = request.get_int('age')
     
     print(genrelist)
     glist = ""
+    
+    print(user_age)
+    age = 0
 
     if(genrelist.get('Action')) : glist += "Action,"
     if(genrelist.get('Adventure')) : glist += "Adventure,"
@@ -147,11 +156,12 @@ def usersurvey():
     if(genrelist.get('War')) : glist += "War,"
     if(genrelist.get('Western')) : glist += "Western,"
 
+    if(user_age.get(age)) : glist += age
 
     glist = glist[:-1]
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
-    result = top25_by_genre('movies_db.csv', glist)
+    result = top25_by_genre('movies_db.csv', glist, age)
    
     return result
 
