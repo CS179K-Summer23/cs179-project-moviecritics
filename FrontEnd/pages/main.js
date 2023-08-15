@@ -21,7 +21,6 @@ import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
 import MovieshowerFromInterests from "./interestsFromSurvey";
 import CloseIcon from '@mui/icons-material/Close';
-import LaunchPage from "./launchpage";
 import MovieRatings from "./MovieRating";
 import PaginationApp from "./Pagination";
 import ProfilePage from "./profile";
