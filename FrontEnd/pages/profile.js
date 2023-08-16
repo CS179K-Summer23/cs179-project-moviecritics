@@ -23,18 +23,17 @@ const darkTheme = createTheme({
   },
 });
 
-export default function ProfilePage() {
+export default function ProfilePage(email) {
 
   const [formdata, setformdata] = useState({
-    Name: "Filler.name",
     Email: "Filler.email",
     Password: "Filler.password"
     
   });
 
   const handleChange = (event) => {
-    setFormData({
-      ...formData,
+    setformdata({
+      ...formdata,
       [event.target.id]: event.target.value,
     });
   };
@@ -43,6 +42,47 @@ export default function ProfilePage() {
     event.preventDefault();
 
   };
+
+  const LoadProfile = async (event) => {
+    event.preventDefault();
+    try {
+        
+        const res = await axios.post(
+        "http://localhost:5000/loadprofile",
+        email
+        );
+        setformdata.Password=res.data;
+        
+        alert(res.data);
+        if (res.data && res.status === 200) {
+        if (onSuccess) {
+            onSuccess();
+        }
+        }
+    } catch (err) {
+        console.error(err);
+    }
+  };
+
+  const SaveProfile = async (event) => {
+    event.preventDefault();
+    try {
+        
+        const res = await axios.post(
+        "http://localhost:5000/saveprofile",
+        formData
+        );
+        alert(res.data);
+        if (res.data && res.status === 200) {
+        if (onSuccess) {
+            onSuccess();
+        }
+        }
+    } catch (err) {
+        console.error(err);
+    }
+  };
+
 
   return (
     <>
@@ -69,7 +109,7 @@ export default function ProfilePage() {
           <p></p>
           <StyledInput label="Password" name="Password" onChange={handleChange} required value={formdata.Password} variant="outlined" />
           <p></p>
-          <Button variant="contained" type="submit" >Update</Button>
+          <Button id="sub_button" variant="contained" type="submit" onClick={SaveProfile} >Update</Button>
           <p></p>
         </form>
         </Box>

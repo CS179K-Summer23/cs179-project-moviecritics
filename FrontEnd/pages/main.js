@@ -217,7 +217,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
             {page === 1 && <MovieshowerFromInterests jsonfile={jsonfile} />}
             {page === 2 && <PaginationApp />}
             {page === 3 && <MovieRatings jsonfile2={jsonfile2} />}
-            {page === 4 && <ProfilePage />}
+            {page === 4 && <ProfilePage email={email}/>}
           </Main>
         </Box>
       </ThemeProvider>
