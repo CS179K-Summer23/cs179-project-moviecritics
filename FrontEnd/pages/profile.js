@@ -65,8 +65,6 @@ export default function ProfilePage() {
           <h1 align='center'>Profile Page</h1>
           <form onSubmit={UpdateAccount}>
           <p></p>
-          <StyledInput label="Name" name="name" marginLeft="500px" onChange={handleChange} required value={formdata.Name} variant="outlined" />
-          <p></p>
           <StyledInput label="Email" name="email" onChange={handleChange} required value={formdata.Email} variant="outlined" />
           <p></p>
           <StyledInput label="Password" name="Password" onChange={handleChange} required value={formdata.Password} variant="outlined" />

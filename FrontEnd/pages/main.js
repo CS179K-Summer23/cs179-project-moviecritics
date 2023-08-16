@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
@@ -20,11 +20,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
 import MovieshowerFromInterests from "./interestsFromSurvey";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import MovieRatings from "./MovieRating";
 import PaginationApp from "./Pagination";
 import ProfilePage from "./profile";
 import HomeAccount from "./homeaccount";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -74,7 +76,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const customTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
     primary: { main: "#F8F9FA" },
     secondary: {
       main: "#010203",
@@ -86,24 +88,39 @@ const customTheme = createTheme({
   },
 });
 
-export default function MainApp({jsonfile, jsonfile2}) {
+
+export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const [page, setpage] = React.useState(0);
 
   const handleDrawerOpen = () => {
-    if(!accountCreated){setOpen(true)};
+    if (!accountCreated) {
+      setOpen(true);
+    }
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
-  const [accountCreated, setAccountCreated] = useState(false);
 
- // const [jsonfilevar, setjsonfilevar] = useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+  const logoutfunction = () => {
+    setsignout(true);
+    setAnchorElUser(null);
+  };
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
 
   return (
     <>
@@ -111,7 +128,7 @@ export default function MainApp({jsonfile, jsonfile2}) {
         <Box sx={{ display: "flex" }}>
           <CssBaseline />
           <AppBar position="fixed" color={"secondary"} open={open}>
-            <Toolbar  >
+            <Toolbar>
               <IconButton
                 color="primary"
                 aria-label="open drawer"
@@ -124,7 +141,11 @@ export default function MainApp({jsonfile, jsonfile2}) {
               <Typography variant="h6" noWrap component="div">
                 MovieCritics
               </Typography>
-              <Button sx={{ marginLeft: "auto" }} >Log Out</Button>
+              
+              <Button sx={{ marginLeft: "auto" }}  onClick={logoutfunction}>Log Out</Button>
+              <Typography variant="h6" align="right" component="div">
+                Email: {email}
+              </Typography>
             </Toolbar>
           </AppBar>
           <Drawer
@@ -148,56 +169,55 @@ export default function MainApp({jsonfile, jsonfile2}) {
             </DrawerHeader>
             <Divider />
             <List>
-                  <ListItem key="Home" disablePadding>
-                    <ListItemButton onClick={() => (setpage(0))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Home" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="Suggestions" disablePadding>
-                    <ListItemButton onClick={() => (setpage(1))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Suggestions" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="MovieDB"disablePadding>
-                    <ListItemButton onClick={() => (setpage(2))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="MovieDB" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="LatestMovies" disablePadding>
-                    <ListItemButton onClick={() => (setpage(3))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="LatestMovies" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="Profile" disablePadding>
-                    <ListItemButton onClick={() => (setpage(4))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Profile" />
-                    </ListItemButton>
-                  </ListItem>
-           
+              <ListItem key="Home" disablePadding>
+                <ListItemButton onClick={() => setpage(0)}>
+                  <ListItemIcon>
+                    <DescriptionIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Home" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key="Suggestions" disablePadding>
+                <ListItemButton onClick={() => setpage(1)}>
+                  <ListItemIcon>
+                    <DescriptionIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Suggestions" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key="MovieDB" disablePadding>
+                <ListItemButton onClick={() => setpage(2)}>
+                  <ListItemIcon>
+                    <DescriptionIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="MovieDB" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key="LatestMovies" disablePadding>
+                <ListItemButton onClick={() => setpage(3)}>
+                  <ListItemIcon>
+                    <DescriptionIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="LatestMovies" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key="Profile" disablePadding>
+                <ListItemButton onClick={() => setpage(4)}>
+                  <ListItemIcon>
+                    <DescriptionIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Profile" />
+                </ListItemButton>
+              </ListItem>
             </List>
             <Divider />
           </Drawer>
-          <Main open={open} >
-            {page === 0 && <HomeAccount /> }
-            {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
-            {page===2 && <PaginationApp />  }
-            {page===3 && <MovieRatings jsonfile2={jsonfile2}/> }
-            {page===4 && <ProfilePage />}
+          <Main open={open}>
+            {page === 0 && <HomeAccount />}
+            {page === 1 && <MovieshowerFromInterests jsonfile={jsonfile} />}
+            {page === 2 && <PaginationApp />}
+            {page === 3 && <MovieRatings jsonfile2={jsonfile2} />}
+            {page === 4 && <ProfilePage />}
           </Main>
         </Box>
       </ThemeProvider>

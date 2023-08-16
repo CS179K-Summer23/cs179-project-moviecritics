@@ -27,7 +27,7 @@ const darkTheme = createTheme({
 
 // const regex = /^[0-9\b]+$/;
 
-export default function AccountCreation({onSuccess}) {
+export default function AccountCreation({setsignout, setemail, onSuccess}) {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -70,6 +70,8 @@ export default function AccountCreation({onSuccess}) {
       alert(res.data);
       if (res.data && res.status === 200) {
         if(onSuccess){
+          setemail(formData.email);
+          setsignout(false);
           onSuccess();
         }
       }
