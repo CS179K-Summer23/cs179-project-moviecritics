@@ -110,7 +110,9 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted, setjsonfile
         
         {buttonstate===1 && !accountCreated && (<><AccountCreation onSuccess={handleAccountCreationSuccess} /> </>)}
         {buttonstate===1 && accountCreated && (<><UserSurveyApp  setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} onSuccess={handlesurverySubmit} /></>) }
-        {buttonstate===2 && (<> <Login onLogin={handleLoginSuccess} /> </>)}
+        {/* {buttonstate===2 && (<> <Login onLogin={handleLoginSuccess} /> </>)} */}
+        {buttonstate===2 && !onLogin && (<> <Login onLogin={handleLoginSuccess} /> </>)}
+        {buttonstate===2 && onLogin && (<><UserSurveyApp  setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} onSuccess={handlesurverySubmit} /></>) }
         {buttonstate==3}
         
       </ThemeProvider>

@@ -53,7 +53,7 @@ export default function Login({ onLogin }) {
         }
       }
     } catch (err) {
-      console.error(err);
+      alert("Invalid username or password. Please try again.");
     }
   };
 
