@@ -8,6 +8,8 @@ from movie_critics import MovieAnalyzerApp
 import json
 import csv 
 import datetime
+import psycopg2
+from movie_list import MovieList
 
 
 csv_filename = "movies_db.csv"
@@ -81,6 +83,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost/po
 db.init_app(app)
 CORS(app)
 
+db_params = {
+    'dbname': 'postgres',
+    'user': 'postgres',
+    'password': '1234',
+    'host': 'localhost',
+    'port': '5432'
+}
 
 
 @app.route('/signup', methods=['POST'])
@@ -196,28 +205,49 @@ def movieratings():
 
     return result
 
-# Route to fetch top movies based on choice and display as JSON
 @app.route('/pagination', methods=['POST'])
 def get_top_movies():
-    data = request.json  # Get JSON data from the request
+    data = request.json
     choice = data.get("choice")
     n = int(data.get("n", 30))
 
-    analyzer = MovieAnalyzerApp("movies_db.csv")
+    analyzer = MovieAnalyzerApp(db_params)
 
     if choice == "rating":
-        top_movies_df = analyzer.get_top_movies_by_rating_df(n)
+        top_movies = analyzer.get_top_movies_by_rating_df(n)
+        records = [{'rank': i + 1, 'title': row[1], 'rating': row[2], 'genre': row[3], 'release_date': row[4]} for i, row in enumerate(top_movies[:n])]
     elif choice == "profits":
-        top_movies_df = analyzer.get_top_movies_by_profit_df(n)
+        top_movies = analyzer.get_top_movies_by_profit_df(n)
+        records = [{'rank': row[0], 'title': row[1], 'profit': row[2], 'genre': row[3], 'release_date': row[5]} for row in top_movies]
     elif choice == "revenue":
-        top_movies_df = analyzer.get_top_movies_by_revenue_df(n)
+        top_movies = analyzer.get_top_movies_by_revenue_df(n)
+        records = [{'rank': i + 1, 'title': row[1], 'revenue': row[2], 'genre': row[3], 'release_date': row[5]} for i, row in enumerate(top_movies[:n])]
     else:
         return jsonify({"error": "Invalid choice"}), 400
 
-    records = top_movies_df.to_dict(orient="records")
-    print(records)
     return jsonify(records)
 
+@app.route('/movie_data', methods=['POST'])
+def get_movie_data():
+    movie_app = MovieList(db_params)
+    movie_data = movie_app.read_movie_data()
+
+    if movie_data:
+        return jsonify({'movie_data': movie_data})
+    else:
+        return jsonify({'message': 'No movie data found.'}), 404
+
+@app.route('/submit_rating', methods=['POST'])
+def submit_rating():
+    data = request.get_json()
+    movie_title = data.get('movie_title')
+    new_rating = data.get('new_rating')
+
+    movie_app = MovieList(db_params)
+    if movie_app.submit_rating(movie_title, new_rating):
+        return 'Rating submitted successfully', 200
+    else:
+        return 'Movie not found', 404
 
 # Route for seeing a data
 @app.route('/data')
