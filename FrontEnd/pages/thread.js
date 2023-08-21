@@ -35,7 +35,10 @@ export default function Threadlist() {
     <>
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
-        <Box display="flex" justifyContent="center" alignItems="center"
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
           sx={{
             marginTop: 8,
             display: "flex",
@@ -49,39 +52,63 @@ export default function Threadlist() {
         >
           <h1>Movie Lists</h1>
         </Box>
-        <Box display="flex" justifyContent="center" alignItems="center"
-          sx={{
-            display: "flex",
-            marginTop: 5,
-            marginLeft: "10%",
-            marginRight: "auto",
-            marginBottom: "auto",
-            justifyContent: "flex",
-            flexDirection: "row",
-            backgroundColor: "black",
-            align: "left",
-            width: "30%",
-            height: "100px",
-            borderRadius: 5,
-            overflow: "hidden",
-          }}
-        >
-            <ListIcon/>
-          <Button variant="outlined" style={{maxWidth: '500px', maxHeight: '100px', minWidth: '500px', minHeight: '100px'}} onClick={handleClickOpen}>
-            User1 List
-          </Button>
-          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>User1 List</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                List:
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Close</Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
+        {/* {lists.map((list, index) => { */}
+          {/* return ( */}
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={{
+                display: "flex",
+                marginTop: 5,
+                marginLeft: "38%",
+                marginRight: "auto",
+                marginBottom: "auto",
+                justifyContent: "flex",
+                flexDirection: "row",
+                backgroundColor: "black",
+                align: "center",
+                width: "30%",
+                height: "100px",
+                borderRadius: 5,
+                overflow: "hidden",
+              }}
+            >
+              <ListIcon />
+              <Button
+                variant="outlined"
+                style={{
+                  maxWidth: "500px",
+                  maxHeight: "100px",
+                  minWidth: "500px",
+                  minHeight: "100px",
+                }}
+                onClick={handleClickOpen}
+              >
+                {/* {list.user} */}
+                list1
+              </Button>
+              <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>list1</DialogTitle>
+                {/* <DialogTitle>{list.user}</DialogTitle> */}
+                <DialogContent>
+                  <DialogContentText>________List:_________</DialogContentText>
+                  <DialogContentText>Movie 1</DialogContentText>
+                  <DialogContentText>Movie 2</DialogContentText>
+                  <DialogContentText>Movie 3</DialogContentText>
+                  <DialogContentText>Movie 4</DialogContentText>
+                  <DialogContentText>Movie 5</DialogContentText>
+                  <DialogContentText>Movie 6</DialogContentText>
+                  <DialogContentText>Movie 7</DialogContentText>
+                  <DialogContentText>Movie 8</DialogContentText>
+                  <DialogContentText>Movie 9</DialogContentText>
+                  <DialogContentText>Movie 10</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Close</Button>
+                </DialogActions>
+              </Dialog>
+            </Box>
       </ThemeProvider>
     </>
   );
