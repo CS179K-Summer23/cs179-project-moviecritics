@@ -9,7 +9,6 @@ import jwt, os
 from functools import wraps
 from flask_bcrypt import Bcrypt
 import csv 
-import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_
@@ -64,7 +63,7 @@ def token_required(f):
 
 def todays_hottest(target_genres, age=None, min_vote_count=1000, limit=25):
     movies_list = []
-    
+   
     query = db.session.query(moviedetails)
     
     for movie in query.all():
@@ -239,7 +238,9 @@ def usersurvey(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
+
     result = top25_by_genre(glist)
+
     print('This is the result')
     print(result)
     return result
@@ -311,6 +312,28 @@ def get_top_movies():
     print(records)
     return jsonify(records)
 
+@app.route('/getusers', methods=['POST'])
+def get_users():
+    ids=[]
+    query = db.session.query(user_watchlist)
+    for user in query.all():
+        id = user.user_id
+        ids.append(id)
+
+    return ids
+
+
+@app.route('/getlist', methods=['POST'])
+def get_list():
+    movielist=[]
+    data = request.json
+    name = data.get('user_id')  
+    query = db.session.query(user_watchlist).filter_by(user_id = name)
+    for movie in query.all():
+        moviename = movie.user_id
+        movielist.append(moviename)
+    return movielist
+
 @app.route('/movie_data', methods=['POST'])
 def get_movie_data():
     movie_app = MovieList(db_params)
@@ -333,7 +356,6 @@ def submit_rating():
         return 'Rating submitted successfully', 200
     else:
         return 'Movie not found', 404
-
 
 @app.route('/news')
 def get_news():

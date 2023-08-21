@@ -45,3 +45,10 @@ class moviedetails(db.Model):
     rated = db.Column(db.String(10), nullable=False)
                      
                    
+
+
+class User_watchlist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    movie_id = db.Column(db.String(120), unique=True, nullable=False)

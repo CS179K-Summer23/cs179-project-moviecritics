@@ -189,7 +189,7 @@ export default function MainApp({jsonfile, jsonfile2}) {
                       </ListItemIcon>
                       <ListItemText primary="Profile" />
                     </ListItemButton>
-                  </ListItem>
+                    </ListItem>
                   <ListItem key="MovieList" disablePadding>
                     <ListItemButton onClick={() => (setpage(5))}>
                       <ListItemIcon>
@@ -198,6 +198,15 @@ export default function MainApp({jsonfile, jsonfile2}) {
                       <ListItemText primary="MovieList" />
                     </ListItemButton>
                   </ListItem>
+                  <ListItem key="ThreadList" disablePadding>
+                    <ListItemButton onClick={() => (setpage(6))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="ThreadList" />
+                    </ListItemButton>
+                  </ListItem>
+                  
            
             </List>
             <Divider />
@@ -209,6 +218,8 @@ export default function MainApp({jsonfile, jsonfile2}) {
             {page===3 && <MovieRatings jsonfile2={jsonfile2}/> }
             {page===4 && <ProfilePage />}
             {page===5  && <MovieList />}
+            {page === 6 && <ThreadList />}
+            
           </Main>
         </Box>
       </ThemeProvider>
