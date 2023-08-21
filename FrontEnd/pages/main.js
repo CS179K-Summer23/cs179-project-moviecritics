@@ -26,6 +26,7 @@ import MovieRatings from "./MovieRating";
 import PaginationApp from "./Pagination";
 import ProfilePage from "./profile";
 import HomeAccount from "./homeaccount";
+import MovieList from "./Movies_list"
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -189,6 +190,14 @@ export default function MainApp({jsonfile, jsonfile2}) {
                       <ListItemText primary="Profile" />
                     </ListItemButton>
                     </ListItem>
+                  <ListItem key="MovieList" disablePadding>
+                    <ListItemButton onClick={() => (setpage(5))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="MovieList" />
+                    </ListItemButton>
+                  </ListItem>
                   <ListItem key="ThreadList" disablePadding>
                     <ListItemButton onClick={() => (setpage(6))}>
                       <ListItemIcon>
@@ -197,6 +206,7 @@ export default function MainApp({jsonfile, jsonfile2}) {
                       <ListItemText primary="ThreadList" />
                     </ListItemButton>
                   </ListItem>
+                  
            
             </List>
             <Divider />
@@ -207,7 +217,9 @@ export default function MainApp({jsonfile, jsonfile2}) {
             {page===2 && <PaginationApp />  }
             {page===3 && <MovieRatings jsonfile2={jsonfile2}/> }
             {page===4 && <ProfilePage />}
+            {page===5  && <MovieList />}
             {page === 6 && <ThreadList />}
+            
           </Main>
         </Box>
       </ThemeProvider>
