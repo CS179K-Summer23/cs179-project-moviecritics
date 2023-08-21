@@ -43,7 +43,7 @@ const MovieList = () => {
 
   const fetchMovieData = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/movie_data');
+      const response = await axios.post('http://localhost:8002/movie_data');
       setMovieData(response.data.movie_data);
     } catch (error) {
       console.error('Error fetching data:', error);

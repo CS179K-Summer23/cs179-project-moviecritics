@@ -38,7 +38,7 @@ export default function Threadlist() {
     event.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:5000/getusers');
+      const res = await axios.post('http://localhost:8002/getusers');
       console.log(res);
       
       alert(res.data);
@@ -57,7 +57,7 @@ export default function Threadlist() {
     event.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:5000/getlist', listchoose);
+      const res = await axios.post('http://localhost:8002/getlist', listchoose);
       console.log(res.data);
       movielists = res.data;
       setOpen(true);

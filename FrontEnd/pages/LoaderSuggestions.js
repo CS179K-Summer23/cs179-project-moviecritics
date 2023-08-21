@@ -32,11 +32,11 @@ const [loading, setloading] = useState(true);
         try {
             setloading(true);
             const res = await axios.post(
-            "http://localhost:5000/json1load",
+            "http://localhost:8002/json1load",
             id
             );
             const res2 = await axios.post(
-            "http://localhost:5000/json2load",
+            "http://localhost:8002/json2load",
             id
             );
             const jsonfileresult = res.data;

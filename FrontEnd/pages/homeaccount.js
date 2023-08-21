@@ -14,7 +14,7 @@ function HomeAccount() {
   const [news, setNews] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/news")
+    fetch("http://localhost:8002/news")
       .then((response) => response.json())
       .then((data) => {
         setNews(data);

@@ -55,7 +55,7 @@ export default function ProfilePage(email) {
     event.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:5000/saveprofile",
+        "http://localhost:8002/saveprofile",
         formData
       );
       alert(res.data);
@@ -72,7 +72,7 @@ export default function ProfilePage(email) {
   const getWatched = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/getwatched", email);
+      const res = await axios.post("http://localhost:8002/getwatched", email);
       watchedlist = res.data;
 
       alert(res.data);
