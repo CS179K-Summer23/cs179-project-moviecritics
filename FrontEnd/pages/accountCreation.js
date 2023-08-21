@@ -67,13 +67,18 @@ export default function AccountCreation({setsignout, setemail, onSuccess}) {
     try {
       const res = await axios.post('http://localhost:5000/signup', formData);
       console.log(res);
-      alert(res.data);
-      if (res.data && res.status === 200) {
+      if(res.status === 201){
+        alert('Signup Successful');
+        const token = res.data.token;
+        localStorage.setItem('authToken', token);
         if(onSuccess){
           setemail(formData.email);
           setsignout(false);
           onSuccess();
         }
+      }
+      else{
+        alert('Signup Failed')
       }
     } catch (err) {
       console.error(err);

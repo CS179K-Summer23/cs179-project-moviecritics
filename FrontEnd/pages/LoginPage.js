@@ -48,6 +48,8 @@ export default function Login({setsignout ,setemail, onLogin }) {
         setonlogin(true);
       }
       if (res.data && res.status === 200) {
+        const token = res.data.token;
+        localStorage.setItem('authToken', token);
         if (onLogin) {
           setemail(formData.email);
           setsignout(false);
