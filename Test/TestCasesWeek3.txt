@@ -1,0 +1,41 @@
+﻿New Test Cases Week 3:
+
+
+1. Show reviewer buttons on each row and be able to give a review for that movie (Front End)
+Test Case: Make sure the review button is being pressed and there is a popup card for that specific movie. The button should only do the review for the exact movie for the row it was pressed on
+
+
+2. Show watched button on each row and be able to click watched so that suggestion disappears (Front End) 
+Test Case: Make sure that the button of watched is saying watched for the correct movie   of the selected row.
+
+
+3. Functionality to process review of movie (Back End)
+TestCase: Create a route for receiving which movie was reviewed on and process the results and append the new result for rating in the database. (Back End)
+Make sure after a rating in the front end the route function, calculates a new rating and replaces it in the movie database.
+
+
+4. Functionality to process watched movies (Back End)
+TestCase: Create a route for receiving which movie was watched by the user and add it to the user’s table of watched movies. Lastly, generate new suggestions while not showing the suggested movies. Verify that the movie that was watched is not shown in the table.
+
+
+5. Change the 2 suggestion movie functions to use the postgresql db instead of csv format
+TestCase: Run through week 1 and week 2 tasks for the suggested movies and make sure able to go through the demo process with no errors
+
+
+6. Authentication of email (Backend)
+        TestCase: Make sure a fake email is not able to be created an account with. Also be a vulnerability from inspect element in browser
+
+
+7. Create a list of of movies that is able to be shared with other users (Front End and Back End)
+Test Case: Verify lists that are public are shown in other user accounts. Also, other users will not be able to see lists that are private to that user.
+        
+8. Create Profile Page that will show and be able to edit fields of user data(Name, password, re take survey). (Front End and Back End)
+TestCase: Verify fields are being able to be viewed and changed. Also check user table to see if the changes are updated.
+
+
+9. Redesign Home page when user has been logged in (Front End)
+Test Case: Verify that the page is being shown with no errors in the console
+
+
+10. Make an A to Z list of movies page sorted alphabetically with a possible search bar that is searchable by movie title. (Front End and Back End).
+Test Case: Verify that the entire movie list is shown and it is alphabetical.

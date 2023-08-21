@@ -145,7 +145,6 @@ export default function MainApp({jsonfile, jsonfile2}) {
             <DrawerHeader>
               <IconButton color="secondary" onClick={handleDrawerClose}>
                 <CloseIcon color="primary" />
-                {theme.direction === "ltr"}
               </IconButton>
             </DrawerHeader>
             <Divider />
