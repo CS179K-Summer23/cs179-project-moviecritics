@@ -1,0 +1,22 @@
+﻿Old Actionable tasks:
+1. Functionality to process watched movies (Back End)
+TestCase: Create a route for receiving which movie was watched by the user and add it to the user’s table of watched movies. Lastly, generate new suggestions while not showing the suggested movies. Verify that the movie that was watched is not shown in the table.
+
+
+2. Create a list of of movies that is able to be shared with other users (Front End and Back End)
+Test Case: Verify lists that are public are shown in other user accounts. Also, other users will not be able to see lists that are private to that user.
+
+
+New Actionable tasks:
+3. Update News api integration with new homepage (Front End)
+Test Case: Verify that the news is being showed
+4. Integrate a link to movie titles to show a page of all the movie information with showing where it is being streamed (Front End and Back End)
+        Test Case: Verify that the movie links are clickable and showing the information that backend stores 
+
+
+5. Change where session token is stored to the browser cookies
+Test Case: verify that still able to login
+
+
+6. Admin page to do CRUD with movie database
+        Test case: Verify that all crud operations work and are being seen in the postgresql database
