@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import db, User, UserPreference, moviedetails
+from models import db, User, UserPreference, moviedetails, UserWatchlist
 import datetime
 #from datetime import datetime
 from movie_critics import MovieAnalyzerApp
@@ -160,7 +160,6 @@ def login():
     user = request.get_json()
     email = user.get('email')
     password = user.get('password')
-    # print(email, password)
 
     if email is None or email == "" or password is None or password == "":
         return jsonify({"message": "Invalid credentials"}), 400
@@ -171,13 +170,13 @@ def login():
         print("Invalid Credentials")
         return jsonify({"message": "Invalid credentials"}), 401
     
-    # Generate a JWT token
     token = jwt.encode({'user_id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
                        app.config['SECRET_KEY'], algorithm='HS256')
     
     pref = UserPreference.query.filter_by(user_id = user.id).first()
     print("pref:", pref.genre)
     genrelist = json.loads(pref.genre)
+    glist = ""
     if(genrelist.get('Action')) : glist += "Action,"
     if(genrelist.get('Adventure')) : glist += "Adventure,"
     if(genrelist.get('Animation')) : glist += "Animation,"
@@ -200,11 +199,31 @@ def login():
 
 
     glist = glist[:-1]
-    #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
-    result = top25_by_genre('movies_db.csv', glist)
+    result = todays_hottest(glist)
 
     return jsonify({"message": "Login Successful", "token": token, "result": result}), 200
+
+@app.route('/addToWatchList/<int:movie_id>', methods=['POST'])
+@token_required
+def add_to_watchlist(current_user, movie_id):
+    user_id = current_user.id
+
+
+    watchlist = UserWatchlist.query.filter_by(user_id=user_id).first()
+
+    if not watchlist:
+        watchlist = UserWatchlist(user_id=user_id)
+
+    if not watchlist.movie_id or movie_id not in watchlist.movie_id:
+        if not watchlist.movie_id:
+            watchlist.movie_id = []
+        watchlist.movie_id.append(movie_id)
+        db.session.add(watchlist)
+        db.session.commit()
+        return jsonify({'message': 'Movie added to watchlist'}), 201
+    else:
+        return jsonify({'message': 'Movie is already in watchlist'}), 400
 
 @app.route('/usersurvey', methods=['POST'])
 @token_required
@@ -238,9 +257,7 @@ def usersurvey(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-
     result = top25_by_genre(glist)
-
     print('This is the result')
     print(result)
     return result

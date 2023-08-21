@@ -63,7 +63,7 @@ export default function UserSurveyApp({ onSuccess, setjsonfile, setjsonfile2 }) 
       try {
         setloading(true);
         const res = await axios.post(
-          "http://localhost:8002/usersurvey",
+          "http://localhost:8001/usersurvey",
           preferences,
           {
             headers: {
@@ -72,7 +72,7 @@ export default function UserSurveyApp({ onSuccess, setjsonfile, setjsonfile2 }) 
           }
         );
         const res2 = await axios.post(
-          "http://localhost:8002/movieratings",
+          "http://localhost:8001/movieratings",
           preferences,
           {
             headers: {

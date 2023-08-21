@@ -26,6 +26,15 @@ class UserPreference(db.Model):
     def __init__(self, user_id, genre):
         self.user_id = user_id
         self.genre = genre
+
+class UserWatchlist(db.Model):
+    __tablename__ = 'user_watchlist'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    movie_id = db.Column(db.ARRAY(db.Integer))
+
+    user = db.relationship('User', backref=db.backref('watchlist', lazy=True))
     
 
 class moviedetails(db.Model):

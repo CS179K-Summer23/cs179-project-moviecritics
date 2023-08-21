@@ -7,7 +7,11 @@ import styled from "styled-components";
 import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
 import Login from "./LoginPage";
+<<<<<<< Updated upstream
 import Loadsuggestionapp from "./LoaderSuggestions";
+=======
+import MainApp from "./main"
+>>>>>>> Stashed changes
 
 
 //use this with variant="outlined"
