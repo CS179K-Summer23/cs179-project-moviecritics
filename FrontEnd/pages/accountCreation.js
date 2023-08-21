@@ -98,7 +98,7 @@ export default function AccountCreation({setsignout, setemail, onSuccess}) {
           backgroundColor: 'black',
           align: 'center',
           width: '500px',
-          borderRadius: 3,
+          borderRadius: 5,
           overflow:'hidden',
         }}
         

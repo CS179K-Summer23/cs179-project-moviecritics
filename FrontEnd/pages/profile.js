@@ -51,23 +51,6 @@ export default function ProfilePage(email) {
     event.preventDefault();
   };
 
-  const LoadProfile = async (event) => {
-    event.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:5000/loadprofile", email);
-      setformdata.Password = res.data;
-
-      alert(res.data);
-      if (res.data && res.status === 200) {
-        if (onSuccess) {
-          onSuccess();
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const SaveProfile = async (event) => {
     event.preventDefault();
     try {

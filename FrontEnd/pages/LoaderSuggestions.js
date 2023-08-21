@@ -24,7 +24,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function loadsuggestionapp() {
+export default function Loadsuggestionapp({setSurveySubmitted}) {
 const [loading, setloading] = useState(true);
 
     const CreateAccountAction = async (event) => {
@@ -44,6 +44,7 @@ const [loading, setloading] = useState(true);
             setloading(false);
             setjsonfile(jsonfileresult);
             setjsonfile2(jsonfileresult2);
+            setSurveySubmitted(true);
             //setjsonfilevar(res.data);
             alert(res2.data);
             if (res.data && res.status === 200) {

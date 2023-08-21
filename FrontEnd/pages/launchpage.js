@@ -7,6 +7,7 @@ import styled from "styled-components";
 import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
 import Login from "./LoginPage";
+import Loadsuggestionapp from "./LoaderSuggestions";
 
 
 //use this with variant="outlined"
@@ -108,7 +109,7 @@ export default function LaunchPage({setsignout, setemail, setjsonfile, setSurvey
         {buttonstate===1 && !accountCreated && (<><AccountCreation setsignout={setsignout} onSuccess={handleAccountCreationSuccess} setemail={setemail} /> </>)}
         {buttonstate===1 && accountCreated && (<><UserSurveyApp  setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} onSuccess={handlesurverySubmit} /></>) }
         {buttonstate===2 && !onLogin && (<> <Login setsignout={setsignout} onLogin={handleLoginSuccess} setemail={setemail}/> </>)}
-        {buttonstate===2 && onLogin && (<> <loadsuggestionapp setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} /> </>)}
+        {buttonstate===2 && onLogin && (<> <Loadsuggestionapp setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} setSurveySubmitted={setSurveySubmitted} /> </>)}
         {buttonstate===3}
         
       </ThemeProvider>

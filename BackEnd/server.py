@@ -223,6 +223,25 @@ def get_top_movies():
     print(records)
     return jsonify(records)
 
+@app.route('/saveprofile', methods=['POST'])
+def get_top_movies():
+    data = request.json  
+
+    #data.Email find in user detail database
+    #encrypt given data.Password
+    #replace password
+
+    return  
+
+@app.route('/getwatched', methods=['POST'])
+def get_top_movies():
+    data = request.json  
+    
+    #data.Email find in user detail database
+    # return list of titles
+    
+    return 
+
 
 # Route for seeing a data
 @app.route('/data')
