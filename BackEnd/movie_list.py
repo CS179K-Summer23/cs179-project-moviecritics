@@ -44,8 +44,11 @@ class MovieList:
             cursor.execute(update_query, (new_rating, movie_title))
 
             # Calculate average between rating and new_rating
-            avg_query = "UPDATE movieDetails SET rating = (rating + new_rating) / 2 WHERE title = %s;"
-            cursor.execute(avg_query, (movie_title,))
+            avg_query = "UPDATE movieDetails SET rating = ((rating * vote_count) + %s) / (vote_count + 1) WHERE title = %s;"
+            cursor.execute(avg_query, (new_rating, movie_title))
+
+           # update_query = "UPDATE movieDetails SET vote_count = (vote_count + 1) WHERE title = %s;"
+           # cursor.execute(update_query, (movie_title))
 
             connection.commit()
             return True
