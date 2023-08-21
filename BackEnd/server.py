@@ -1,14 +1,56 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import db, User
+from models import db, User, UserPreference
 import datetime
 from movie_critics import MovieAnalyzerApp
-#from sort_genre_rank import top25_by_genre
-#import subprocess
 import json
-import csv 
+import csv
+import jwt, os
+from functools import wraps
+from flask_bcrypt import Bcrypt
 
 csv_filename = "movies_db.csv"
+
+# Initializing flask app
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost/postgres'
+db.init_app(app)
+CORS(app)
+
+bcrypt = Bcrypt()
+
+
+def generate_secret_key(length=32):
+    return os.urandom(length).hex()
+
+app.config['SECRET_KEY'] = 'randomForNow'
+
+def generate_token(user_id):
+    payload = {
+        'user_id': user_id,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)
+    }
+    token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+    return token
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+
+        if not token:
+            return jsonify({'message': 'Token is missing'}), 401
+
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+            current_user = User.query.get(data['user_id'])
+        except:
+            return jsonify({'message': 'Token is invalid'}), 401
+
+        return f(current_user, *args, **kwargs)
+
+    return decorated
+
 
 def todays_hottest(csv_file, target_genres, min_vote_count=1000, limit=10):
     movies_list = []
@@ -69,14 +111,6 @@ def top25_by_genre(csv_file, target_genres, min_vote_count=1000, limit=25):
         return sorted_movies[:limit]
  
 x = datetime.datetime.now()
- 
-# Initializing flask app
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost/postgres'
-db.init_app(app)
-CORS(app)
-
-
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -85,41 +119,76 @@ def signup():
     email = user.get('email')
     password = user.get('password')
     age = user.get('age')
-    #Check if email is being used already
-    
-    #curr = app.cursor()
-    #curr.execute("SELECT * FROM "user" WHERE email EQUALS)
-    #data = curr.fetchall()
-    #if(len(data) != 0)
-    #{
-    #    return 'Email is being used, try Login or a different email'
-    #}
 
-    newUser = User(name = name, email = email, password = password, age = age)
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    newUser = User(name = name, email = email, password = hashed_password, age = age)
     db.session.add(newUser)
     db.session.commit()
-    print(user)
-    return 'Signup Successful'
+    # Generate a JWT token
+    token = jwt.encode({'user_id': newUser.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+                       app.config['SECRET_KEY'], algorithm='HS256')
+    # print(user)
+    return jsonify({'message': 'Signup Successful', 'token': token}), 201
 
 @app.route('/login', methods=['POST'])
 def login():
+    print("API Called")
     user = request.get_json()
     email = user.get('email')
     password = user.get('password')
+    # print(email, password)
 
     if email is None or email == "" or password is None or password == "":
-        return 'False', 400
+        return jsonify({"message": "Invalid credentials"}), 400
 
-    user = User.query.filter_by(email=email, password=password).first()
-    if user is not None:
-        return 'Login Successful'
-    return 'Invalid Username or password', 400
+    user = User.query.filter_by(email=email).first()
+    print("user:", user)
+    if user is None or not bcrypt.check_password_hash(user.password, password):
+        print("Invalid Credentials")
+        return jsonify({"message": "Invalid credentials"}), 401
+    
+    # Generate a JWT token
+    token = jwt.encode({'user_id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+                       app.config['SECRET_KEY'], algorithm='HS256')
+    
+    pref = UserPreference.query.filter_by(user_id = user.id).first()
+    print("pref:", pref.genre)
+    genrelist = json.loads(pref.genre)
+    if(genrelist.get('Action')) : glist += "Action,"
+    if(genrelist.get('Adventure')) : glist += "Adventure,"
+    if(genrelist.get('Animation')) : glist += "Animation,"
+    if(genrelist.get('Comedy')) : glist += "Comedy,"
+    if(genrelist.get('Crime')) : glist += "Crime,"
+    if(genrelist.get('Documentary')) : glist += "Documentary,"
+    if(genrelist.get('Drama')) : glist += "Drama,"
+    if(genrelist.get('Family')) : glist += "Family,"
+    if(genrelist.get('Fantasy')) : glist += "Fantasy,"
+    if(genrelist.get('History')) : glist += "History,"
+    if(genrelist.get('Horror')) : glist += "Horror,"
+    if(genrelist.get('Music')) : glist += "Music,"
+    if(genrelist.get('Mystery')) : glist += "Mystery,"
+    if(genrelist.get('Romance')) : glist += "Romance,"
+    if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
+    if(genrelist.get('TVMovie')) : glist += "TVMovie,"
+    if(genrelist.get('Thriller')) : glist += "Thriller,"
+    if(genrelist.get('War')) : glist += "War,"
+    if(genrelist.get('Western')) : glist += "Western,"
+
+
+    glist = glist[:-1]
+    #genrelist_str = json.dumps(glist)
+    glist = [genre.strip().lower() for genre in glist.split(",")]
+    result = top25_by_genre('movies_db.csv', glist)
+
+    return jsonify({"message": "Login Successful", "token": token, "result": result}), 200
 
 @app.route('/usersurvey', methods=['POST'])
-def usersurvey():
+@token_required
+def usersurvey(current_user):
     genrelist = request.get_json()
-    
-    print(genrelist)
+    print("current user: ", current_user)
+    print("genrelist: ", genrelist)
     glist = ""
 
     if(genrelist.get('Action')) : glist += "Action,"
@@ -151,8 +220,15 @@ def usersurvey():
     return result
 
 @app.route('/movieratings', methods=['POST'])
-def movieratings():
+@token_required
+def movieratings(current_user):
     genrelist = request.get_json()
+    serialized_genrelist = json.dumps(genrelist)
+
+    # Insert the serialized JSON string into the database
+    new_preference = UserPreference(user_id=current_user.id, genre=serialized_genrelist)
+    db.session.add(new_preference)
+    db.session.commit()
     
     print(genrelist)
     glist = ""
