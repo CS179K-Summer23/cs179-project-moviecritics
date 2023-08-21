@@ -27,6 +27,7 @@ import ProfilePage from "./profile";
 import HomeAccount from "./homeaccount";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import MovieList from "./Movies_list"
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -169,55 +170,66 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
             </DrawerHeader>
             <Divider />
             <List>
-              <ListItem key="Home" disablePadding>
-                <ListItemButton onClick={() => setpage(0)}>
-                  <ListItemIcon>
-                    <DescriptionIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Home" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem key="Suggestions" disablePadding>
-                <ListItemButton onClick={() => setpage(1)}>
-                  <ListItemIcon>
-                    <DescriptionIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Suggestions" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem key="MovieDB" disablePadding>
-                <ListItemButton onClick={() => setpage(2)}>
-                  <ListItemIcon>
-                    <DescriptionIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="MovieDB" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem key="LatestMovies" disablePadding>
-                <ListItemButton onClick={() => setpage(3)}>
-                  <ListItemIcon>
-                    <DescriptionIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="LatestMovies" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem key="Profile" disablePadding>
-                <ListItemButton onClick={() => setpage(4)}>
-                  <ListItemIcon>
-                    <DescriptionIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Profile" />
-                </ListItemButton>
-              </ListItem>
+                   <ListItem key="Home" disablePadding>
+                    <ListItemButton onClick={() => (setpage(0))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Home" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem key="Suggestions" disablePadding>
+                    <ListItemButton onClick={() => (setpage(1))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Suggestions" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem key="MovieDB"disablePadding>
+                    <ListItemButton onClick={() => (setpage(2))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="MovieDB" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem key="LatestMovies" disablePadding>
+                    <ListItemButton onClick={() => (setpage(3))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="LatestMovies" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem key="Profile" disablePadding>
+                    <ListItemButton onClick={() => (setpage(4))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Profile" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem key="MovieList" disablePadding>
+                    <ListItemButton onClick={() => (setpage(5))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="MovieList" />
+                    </ListItemButton>
+                  </ListItem>
+           
             </List>
             <Divider />
           </Drawer>
-          <Main open={open}>
-            {page === 0 && <HomeAccount />}
-            {page === 1 && <MovieshowerFromInterests jsonfile={jsonfile} />}
-            {page === 2 && <PaginationApp />}
-            {page === 3 && <MovieRatings jsonfile2={jsonfile2} />}
-            {page === 4 && <ProfilePage email={email}/>}
+          <Main open={open} >
+            {page === 0 && <HomeAccount /> }
+            {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
+            {page===2 && <PaginationApp />  }
+            {page===3 && <MovieRatings jsonfile2={jsonfile2}/> }
+            {page===4 && <ProfilePage />}
+            {page===5  && <MovieList />}
+
           </Main>
         </Box>
       </ThemeProvider>

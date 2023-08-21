@@ -1,77 +1,85 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import db, User
+from models import db, User, moviedetails
 import datetime
+#from datetime import datetime
 from movie_critics import MovieAnalyzerApp
-#from sort_genre_rank import top25_by_genre
-#import subprocess
 import json
 import csv 
-import datetime
+import psycopg2
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import or_
+from movie_list import MovieList
+import requests
+from news import NewsAPI
+
+NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
+news_api = NewsAPI(NEWS_API_KEY)
 
 
-csv_filename = "movies_db.csv"
 
-def todays_hottest(csv_filename, target_genres, min_vote_count=1000, limit=25):
+
+def todays_hottest(target_genres, age=None, min_vote_count=1000, limit=25):
     movies_list = []
-    with open(csv_filename, 'r', newline='', encoding='utf-8') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            movie_title = row['title']
-            movie_genres = row['genres'].split('-')
-            vote_count = float(row['vote_count'])
-            vote_average = float(row['vote_average'])
-            release_date_str = row['release_date']
-          
-            if release_date_str:
-                try:
-                    release_date = datetime.datetime.strptime(release_date_str, '%Y-%m-%d')
-                except ValueError:
-                    release_date = None
-
-                current_date = datetime.datetime.now()
-
-                if release_date and release_date <= current_date and any(genre.strip().lower() in target_genres for genre in movie_genres) and vote_count > min_vote_count:
-                    movie_info = {
-                        'title': movie_title,
-                        'genres': movie_genres,
-                        'vote_count': vote_count,
-                        'vote_average': vote_average,
-                        'release_date': release_date_str
-                    }
-                    movies_list.append(movie_info)
-
-        sorted_movies = sorted(movies_list, key=lambda x: x['release_date'], reverse=True)
+    
+    query = db.session.query(moviedetails)
+    
+    for movie in query.all():
+        movie_title = movie.title
+        movie_genres = movie.genre
+        vote_count = movie.vote_count
+        vote_average = movie.vote_average
+        release_date = movie.release_date
+        movie_rating = movie.rated
         
-        return sorted_movies[:limit]
+        if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')):
+            date_string = movie.release_date.strftime("%a, %d %b %Y")  # Format the date without time and timezone
+            movie_info = {
+                'title': movie_title,
+                'genre': movie_genres,
+                'vote_count': vote_count,
+                'vote_average': vote_average,
+                'release_date': date_string,
+                'rated': movie_rating
+            }
+            movies_list.append(movie_info)
+    
+    sorted_movies = sorted(movies_list, key=lambda x: datetime.datetime.strptime(x['release_date'], "%a, %d %b %Y"), reverse=True)
+    return sorted_movies[:limit]
 
-def top25_by_genre(csv_file, target_genres, age, min_vote_count=1000, limit=25):
+
+def top25_by_genre(target_genres, min_vote_count=1000, limit=25, age=None):
     movies_list = []
-    with open(csv_file, 'r', newline='', encoding='utf-8') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            movie_title = row['title']
-            movie_genres = row['genres']  
-            vote_count = float(row['vote_count'])
-            vote_average = float(row['vote_average'])
-            movie_rating = row['Rated']
-            
-            if age is not None and age < 13 and movie_rating == 'PG-13':
-                continue
-            
-            if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')):
-                movie_info = {
-                    'title': movie_title,
-                    'genres': movie_genres, 
-                    'vote_count': vote_count,
-                    'vote_average': vote_average,
-                    'Rated': movie_rating
-                }
-                movies_list.append(movie_info)
+
+    ilike_conditions = [
+        moviedetails.genre.ilike(f'%{genre}%') for genre in target_genres
+    ]
+    query = db.session.query(moviedetails).filter(or_(*ilike_conditions))
+
+    for movie in query.all():
+        movie_title = movie.title
+        movie_genres = movie.genre
+        vote_count = movie.vote_count
+        vote_average = movie.vote_average
+        movie_rating = movie.rated
         
-        sorted_movies = sorted(movies_list, key=lambda x: x['vote_average'], reverse=True)
+        if age is not None and age < 13 and movie_rating == 'PG-13':
+            continue
         
-        return sorted_movies[:limit]
+        if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')):
+            movie_info = {
+                'title': movie_title,
+                'genre': movie_genres,
+                'vote_count': vote_count,
+                'vote_average': vote_average,
+                'rated': movie_rating
+            }
+            movies_list.append(movie_info)
+    
+    sorted_movies = sorted(movies_list, key=lambda x: x['vote_average'], reverse=True)
+    return sorted_movies[:limit]
+
  
 x = datetime.datetime.now()
  
@@ -81,6 +89,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost/po
 db.init_app(app)
 CORS(app)
 
+db_params = {
+    'dbname': 'postgres',
+    'user': 'postgres',
+    'password': '1234',
+    'host': 'localhost',
+    'port': '5432'
+}
 
 
 @app.route('/signup', methods=['POST'])
@@ -90,9 +105,6 @@ def signup():
     email = user.get('email')
     password = user.get('password')
     age = user.get('age')
-    global globalage 
-    globalage = int(age)
- 
     #Check if email is being used already
     
     #curr = app.cursor()
@@ -109,24 +121,21 @@ def signup():
     print(user)
     return 'Signup Successful'
 
+
+
 @app.route('/login', methods=['POST'])
 def login():
     user = request.get_json()
     email = user.get('email')
     password = user.get('password')
-    result = True
-    #Check if email is being used already
-    
-    #curr = app.cursor()
-    #curr.execute("SELECT * FROM "user" WHERE email EQUALS)
-    #data = curr.fetchall()
-    #if(len(data) != 0)
-    #{
-    #    return 'Email is being used, try Login or a different email'
-    #}
 
-    print(result)
-    return 'Login Successful'
+    if email is None or email == "" or password is None or password == "":
+        return 'False', 400
+
+    user = User.query.filter_by(email=email, password=password).first()
+    if user is not None:
+        return 'Login Successful'
+    return 'Invalid Username or password', 400
 
 @app.route('/usersurvey', methods=['POST'])
 def usersurvey():
@@ -159,7 +168,7 @@ def usersurvey():
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-    result = top25_by_genre('movies_db.csv', glist, globalage)
+    result = top25_by_genre(glist)
     print('This is the result')
     print(result)
     return result
@@ -196,8 +205,9 @@ def movieratings():
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
    
-    result = todays_hottest('movies_db.csv',glist)
-   
+    result = todays_hottest(glist)
+    print('Hot Arrivals: ')
+    print(result)
 
     return result
 
@@ -242,6 +252,35 @@ def get_watched():
     
     return 
 
+@app.route('/movie_data', methods=['POST'])
+def get_movie_data():
+    movie_app = MovieList(db_params)
+    movie_data = movie_app.read_movie_data()
+
+    if movie_data:
+        return jsonify({'movie_data': movie_data})
+    else:
+        return jsonify({'message': 'No movie data found.'}), 404
+
+@app.route('/submit_rating', methods=['POST'])
+def submit_rating():
+    data = request.get_json()
+    movie_title = data.get('movie_title')
+    new_rating = data.get('new_rating')
+
+    movie_app = MovieList(db_params)
+
+    if movie_app.submit_rating(movie_title, new_rating):
+        return 'Rating submitted successfully', 200
+    else:
+        return 'Movie not found', 404
+
+
+@app.route('/news')
+def get_news():
+    articles = news_api.fetch_news()
+    return jsonify(articles)
+
 
 # Route for seeing a data
 @app.route('/data')
@@ -258,4 +297,5 @@ def get_time():
      
 # Running app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
+

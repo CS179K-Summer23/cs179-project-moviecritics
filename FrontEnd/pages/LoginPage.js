@@ -55,7 +55,7 @@ export default function Login({setsignout ,setemail, onLogin }) {
         }
       }
     } catch (err) {
-      console.error(err);
+      alert("Invalid username or password. Please try again.");
     }
   };
 
