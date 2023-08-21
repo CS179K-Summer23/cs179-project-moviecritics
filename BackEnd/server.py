@@ -11,6 +11,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_
 from movie_list import MovieList
+import requests
+from news import NewsAPI
+
+NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
+news_api = NewsAPI(NEWS_API_KEY)
+
 
 
 
@@ -249,6 +255,13 @@ def submit_rating():
         return 'Rating submitted successfully', 200
     else:
         return 'Movie not found', 404
+
+
+@app.route('/news')
+def get_news():
+    articles = news_api.fetch_news()
+    return jsonify(articles)
+
 
 # Route for seeing a data
 @app.route('/data')
