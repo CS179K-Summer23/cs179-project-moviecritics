@@ -8,6 +8,7 @@ from movie_critics import MovieAnalyzerApp
 import json
 import csv 
 import datetime
+import psycopg2
 
 
 csv_filename = "movies_db.csv"
@@ -18,7 +19,7 @@ def todays_hottest(csv_filename, target_genres, min_vote_count=1000, limit=25):
         reader = csv.DictReader(file)
         for row in reader:
             movie_title = row['title']
-            movie_genres = row['genres'].split('-')
+            movie_genres = row['genre'].split('-')
             vote_count = float(row['vote_count'])
             vote_average = float(row['vote_average'])
             release_date_str = row['release_date']
@@ -81,6 +82,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost/po
 db.init_app(app)
 CORS(app)
 
+db_params = {
+    'dbname': 'postgres',
+    'user': 'postgres',
+    'password': '1234',
+    'host': 'localhost',
+    'port': '5432'
+}
 
 
 @app.route('/signup', methods=['POST'])
@@ -154,7 +162,7 @@ def usersurvey():
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-    result = top25_by_genre('movies_db.csv', glist, globalage)
+    result = top25_by_genre('movies_db.csv', glist)
     print('This is the result')
     print(result)
     return result
@@ -218,6 +226,27 @@ def get_top_movies():
     print(records)
     return jsonify(records)
 
+@app.route('/getusers', methods=['POST'])
+def get_users():
+    ids=[]
+    query = db.session.query(user_watchlist)
+    for user in query.all():
+        id = user.user_id
+        ids.append(id)
+
+    return ids
+
+
+@app.route('/getlist', methods=['POST'])
+def get_list():
+    movielist=[]
+    data = request.json
+    name = data.get('user_id')  
+    query = db.session.query(user_watchlist).filter_by(user_id = name)
+    for movie in query.all():
+        moviename = movie.user_id
+        movielist.append(moviename)
+    return movielist
 
 # Route for seeing a data
 @app.route('/data')

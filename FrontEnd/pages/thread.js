@@ -17,10 +17,8 @@ const lightTheme = createTheme({
 });
 
 export default function Threadlist() {
-  const onSubmit = (e) => {
-    e.preventDefault();
-  };
 
+  const [listchoose, setlistchoose] = React.useState();
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -30,6 +28,53 @@ export default function Threadlist() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleViewList = temp => {
+    setlistchoose(temp);
+    getList();
+  };
+
+  const getUsers = async (event) => {
+    event.preventDefault();
+
+    try {
+      const res = await axios.post('http://localhost:5000/getusers');
+      console.log(res);
+      
+      alert(res.data);
+      if (res.data && res.status === 200) {
+        if(onSuccess){
+          onSuccess();
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
+  const getList = async (event) => {
+    event.preventDefault();
+
+    try {
+      const res = await axios.post('http://localhost:5000/getlist', listchoose);
+      console.log(res.data);
+      movielists = res.data;
+      setOpen(true);
+      alert(res.data);
+      if (res.data && res.status === 200) {
+        if(onSuccess){
+          onSuccess();
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   return (
     <>
@@ -52,8 +97,8 @@ export default function Threadlist() {
         >
           <h1>Movie Lists</h1>
         </Box>
-        {/* {lists.map((list, index) => { */}
-          {/* return ( */}
+        {lists.map((list, index) => {
+          return (
             <Box
               display="flex"
               justifyContent="center"
@@ -83,32 +128,27 @@ export default function Threadlist() {
                   minWidth: "500px",
                   minHeight: "100px",
                 }}
-                onClick={handleClickOpen}
+                onClick={() => handleViewList(list.user)}
               >
-                {/* {list.user} */}
-                list1
+                {list.user}
               </Button>
-              <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>list1</DialogTitle>
-                {/* <DialogTitle>{list.user}</DialogTitle> */}
-                <DialogContent>
-                  <DialogContentText>________List:_________</DialogContentText>
-                  <DialogContentText>Movie 1</DialogContentText>
-                  <DialogContentText>Movie 2</DialogContentText>
-                  <DialogContentText>Movie 3</DialogContentText>
-                  <DialogContentText>Movie 4</DialogContentText>
-                  <DialogContentText>Movie 5</DialogContentText>
-                  <DialogContentText>Movie 6</DialogContentText>
-                  <DialogContentText>Movie 7</DialogContentText>
-                  <DialogContentText>Movie 8</DialogContentText>
-                  <DialogContentText>Movie 9</DialogContentText>
-                  <DialogContentText>Movie 10</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose}>Close</Button>
-                </DialogActions>
-              </Dialog>
             </Box>
+          );
+        })}
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>{listchoose}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>________List:_________</DialogContentText>
+            {movielists.map((m, index) => {
+                  return (
+            <DialogContentText>{m.title}</DialogContentText>
+            );
+          })}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
       </ThemeProvider>
     </>
   );

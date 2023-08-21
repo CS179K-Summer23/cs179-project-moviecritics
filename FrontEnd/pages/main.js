@@ -188,6 +188,14 @@ export default function MainApp({jsonfile, jsonfile2}) {
                       </ListItemIcon>
                       <ListItemText primary="Profile" />
                     </ListItemButton>
+                    </ListItem>
+                  <ListItem key="ThreadList" disablePadding>
+                    <ListItemButton onClick={() => (setpage(6))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="ThreadList" />
+                    </ListItemButton>
                   </ListItem>
            
             </List>
@@ -199,6 +207,7 @@ export default function MainApp({jsonfile, jsonfile2}) {
             {page===2 && <PaginationApp />  }
             {page===3 && <MovieRatings jsonfile2={jsonfile2}/> }
             {page===4 && <ProfilePage />}
+            {page === 6 && <ThreadList />}
           </Main>
         </Box>
       </ThemeProvider>
