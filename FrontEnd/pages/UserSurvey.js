@@ -64,11 +64,21 @@ export default function UserSurveyApp({ onSuccess, setjsonfile, setjsonfile2 }) 
         setloading(true);
         const res = await axios.post(
           "http://localhost:5000/usersurvey",
-          preferences
+          preferences,
+          {
+            headers: {
+              Authorization: localStorage.getItem('authToken'),
+            },
+          }
         );
         const res2 = await axios.post(
           "http://localhost:5000/movieratings",
-          preferences
+          preferences,
+          {
+            headers: {
+              Authorization: localStorage.getItem('authToken'),
+            },
+          }
         );
         const jsonfileresult = res.data;
         const jsonfileresult2 = res2.data;

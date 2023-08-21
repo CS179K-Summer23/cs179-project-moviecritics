@@ -48,6 +48,8 @@ export default function Login({ onLogin }) {
         setonlogin(true);
       }
       if (res.data && res.status === 200) {
+        const token = res.data.token;
+        localStorage.setItem('authToken', token);
         if (onLogin) {
           onLogin(); // Call the callback function passed to the component
         }
