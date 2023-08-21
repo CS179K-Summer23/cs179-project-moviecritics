@@ -28,6 +28,7 @@ import HomeAccount from "./homeaccount";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MovieList from "./Movies_list"
+import ThreadList from "./thread"
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -97,9 +98,9 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
   const [page, setpage] = React.useState(0);
 
   const handleDrawerOpen = () => {
-    if (!accountCreated) {
+   
       setOpen(true);
-    }
+
   };
 
   const handleDrawerClose = () => {

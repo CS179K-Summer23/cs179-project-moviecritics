@@ -81,4 +81,4 @@ function HomeAccount() {
   );
 }
 
-export default MainComponent;
+export default HomeAccount;
