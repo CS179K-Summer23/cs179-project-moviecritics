@@ -46,6 +46,8 @@ class moviedetails(db.Model):
     vote_count = db.Column(db.Float, primary_key=True)
     credits = db.Column(db.String(10000), nullable=False)
     keywords = db.Column(db.String(10000), nullable=False)
+    poster_path = db.Column(db.String(10000), nullable=False)
+    backdrop_path = db.Column(db.String(10000), nullable=False)
     recommendations = db.Column(db.String(10000), nullable=False)
     profit = db.Column(db.Float, primary_key=True)
     rating = db.Column(db.Float, primary_key=True)
