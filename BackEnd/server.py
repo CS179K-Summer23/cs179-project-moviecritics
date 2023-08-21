@@ -224,7 +224,7 @@ def get_top_movies():
     return jsonify(records)
 
 @app.route('/saveprofile', methods=['POST'])
-def get_top_movies():
+def set_saveprofile():
     data = request.json  
 
     #data.Email find in user detail database
@@ -234,7 +234,7 @@ def get_top_movies():
     return  
 
 @app.route('/getwatched', methods=['POST'])
-def get_top_movies():
+def get_watched():
     data = request.json  
     
     #data.Email find in user detail database
