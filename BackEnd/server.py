@@ -312,6 +312,26 @@ def get_top_movies():
     print(records)
     return jsonify(records)
 
+
+@app.route('/saveprofile', methods=['POST'])
+def set_saveprofile():
+    data = request.json  
+
+    #data.Email find in user detail database
+    #encrypt given data.Password
+    #replace password
+
+    return  
+
+@app.route('/getwatched', methods=['POST'])
+def get_watched():
+    data = request.json  
+    
+    #data.Email find in user detail database
+    # return list of titles
+    
+    return 
+
 @app.route('/getusers', methods=['POST'])
 def get_users():
     ids=[]
@@ -333,6 +353,7 @@ def get_list():
         moviename = movie.user_id
         movielist.append(moviename)
     return movielist
+
 
 @app.route('/movie_data', methods=['POST'])
 def get_movie_data():

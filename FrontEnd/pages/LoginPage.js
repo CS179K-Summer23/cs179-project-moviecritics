@@ -22,7 +22,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function Login({ onLogin }) {
+export default function Login({setsignout ,setemail, onLogin }) {
   const [onlogin, setonlogin] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -51,6 +51,8 @@ export default function Login({ onLogin }) {
         const token = res.data.token;
         localStorage.setItem('authToken', token);
         if (onLogin) {
+          setemail(formData.email);
+          setsignout(false);
           onLogin(); // Call the callback function passed to the component
         }
       }

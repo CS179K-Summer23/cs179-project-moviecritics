@@ -1,15 +1,13 @@
 import * as React from "react";
-import axios from "axios";
 import { useState } from "react";
-import { BrowserRouter as Router, Switch, Route, useNavigate  } from "react-router-dom";
 import { Button, Box, TextField } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import styled from "styled-components";
-import Link from "@mui/material";
 import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
 import Login from "./LoginPage";
+import Loadsuggestionapp from "./LoaderSuggestions";
 
 
 //use this with variant="outlined"
@@ -30,7 +28,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function LaunchPage({setjsonfile, setSurveySubmitted, setjsonfile2}) {
+export default function LaunchPage({setsignout, setemail, setjsonfile, setSurveySubmitted, setjsonfile2}) {
 
   const [buttonstate, setbuttonstate] = useState(0);
   const [onLogin, setonLogin] = useState(false)
@@ -108,12 +106,11 @@ export default function LaunchPage({setjsonfile, setSurveySubmitted, setjsonfile
     </form>
       </Box>
         
-        {buttonstate===1 && !accountCreated && (<><AccountCreation onSuccess={handleAccountCreationSuccess} /> </>)}
+        {buttonstate===1 && !accountCreated && (<><AccountCreation setsignout={setsignout} onSuccess={handleAccountCreationSuccess} setemail={setemail} /> </>)}
         {buttonstate===1 && accountCreated && (<><UserSurveyApp  setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} onSuccess={handlesurverySubmit} /></>) }
-        {/* {buttonstate===2 && (<> <Login onLogin={handleLoginSuccess} /> </>)} */}
-        {buttonstate===2 && !onLogin && (<> <Login onLogin={handleLoginSuccess} /> </>)}
-        {buttonstate===2 && onLogin && (<><UserSurveyApp  setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} onSuccess={handlesurverySubmit} /></>) }
-        {buttonstate==3}
+        {buttonstate===2 && !onLogin && (<> <Login setsignout={setsignout} onLogin={handleLoginSuccess} setemail={setemail}/> </>)}
+        {buttonstate===2 && onLogin && (<> <Loadsuggestionapp setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} setSurveySubmitted={setSurveySubmitted} /> </>)}
+        {buttonstate===3}
         
       </ThemeProvider>
     </>

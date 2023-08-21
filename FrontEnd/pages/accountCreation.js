@@ -27,7 +27,7 @@ const darkTheme = createTheme({
 
 // const regex = /^[0-9\b]+$/;
 
-export default function AccountCreation({onSuccess}) {
+export default function AccountCreation({setsignout, setemail, onSuccess}) {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -72,6 +72,8 @@ export default function AccountCreation({onSuccess}) {
         const token = res.data.token;
         localStorage.setItem('authToken', token);
         if(onSuccess){
+          setemail(formData.email);
+          setsignout(false);
           onSuccess();
         }
       }
@@ -101,7 +103,7 @@ export default function AccountCreation({onSuccess}) {
           backgroundColor: 'black',
           align: 'center',
           width: '500px',
-          borderRadius: 3,
+          borderRadius: 5,
           overflow:'hidden',
         }}
         
