@@ -81,10 +81,12 @@ const MovieList = () => {
   
       if (response.status === 200) {
         console.log('Rating submitted successfully');
+        console.log(response.new_rating);
         setIsRatingOpen(false);
         setRatingMovieTitle('');
         setRating('');
         // You might want to update the movieData state to reflect the new ratings
+        fetchMovieData();
       }
     } catch (error) {
       console.error('Error submitting rating:', error);

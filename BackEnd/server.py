@@ -13,6 +13,13 @@ import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_
+from movie_list import MovieList
+import requests
+from news import NewsAPI
+
+NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
+news_api = NewsAPI(NEWS_API_KEY)
+
 
 
 # Initializing flask app
@@ -117,6 +124,15 @@ def top25_by_genre(target_genres, min_vote_count=1000, limit=25, age=None):
 
  
 x = datetime.datetime.now()
+
+db_params = {
+    'dbname': 'postgres',
+    'user': 'postgres',
+    'password': '1234',
+    'host': 'localhost',
+    'port': '5432'
+}
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -223,7 +239,7 @@ def usersurvey(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-    result = top25_by_genre(glist, globalage)
+    result = top25_by_genre(glist)
     print('This is the result')
     print(result)
     return result
@@ -267,7 +283,7 @@ def movieratings(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
    
-    result = todays_hottest(glist, globalage)
+    result = todays_hottest(glist)
     print('Hot Arrivals: ')
     print(result)
 
@@ -295,6 +311,35 @@ def get_top_movies():
     print(records)
     return jsonify(records)
 
+@app.route('/movie_data', methods=['POST'])
+def get_movie_data():
+    movie_app = MovieList(db_params)
+    movie_data = movie_app.read_movie_data()
+
+    if movie_data:
+        return jsonify({'movie_data': movie_data})
+    else:
+        return jsonify({'message': 'No movie data found.'}), 404
+
+@app.route('/submit_rating', methods=['POST'])
+def submit_rating():
+    data = request.get_json()
+    movie_title = data.get('movie_title')
+    new_rating = data.get('new_rating')
+
+    movie_app = MovieList(db_params)
+
+    if movie_app.submit_rating(movie_title, new_rating):
+        return 'Rating submitted successfully', 200
+    else:
+        return 'Movie not found', 404
+
+
+@app.route('/news')
+def get_news():
+    articles = news_api.fetch_news()
+    return jsonify(articles)
+
 
 # Route for seeing a data
 @app.route('/data')
@@ -311,5 +356,5 @@ def get_time():
      
 # Running app
 if __name__ == '__main__':
-    app.run(debug=True, port=8001)
+    app.run(debug=True, port=5000)
 

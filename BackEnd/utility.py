@@ -14,7 +14,7 @@ csv_file_path = 'movies_db.csv'
 insert_columns = [
     'id', 'title', 'genre', 'language', 'overview', 'popularity',
     'productioncompanies', 'release_date', 'budget', 'revenue', 'runtime',
-    'status', 'tagline', 'vote_average', 'vote_count', 'credits', 'keywords',
+    'status', 'tagline', 'vote_average', 'vote_count', 'credits', 'keywords', 'poster_path', 'backdrop_path',
     'recommendations', 'profit', 'rating', 'rated'
 ]
 
@@ -49,6 +49,8 @@ with open(csv_file_path, 'r', encoding='utf-8') as csvfile:
                 float(row['vote_count']),
                 row['credits'],
                 row['keywords'],
+                row['poster_path'],
+                row['backdrop_path'],
                 row['recommendations'],
                 float(row['profit']),
                 float(row['rating']),
