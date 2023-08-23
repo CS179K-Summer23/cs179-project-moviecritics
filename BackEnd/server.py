@@ -16,7 +16,8 @@ from movie_list import MovieList
 import requests
 from news import NewsAPI
 
-NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
+NEWS_API_KEY = ''
+#NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
 news_api = NewsAPI(NEWS_API_KEY)
 
 
@@ -356,12 +357,16 @@ def get_watched():
 @app.route('/getusers', methods=['POST'])
 def get_users():
     ids=[]
-    # query = db.session.query(user_watchlist)
-    # for user in query.all():
-    #     id = user.user_id
-    #     ids.append(id)
-
-    # return ids
+    
+    query = db.session.query(UserWatchlist)
+    
+    for movie in query.all():
+        id = movie.user_id
+        id.append(id)
+    
+    ids = list(set(ids))
+    print(ids)
+    return ids
 
 
 @app.route('/getlist', methods=['POST'])

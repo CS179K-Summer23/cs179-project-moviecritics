@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Button, Box } from "@mui/material";
@@ -20,6 +21,8 @@ export default function Threadlist() {
 
   const [listchoose, setlistchoose] = React.useState();
   const [open, setOpen] = React.useState(false);
+  const [lists, setLists] = React.useState();
+  const [movielists, setmovielists] = React.useState();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -34,13 +37,12 @@ export default function Threadlist() {
     getList();
   };
 
-  const getUsers = async (event) => {
-    event.preventDefault();
+  const getUsers = async () => {
 
     try {
       const res = await axios.post('http://localhost:8002/getusers');
       console.log(res);
-      
+      setLists(res.data);
       alert(res.data);
       if (res.data && res.status === 200) {
         if(onSuccess){
@@ -53,13 +55,12 @@ export default function Threadlist() {
   };
 
 
-  const getList = async (event) => {
-    event.preventDefault();
+  const getList = async () => {
 
     try {
       const res = await axios.post('http://localhost:8002/getlist', listchoose);
       console.log(res.data);
-      movielists = res.data;
+      setmovielists(res.data);
       setOpen(true);
       alert(res.data);
       if (res.data && res.status === 200) {
@@ -74,7 +75,7 @@ export default function Threadlist() {
 
   useEffect(() => {
     getUsers();
-  }, []);
+  }, [lists]);
 
   return (
     <>
@@ -97,8 +98,8 @@ export default function Threadlist() {
         >
           <h1>Movie Lists</h1>
         </Box>
+        return (
         {lists.map((list, index) => {
-          return (
             <Box
               display="flex"
               justifyContent="center"
@@ -133,8 +134,7 @@ export default function Threadlist() {
                 {list.user}
               </Button>
             </Box>
-          );
-        })}
+        })});
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>{listchoose}</DialogTitle>
           <DialogContent>
