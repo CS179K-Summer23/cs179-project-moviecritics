@@ -97,9 +97,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
   const [page, setpage] = React.useState(0);
 
   const handleDrawerOpen = () => {
-    if (!accountCreated) {
       setOpen(true);
-    }
   };
 
   const handleDrawerClose = () => {
@@ -142,7 +140,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
               <Typography variant="h6" noWrap component="div">
                 MovieCritics
               </Typography>
-              
+              <Button sx={{ marginLeft: "auto" }}> Request Movie</Button>
               <Button sx={{ marginLeft: "auto" }}  onClick={logoutfunction}>Log Out</Button>
               <Typography variant="h6" align="right" component="div">
                 Email: {email}
