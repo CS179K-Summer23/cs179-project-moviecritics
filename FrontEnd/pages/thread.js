@@ -20,9 +20,7 @@ const lightTheme = createTheme({
 
 export default function Threadlist() {
 
-  const [listchoose, setlistchoose] = React.useState(useState({
-    id: ""
-  }));
+  const [listchoose, setlistchoose] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [lists, setLists] = React.useState(['0', '1', '2', '3']);
   const [movielists, setmovielists] = React.useState(['movie1', 'movie3', 'movie2', 'movie3']);
@@ -39,17 +37,13 @@ export default function Threadlist() {
 
   const handleViewList = temp => {
     setlistchoose(temp);
-    handleChange();
     setboolval(true);
     getList();
   };
 
-  const handleChange = (event) => {
-    setlistchoose({
-      ...listchoose,
-      [event.target.id]: event.target.value,
-    });
-  };
+  useEffect(() => {
+    getList();
+  }, [boolval]);
 
   const getUsers = async () => {
 
@@ -67,7 +61,9 @@ export default function Threadlist() {
   const getList = async () => {
 
     try {
-      const res = await axios.post('http://localhost:8002/getlist', listchoose);
+
+      jsonchoose = "{ \"id\" : "+ " \"" + listchoose + "\" }" 
+      const res = await axios.post('http://localhost:8002/getlist', jsonchoose);
       console.log('Here is listchoose')
       console.log(listchoose)
       console.log(res.data);
@@ -84,9 +80,7 @@ export default function Threadlist() {
     }
   };
 
-  useEffect(() => {
-    getList();
-  }, [boolval]);
+  
 
   useEffect(() => {
     getUsers();
@@ -147,7 +141,8 @@ export default function Threadlist() {
                   minWidth: "800px",
                   minHeight: "100px",
                 }}
-                onClick={() => handleViewList(list.title)}
+                id={list.title}
+                onClick={() => handleViewList(list.title) }
               >
                 {list.title}
               </Button>
