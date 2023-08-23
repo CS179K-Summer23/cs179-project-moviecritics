@@ -22,7 +22,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function Login({ onLogin, setSurveySubmitted }) {
+export default function Login({ onLogin, setSurveySubmitted, setemail, setsignout }) {
   const [onlogin, setonlogin] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -49,6 +49,7 @@ export default function Login({ onLogin, setSurveySubmitted }) {
         setSurveySubmitted(true);
       }
       if (res.data && res.status === 200) {
+        setSurveySubmitted(true);
         const token = res.data.token;
         localStorage.setItem('authToken', token);
         if (onLogin) {

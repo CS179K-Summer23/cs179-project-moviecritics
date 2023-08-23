@@ -75,7 +75,7 @@ export default function MovieRatings({ jsonfile2 }) {
     console.log("handleConfirmWatched")
     try {
       const response = await axios.post(
-        `http://localhost:8001/addToWatchList/${selectedMovie.id}`,
+        `http://localhost:8002/addToWatchList/${selectedMovie.title}`,
         {},
         {
           headers: {

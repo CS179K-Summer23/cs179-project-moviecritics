@@ -25,7 +25,7 @@ class UserWatchlist(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    movie_id = db.Column(db.ARRAY(db.Integer))
+    movie_id = db.Column(db.ARRAY(db.Text))
 
     user = db.relationship('User', backref=db.backref('watchlist', lazy=True))
     
