@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Button, Box } from "@mui/material";
@@ -19,7 +20,9 @@ const lightTheme = createTheme({
 
 export default function Threadlist() {
 
-  const [listchoose, setlistchoose] = React.useState();
+  const [listchoose, setlistchoose] = React.useState(useState({
+    id: ""
+  }));
   const [open, setOpen] = React.useState(false);
   const [lists, setLists] = React.useState(['0', '1', '2', '3']);
   const [movielists, setmovielists] = React.useState(['movie1', 'movie3', 'movie2', 'movie3']);
@@ -36,22 +39,25 @@ export default function Threadlist() {
 
   const handleViewList = temp => {
     setlistchoose(temp);
+    handleChange();
     setboolval(true);
     getList();
+  };
+
+  const handleChange = (event) => {
+    setlistchoose({
+      ...listchoose,
+      [event.target.id]: event.target.value,
+    });
   };
 
   const getUsers = async () => {
 
     try {
       const res = await axios.post('http://localhost:8002/getusers');
-      console.log(res);
+      console.log(res.data);
+      console.log('here')
       setLists(res.data);
-      alert(res.data);
-      if (res.data && res.status === 200) {
-        if(onSuccess){
-          onSuccess();
-        }
-      }
     } catch (err) {
       console.error(err);
     }
@@ -62,6 +68,8 @@ export default function Threadlist() {
 
     try {
       const res = await axios.post('http://localhost:8002/getlist', listchoose);
+      console.log('Here is listchoose')
+      console.log(listchoose)
       console.log(res.data);
       setmovielists(res.data);
       setOpen(true);
@@ -78,13 +86,12 @@ export default function Threadlist() {
 
   useEffect(() => {
     getList();
-  }, [lists]);
+  }, [boolval]);
 
   useEffect(() => {
     getUsers();
-  }, [boolval]);
-
-  getList();
+  }, []);
+  
 
   return (
     <>
@@ -108,8 +115,9 @@ export default function Threadlist() {
           <h1>Movie Lists</h1>
         </Box>
         
-        return (
+        
         {lists.map((list, index) => {
+          return (
             <Box
               display="flex"
               justifyContent="center"
@@ -117,14 +125,14 @@ export default function Threadlist() {
               sx={{
                 display: "flex",
                 marginTop: 5,
-                marginLeft: "38%",
+                marginLeft: "auto",
                 marginRight: "auto",
                 marginBottom: "auto",
                 justifyContent: "flex",
                 flexDirection: "row",
                 backgroundColor: "black",
                 align: "center",
-                width: "30%",
+                width: "50%",
                 height: "100px",
                 borderRadius: 5,
                 overflow: "hidden",
@@ -134,17 +142,18 @@ export default function Threadlist() {
               <Button
                 variant="outlined"
                 style={{
-                  maxWidth: "500px",
+                  maxWidth: "800px",
                   maxHeight: "100px",
-                  minWidth: "500px",
+                  minWidth: "800px",
                   minHeight: "100px",
                 }}
-                onClick={() => handleViewList(list.user)}
+                onClick={() => handleViewList(list.title)}
               >
-                {list.user}
+                {list.title}
               </Button>
             </Box>
-        })});
+          );
+        })}
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>{listchoose}</DialogTitle>
           <DialogContent>

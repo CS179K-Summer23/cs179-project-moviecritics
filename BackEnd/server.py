@@ -357,14 +357,17 @@ def get_watched():
 @app.route('/getusers', methods=['POST'])
 def get_users():
     ids=[]
-    print('here')
     query = db.session.query(UserWatchlist)
     
     for movie in query.all():
-        id = movie.user_id
-        id.append(id)
+        id = str(movie.user_id)
+        user_info = {
+                'title': id
+            }
+        ids.append(user_info)
     
-    ids = list(set(ids))
+    #ids = list(set(ids))
+    
     print(ids)
     return ids
 
@@ -372,10 +375,14 @@ def get_users():
 @app.route('/getlist', methods=['POST'])
 def get_list():
     movielist=[]
+    print('here')
     data = request.json
+    print(data)
+    print('hi2')
     name = data.get('user_id')  
+    print(name)
     query = db.session.query(UserWatchlist).filter_by(user_id = name)
-    
+
     for movie in query.all():
         moviename = movie.user_id
         movielist.append(moviename)
