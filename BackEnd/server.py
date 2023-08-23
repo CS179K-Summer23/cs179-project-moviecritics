@@ -360,7 +360,9 @@ def get_users():
     query = db.session.query(UserWatchlist)
     
     for movie in query.all():
-        id = str(movie.user_id)
+        id = movie.user_id
+        query2= User.query.filter_by(id = movie.user_id).first()
+        id = str(query2.name)
         user_info = {
                 'title': id
             }
