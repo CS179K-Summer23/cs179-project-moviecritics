@@ -357,7 +357,7 @@ def get_watched():
 @app.route('/getusers', methods=['POST'])
 def get_users():
     ids=[]
-    
+    print('here')
     query = db.session.query(UserWatchlist)
     
     for movie in query.all():
@@ -372,13 +372,15 @@ def get_users():
 @app.route('/getlist', methods=['POST'])
 def get_list():
     movielist=[]
-    # data = request.json
-    # name = data.get('user_id')  
-    # query = db.session.query(user_watchlist).filter_by(user_id = name)
-    # for movie in query.all():
-    #     moviename = movie.user_id
-    #     movielist.append(moviename)
-    # return movielist
+    data = request.json
+    name = data.get('user_id')  
+    query = db.session.query(UserWatchlist).filter_by(user_id = name)
+    
+    for movie in query.all():
+        moviename = movie.user_id
+        movielist.append(moviename)
+    
+    return movielist
 
 
 @app.route('/movie_data', methods=['POST'])

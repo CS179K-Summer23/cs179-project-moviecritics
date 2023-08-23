@@ -21,8 +21,9 @@ export default function Threadlist() {
 
   const [listchoose, setlistchoose] = React.useState();
   const [open, setOpen] = React.useState(false);
-  const [lists, setLists] = React.useState();
-  const [movielists, setmovielists] = React.useState();
+  const [lists, setLists] = React.useState(['0', '1', '2', '3']);
+  const [movielists, setmovielists] = React.useState(['movie1', 'movie3', 'movie2', 'movie3']);
+  const [boolval, setboolval] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,10 +31,12 @@ export default function Threadlist() {
 
   const handleClose = () => {
     setOpen(false);
+    setboolval(false);
   };
 
   const handleViewList = temp => {
     setlistchoose(temp);
+    setboolval(true);
     getList();
   };
 
@@ -74,8 +77,14 @@ export default function Threadlist() {
   };
 
   useEffect(() => {
-    getUsers();
+    getList();
   }, [lists]);
+
+  useEffect(() => {
+    getUsers();
+  }, [boolval]);
+
+  getList();
 
   return (
     <>
@@ -98,6 +107,7 @@ export default function Threadlist() {
         >
           <h1>Movie Lists</h1>
         </Box>
+        
         return (
         {lists.map((list, index) => {
             <Box
