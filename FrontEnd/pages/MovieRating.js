@@ -16,6 +16,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 const lightTheme = createTheme({
   palette: {
@@ -45,6 +46,7 @@ export default function MovieRatings({ jsonfile2 }) {
   };
 
   const handleOpenWatched = (movie) => {
+    console.log("movie")
     setSelectedMovie(movie);
     setOpenWatchedConfirmation(true);
   };
@@ -69,13 +71,27 @@ export default function MovieRatings({ jsonfile2 }) {
     handleClose();
   };
 
-  const handleConfirmWatched = () => {
-    // Mark the movie as watched or perform other actions
-    // You can add your logic here to update the state or perform any other actions.
-    // For example, you can set a "watched" flag for the selected movie.
-
-    // Close the watched confirmation dialog
-    handleCloseWatchedConfirmation();
+  const handleConfirmWatched = async () => {
+    console.log("handleConfirmWatched")
+    try {
+      const response = await axios.post(
+        `http://localhost:8002/addToWatchList/${selectedMovie.title}`,
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem('authToken')
+          }
+        }
+      );
+  
+      if (response.status === 201) {
+        handleCloseWatchedConfirmation();
+      } else {
+        console.error("API call failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (

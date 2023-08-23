@@ -74,7 +74,7 @@ const MovieList = () => {
 
   const handleSubmitRating = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/submit_rating', {
+      const response = await axios.post('http://localhost:8002/submit_rating', {
         movie_title: ratingMovieTitle,
         new_rating: rating
       });

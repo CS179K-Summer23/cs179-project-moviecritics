@@ -9,13 +9,6 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
-class UserWatchlist(db.Model):
-    tablename = 'user_watchlist'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    movie_id = db.Column(db.ARRAY(db.Integer))
-    user = db.relationship('User', backref=db.backref('watchlist', lazy=True))
-
 class UserPreference(db.Model):
     __tablename__ = 'user_preference'
 
@@ -26,6 +19,15 @@ class UserPreference(db.Model):
     def __init__(self, user_id, genre):
         self.user_id = user_id
         self.genre = genre
+
+class UserWatchlist(db.Model):
+    __tablename__ = 'user_watchlist'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    movie_id = db.Column(db.ARRAY(db.Text))
+
+    user = db.relationship('User', backref=db.backref('watchlist', lazy=True))
     
 
 class moviedetails(db.Model):
