@@ -404,6 +404,21 @@ def get_news():
     articles = news_api.fetch_news()
     return jsonify(articles)
 
+@app.route('/requestmovie')
+def request_movie():
+    req = request.get_json()
+    id = req.get('user_id')
+    name = req.get('movie_name')
+    description = req.get('description')
+
+    newreq = User(user_id = id, movie_name = name, description = description)
+    db.session.add(newreq)
+    db.session.commit()
+   
+    return jsonify({'message': 'Movie Requested'})
+
+
+@app.route()
 
 # Route for seeing a data
 @app.route('/data')
