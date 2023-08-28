@@ -26,14 +26,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DescriptionIcon from "@mui/icons-material/Description";
 import CloseIcon from "@mui/icons-material/Close";
-import MovieRatings from "./MovieRating";
-import PaginationApp from "./Pagination";
-import ProfilePage from "./profile";
-import HomeAccount from "./homeaccount";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import MovieList from "./Movies_list"
-import ThreadList from "./thread"
 import Analytics  from "./analytics";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
@@ -322,9 +314,9 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
           </Drawer>
           <Main open={open} >  
             {page === 0 && <HomeAccount /> }
-            {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
+            {page===1 && <MovieshowerFromInterests  />  }
             {page===2 && <PaginationApp />  }
-            {page===3 && <MovieRatings jsonfile2={jsonfile2}/> }
+            {page===3 && <MovieRatings /> }
             {page===4 && <ProfilePage />}
             {page===5  && <MovieList />}
             {page === 6 && <ThreadList />}
