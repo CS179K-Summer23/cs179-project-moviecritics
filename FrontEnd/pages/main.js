@@ -1,34 +1,124 @@
-import React, { useState } from "react";
-import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import { Button } from "@mui/material";
-import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import DescriptionIcon from "@mui/icons-material/Description";
+import * as React from 'react';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
 import MovieshowerFromInterests from "./interestsFromSurvey";
-import CloseIcon from "@mui/icons-material/Close";
 import MovieRatings from "./MovieRating";
 import PaginationApp from "./Pagination";
 import ProfilePage from "./profile";
 import HomeAccount from "./homeaccount";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import MovieList from "./Movies_list"
-import ThreadList from "./thread"
+import MovieList from "./Movies_list";
+import ThreadList from "./thread";
+import { Tooltip, Avatar, IconButton } from "@mui/material";
+import Settings from '@mui/icons-material/Settings';
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import CssBaseline from "@mui/material/CssBaseline";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import DescriptionIcon from "@mui/icons-material/Description";
+import CloseIcon from "@mui/icons-material/Close";
+import MenuIcon from "@mui/icons-material/Menu";
+import Typography from "@mui/material/Typography";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { styled } from "@mui/system";
+
+
+
+function AccountMenu({ logoutfunction, toggleTheme, themeMode }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <React.Fragment>
+      <Tooltip title="Account settings">
+        <IconButton
+          onClick={handleClick}
+          size="small"
+          sx={{ ml: 'auto' }}
+          aria-controls={open ? 'account-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+        >
+          <Avatar sx={{ width: 32, height: 32 }}>P</Avatar>
+        </IconButton>
+      </Tooltip>
+      <Menu
+        anchorEl={anchorEl}
+        id="account-menu"
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            mt: 1.5,
+            '& .MuiAvatar-root': {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            '&:before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: 'background.paper',
+              transform: 'translateY(-50%) rotate(45deg)',
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <Settings fontSize="small" />
+          </ListItemIcon>
+          Settings
+        </MenuItem>
+        <MenuItem onClick={logoutfunction}>
+          <ListItemIcon>
+            <ExitToAppIcon fontSize="small" />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+        <MenuItem onClick={toggleTheme}>
+          <ListItemIcon>
+            {themeMode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </ListItemIcon>
+          Theme
+        </MenuItem>
+      </Menu>
+    </React.Fragment>
+  );
+}
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -67,108 +157,89 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
-}));
-
-const customTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: { main: "#F8F9FA" },
-    secondary: {
-      main: "#010203",
-      contrastText: "#F8F9FA",
-    },
-    IconButton: {
-      main: "#008000",
-    },
-  },
-});
-
-
 export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-
   const [page, setpage] = React.useState(0);
+  const [themeMode, setThemeMode] = React.useState('dark'); // Default to dark theme
 
   const handleDrawerOpen = () => {
-   
-      setOpen(true);
-
+    setOpen(true);
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
   };
 
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
   const logoutfunction = () => {
     setsignout(true);
-    setAnchorElUser(null);
   };
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
+  const toggleTheme = () => {
+    // Toggle between 'dark' and 'light' themes
+    const newThemeMode = themeMode === 'dark' ? 'light' : 'dark';
+    setThemeMode(newThemeMode);
   };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
+
+  // Define your themes
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+      // other dark theme settings...
+    },
+  });
+
+  const lightTheme = createTheme({
+    palette: {
+      mode: "light",
+      // other light theme settings...
+    },
+  });
+
+  // Determine which theme object to use based on the themeMode state
+  const theme = themeMode === 'dark' ? darkTheme : lightTheme;
 
   return (
-    <>
-      <ThemeProvider theme={customTheme}>
-        <Box sx={{ display: "flex" }}>
-          <CssBaseline />
-          <AppBar position="fixed" color={"secondary"} open={open}>
-            <Toolbar>
-              <IconButton
-                color="primary"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                sx={{ mr: 2, ...(open && { display: "none" }) }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" noWrap component="div">
-                MovieCritics
-              </Typography>
-              
-              <Button sx={{ marginLeft: "auto" }}  onClick={logoutfunction}>Log Out</Button>
-              <Typography variant="h6" align="right" component="div">
-                Email: {email}
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            sx={{
+    <ThemeProvider theme={theme}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar position="fixed" color={"secondary"} open={open}>
+  <Toolbar>
+    <IconButton
+      color="primary"
+      aria-label="open drawer"
+      onClick={handleDrawerOpen}
+      edge="start"
+      sx={{ mr: 2, ...(open && { display: "none" }) }}
+    >
+      <MenuIcon />
+    </IconButton>
+    {/* Center the title */}
+<div style={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+  <Typography variant="h6" noWrap component="div">
+    MovieCritics
+  </Typography>
+</div>
+{/* AccountMenu on the right */}
+<AccountMenu logoutfunction={logoutfunction} toggleTheme={toggleTheme} themeMode={themeMode} />
+  </Toolbar>
+</AppBar>
+        <Drawer
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
               width: drawerWidth,
-              flexShrink: 0,
-              "& .MuiDrawer-paper": {
-                width: drawerWidth,
-                boxSizing: "border-box",
-              },
-            }}
-            variant="persistent"
-            anchor="left"
-            open={open}
-            color="secondary"
-          >
-            <DrawerHeader>
+              boxSizing: "border-box",
+            },
+          }}
+          variant="persistent"
+          anchor="left"
+          open={open}
+          color="secondary"
+        >
               <IconButton color="secondary" onClick={handleDrawerClose}>
                 <CloseIcon color="primary" />
               </IconButton>
-            </DrawerHeader>
             <Divider />
             <List>
                    <ListItem key="Home" disablePadding>
@@ -176,7 +247,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Home" />
+                      <ListItemText primary="HOME" style={{ color: '#178582' ,fontWeight: 'bold'}} />
                     </ListItemButton>
                   </ListItem>
                   <ListItem key="Suggestions" disablePadding>
@@ -184,7 +255,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Suggestions" />
+                      <ListItemText primary="SUGGESTIONS" style={{ color: '#178582' ,fontWeight: 'bold'}}/>
                     </ListItemButton>
                   </ListItem>
                   <ListItem key="MovieDB"disablePadding>
@@ -192,7 +263,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary="MovieDB" />
+                      <ListItemText primary="MOVIE-DB" style={{ color: '#178582' ,fontWeight: 'bold'}} />
                     </ListItemButton>
                   </ListItem>
                   <ListItem key="LatestMovies" disablePadding>
@@ -200,7 +271,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary="LatestMovies" />
+                      <ListItemText primary="LATESTMOVIES" style={{ color: '#178582' ,fontWeight: 'bold'}} />
                     </ListItemButton>
                   </ListItem>
                   <ListItem key="Profile" disablePadding>
@@ -208,7 +279,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Profile" />
+                      <ListItemText primary="PROFILE" style={{ color: '#178582' ,fontWeight: 'bold'}} />
                     </ListItemButton>
                     </ListItem>
                   <ListItem key="MovieList" disablePadding>
@@ -216,7 +287,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary="MovieList" />
+                      <ListItemText primary="MOVIELIST" style={{ color: '#178582' ,fontWeight: 'bold'}}/>
                     </ListItemButton>
                   </ListItem>
                   <ListItem key="ThreadList" disablePadding>
@@ -224,7 +295,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
                       <ListItemIcon>
                           <DescriptionIcon />
                       </ListItemIcon>
-                      <ListItemText primary="ThreadList" />
+                      <ListItemText primary="THREADLIST" style={{ color: '#178582' ,fontWeight: 'bold'}}/>
                     </ListItemButton>
                   </ListItem>
                   
@@ -232,7 +303,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
             </List>
             <Divider />
           </Drawer>
-          <Main open={open} >
+          <Main open={open} >  
             {page === 0 && <HomeAccount /> }
             {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
             {page===2 && <PaginationApp />  }
@@ -245,6 +316,5 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
           </Main>
         </Box>
       </ThemeProvider>
-    </>
   );
 }
