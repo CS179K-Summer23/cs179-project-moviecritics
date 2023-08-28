@@ -16,6 +16,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 const lightTheme = createTheme({
   palette: {
@@ -46,7 +47,10 @@ export default function MovieshowerFromInterests({ jsonfile }) {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [sliderValue, setSliderValue] = useState(0);
   const [reviewedMovies, setReviewedMovies] = useState(new Set()); // Use a Set
-  const [movies, setMovies] = useState(jsonfile); // State to hold movie data
+  const [movies, setMovies] = useState(); // State to hold movie data
+
+  const [jsonfile, setjsonfile] = useState({ id: 1, title: "Movie 1", genres: "Action", vote_average: 9.5, Rated: "PG-13" });
+
 
   const isMovieReviewed = (movie) => reviewedMovies.has(movie.id);
 
@@ -101,6 +105,28 @@ export default function MovieshowerFromInterests({ jsonfile }) {
     setSelectedMovie(null); // Reset the selectedMovie state
     handleCloseWatchedConfirmation();
   };
+
+  const getData = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8003/suggestions",
+        email,
+        {
+          headers: {
+            Authorization: localStorage.getItem("authToken"),
+          },
+        }
+      );
+      console.log(res.json());
+      setjsonfile(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <>

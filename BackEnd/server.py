@@ -234,6 +234,7 @@ def usersurvey(current_user):
     genrelist = request.get_json()
     print("current user: ", current_user)
     print("genrelist: ", genrelist)
+    
     glist = ""
     
     if(genrelist.get('Action')) : glist += "Action,"
@@ -260,52 +261,30 @@ def usersurvey(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-    result = top25_by_genre(glist)
-    print('This is the result')
-    print(result)
-    return result
-
-@app.route('/movieratings', methods=['POST'])
-@token_required
-def movieratings(current_user):
-    genrelist = request.get_json()
-    serialized_genrelist = json.dumps(genrelist)
+    serialized_genrelist = json.dumps(glist)
 
     # Insert the serialized JSON string into the database
     new_preference = UserPreference(user_id=current_user.id, genre=serialized_genrelist)
     db.session.add(new_preference)
     db.session.commit()
-    watchlist = UserWatchlist.query.filter_by(user_id=current_user.id).first()
 
-    glist = ""
+    #result = top25_by_genre(glist)
 
-    if(genrelist.get('Action')) : glist += "Action,"
-    if(genrelist.get('Adventure')) : glist += "Adventure,"
-    if(genrelist.get('Animation')) : glist += "Animation,"
-    if(genrelist.get('Comedy')) : glist += "Comedy,"
-    if(genrelist.get('Crime')) : glist += "Crime,"
-    if(genrelist.get('Documentary')) : glist += "Documentary,"
-    if(genrelist.get('Drama')) : glist += "Drama,"
-    if(genrelist.get('Family')) : glist += "Family,"
-    if(genrelist.get('Fantasy')) : glist += "Fantasy,"
-    if(genrelist.get('History')) : glist += "History,"
-    if(genrelist.get('Horror')) : glist += "Horror,"
-    if(genrelist.get('Music')) : glist += "Music,"
-    if(genrelist.get('Mystery')) : glist += "Mystery,"
-    if(genrelist.get('Romance')) : glist += "Romance,"
-    if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
-    if(genrelist.get('TVMovie')) : glist += "TVMovie,"
-    if(genrelist.get('Thriller')) : glist += "Thriller,"
-    if(genrelist.get('War')) : glist += "War,"
-    if(genrelist.get('Western')) : glist += "Western,"
+    print('This is User Survey')
+    return 'user survey submitted successfully', 200
 
-
-    glist = glist[:-1]
+@app.route('/movieratings', methods=['POST'])
+@token_required
+def movieratings(current_user):
     
-    #genrelist_str = json.dumps(glist)
-    glist = [genre.strip().lower() for genre in glist.split(",")]
-    movielist = watchlist.movie_id if watchlist else []
-    result = todays_hottest(glist, movielist)
+    query = UserPreference.query.filter_by(user_id=current_user.user_id).first()
+    query2= User.query.filter_by(id = current_user.user_id).first()
+    age = query2.age
+    genre = query.genre
+    
+   
+   
+    result = todays_hottest(genre, age)
     print('Hot Arrivals: ')
     print(result)
 
@@ -416,6 +395,23 @@ def get_time():
         "Date":x,
         "programming":"python"
         }
+    
+@app.route('/suggestions')
+@token_required
+def get_suggestions():
+    data = request.json
+    email = data.get('email')  
+    
+    query = db.session.query(User)
+    
+    user = User.query.filter_by(email=email).first()
+    age = user.age
+    genre = user.genre
+    
+    result = top25_by_genre(genre,age)
+    
+    print(result)
+    return result
  
      
 # Running app
