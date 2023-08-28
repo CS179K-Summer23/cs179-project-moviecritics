@@ -8,6 +8,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    sharewatchlist = db.Column(db.Boolean, default=False)
 
 class UserPreference(db.Model):
     __tablename__ = 'user_preference'

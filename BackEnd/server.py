@@ -15,8 +15,11 @@ from sqlalchemy import or_
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
-NEWS_API_KEY = " "
-# NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
+
+
+#NEWS_API_KEY = " "
+NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
+
 news_api = NewsAPI(NEWS_API_KEY)
 
 
@@ -402,24 +405,39 @@ def get_watched():
 @app.route('/getusers', methods=['POST'])
 def get_users():
     ids=[]
-    # query = db.session.query(user_watchlist)
-    # for user in query.all():
-    #     id = user.user_id
-    #     ids.append(id)
-
-    # return ids
+    query = db.session.query(UserWatchlist)
+    
+    for movie in query.all():
+        id = movie.user_id
+        query2= User.query.filter_by(id = movie.user_id).first()
+        id = str(query2.name)
+        user_info = {
+                'title': id
+            }
+        ids.append(user_info)
+    
+    #ids = list(set(ids))
+    
+    print(ids)
+    return ids
 
 
 @app.route('/getlist', methods=['POST'])
 def get_list():
     movielist=[]
-    # data = request.json
-    # name = data.get('user_id')  
-    # query = db.session.query(user_watchlist).filter_by(user_id = name)
-    # for movie in query.all():
-    #     moviename = movie.user_id
-    #     movielist.append(moviename)
-    # return movielist
+    print('here')
+    data = request.json
+    print(data)
+    print('hi2')
+    name = data.get('user_id')  
+    print(name)
+    query = db.session.query(UserWatchlist).filter_by(user_id = name)
+
+    for movie in query.all():
+        moviename = movie.user_id
+        movielist.append(moviename)
+    
+    return movielist
 
 @app.route('/movie_data', methods=['POST'])
 def get_movie_data():
