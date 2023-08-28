@@ -15,7 +15,9 @@ from sqlalchemy import or_
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
-
+from surprise import Dataset, Reader, SVD
+from surprise.model_selection import train_test_split
+from movie_recommendation import MovieRecommendationSystem
 
 #NEWS_API_KEY = " "
 NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
@@ -466,6 +468,25 @@ def submit_rating():
 def get_news():
     articles = news_api.fetch_news()
     return jsonify(articles)
+
+@app.route('/recommendations', methods=['POST'])
+def get_recommendations():
+    try:
+        user_id = int(request.json['user_id'])
+    except (KeyError, ValueError):
+        return jsonify({'error': 'Invalid input'}), 400
+
+    user_recommendations = movie_system.generate_recommendations_for_user(user_id)
+
+    recommendations_df = pd.DataFrame(user_recommendations)
+    columns_to_drop = ['runtime', 'vote_average']
+    recommendations_df = recommendations_df.drop(columns=columns_to_drop)
+    recommendations_df['rating'] = recommendations_df['rating'].apply(lambda x: round(x, 2))
+    recommendations_df['release_date'] = recommendations_df['release_date'].apply(lambda x: x.strftime('%Y-%m-%d'))
+    recommendations_json = recommendations_df.to_dict(orient='records')
+    recommendations_json_string = json.dumps(recommendations_json, indent=2)
+    
+    return recommendations_json_string
 
 
 # Route for seeing a data
