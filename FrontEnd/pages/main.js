@@ -158,7 +158,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
+export default function MainApp({ setsignout, email }) {
   const [open, setOpen] = React.useState(false);
   const [page, setpage] = React.useState(0);
   const [themeMode, setThemeMode] = React.useState('dark'); // Default to dark theme

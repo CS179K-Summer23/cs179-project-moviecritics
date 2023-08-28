@@ -15,8 +15,6 @@ from sqlalchemy import or_
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
-from surprise import Dataset, Reader, SVD
-from surprise.model_selection import train_test_split
 from movie_recommendation import MovieRecommendationSystem
 
 #NEWS_API_KEY = " "
@@ -284,8 +282,9 @@ def usersurvey(current_user):
     genrelist = request.get_json()
     print("current user: ", current_user)
     print("genrelist: ", genrelist)
+
     glist = ""
-    
+
     if(genrelist.get('Action')) : glist += "Action,"
     if(genrelist.get('Adventure')) : glist += "Adventure,"
     if(genrelist.get('Animation')) : glist += "Animation,"
@@ -310,56 +309,16 @@ def usersurvey(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-    result = top25_by_genre(glist)
-    print('This is the result')
-    print(result)
-    return result
-
-@app.route('/movieratings', methods=['POST'])
-@token_required
-def movieratings(current_user):
-    genrelist = request.get_json()
-    serialized_genrelist = json.dumps(genrelist)
+    serialized_genrelist = json.dumps(glist)
 
     # Insert the serialized JSON string into the database
     new_preference = UserPreference(user_id=current_user.id, genre=serialized_genrelist)
     db.session.add(new_preference)
     db.session.commit()
-    watchlist = UserWatchlist.query.filter_by(user_id=current_user.id).first()
 
-    glist = ""
+    print('This is User Survey')
+    return 'user survey submitted successfully', 200
 
-    if(genrelist.get('Action')) : glist += "Action,"
-    if(genrelist.get('Adventure')) : glist += "Adventure,"
-    if(genrelist.get('Animation')) : glist += "Animation,"
-    if(genrelist.get('Comedy')) : glist += "Comedy,"
-    if(genrelist.get('Crime')) : glist += "Crime,"
-    if(genrelist.get('Documentary')) : glist += "Documentary,"
-    if(genrelist.get('Drama')) : glist += "Drama,"
-    if(genrelist.get('Family')) : glist += "Family,"
-    if(genrelist.get('Fantasy')) : glist += "Fantasy,"
-    if(genrelist.get('History')) : glist += "History,"
-    if(genrelist.get('Horror')) : glist += "Horror,"
-    if(genrelist.get('Music')) : glist += "Music,"
-    if(genrelist.get('Mystery')) : glist += "Mystery,"
-    if(genrelist.get('Romance')) : glist += "Romance,"
-    if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
-    if(genrelist.get('TVMovie')) : glist += "TVMovie,"
-    if(genrelist.get('Thriller')) : glist += "Thriller,"
-    if(genrelist.get('War')) : glist += "War,"
-    if(genrelist.get('Western')) : glist += "Western,"
-
-
-    glist = glist[:-1]
-    
-    #genrelist_str = json.dumps(glist)
-    glist = [genre.strip().lower() for genre in glist.split(",")]
-    movielist = watchlist.movie_id.split('|') if watchlist else []
-    result = todays_hottest(glist, movielist)
-    print('Hot Arrivals: ')
-    print(result)
-
-    return result
 
 # Route to fetch top movies based on choice and display as JSON
 @app.route('/pagination', methods=['POST'])
@@ -500,6 +459,37 @@ def get_time():
         "Date":x,
         "programming":"python"
         }
+    
+@app.route('/suggestions', methods=['POST'])
+def get_suggestions(current_user):
+    print('Here12132')
+    data = request.json
+    user = User.query.filter_by(id=current_user.id).first()
+    age = user.age
+    query = UserPreference.query.filter_by(user_id = current_user.id).first()
+    genre = query.genre
+
+    result = top25_by_genre(genre,age)
+
+    print(result)
+    return result
+
+@app.route('/movieratings', methods=['POST'])
+@token_required
+def movieratings(current_user):
+
+    query = UserPreference.query.filter_by(user_id=current_user.id).first()
+    query2= User.query.filter_by(id = current_user.id).first()
+    age = query2.age
+    genre = query.genre
+
+
+
+    result = todays_hottest(genre, age)
+    print('Hot Arrivals: ')
+    print(result)
+
+    return result
  
      
 # Running app

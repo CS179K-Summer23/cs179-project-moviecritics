@@ -36,6 +36,7 @@ export default function HomeAccount() {
   const [sliderValue, setSliderValue] = useState(0);
   const [reviewedMovies, setReviewedMovies] = useState([]);
   const [isBackdropView, setIsBackdropView] = useState({});
+  const [jsonfile, setjsonfile] = useState({})
 
   const [news, setNews] = useState([]);
 
@@ -114,10 +115,10 @@ export default function HomeAccount() {
 
   const moviesPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalMovies = jsonfile2.length;
+  //const totalMovies = jsonfile2.length;
   const lastMovieIndex = currentPage * moviesPerPage;
   const firstMovieIndex = lastMovieIndex - moviesPerPage;
-  const currentMovies = jsonfile2.slice(firstMovieIndex, lastMovieIndex);
+  //const currentMovies = jsonfile2.slice(firstMovieIndex, lastMovieIndex);
 
 
   return (

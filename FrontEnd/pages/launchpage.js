@@ -108,7 +108,7 @@ export default function LaunchPage({setsignout, setemail, setSurveySubmitted}) {
       </Box>
         
         {buttonstate===1 && !accountCreated && (<><AccountCreation setsignout={setsignout} onSuccess={handleAccountCreationSuccess} setemail={setemail} /> </>)}
-        {buttonstate===1 && accountCreated && (<><UserSurveyApp  setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} onSuccess={handlesurverySubmit} /></>) }
+        {buttonstate===1 && accountCreated && (<><UserSurveyApp   onSuccess={handlesurverySubmit} /></>) }
         {buttonstate===2 && !onLogin && (<> <Login setsignout={setsignout} onLogin={handleLoginSuccess} setemail={setemail} setSurveySubmitted={setSurveySubmitted}/> </>)}
         {buttonstate===3}
         

@@ -102,6 +102,30 @@ export default function MovieshowerFromInterests() {
     handleCloseWatchedConfirmation();
   };
 
+
+  const getData = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8003/suggestions",
+        {
+          headers: {
+            Authorization: localStorage.getItem("authToken"),
+          },
+        }
+      );
+      console.log(res.json());
+      setjsonfile(res.data);
+      setMovies(res.data);
+      console.log(movies);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <>
       <ThemeProvider theme={theme}>

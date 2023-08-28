@@ -38,6 +38,7 @@ export default function MovieRatings() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [sliderValue, setSliderValue] = useState(0);
   const [reviewedMovies, setReviewedMovies] = useState([]);
+  
 
   const handleOpenReview = (movie) => {
     setSelectedMovie(movie);

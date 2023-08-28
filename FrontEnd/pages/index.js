@@ -85,8 +85,6 @@ export default function Home() {
   const [signout, setsignout] = useState(true);
   const [email, setemail] = useState('');
   const [surveySubmitted, setSurveySubmitted] = useState(false);
-  const [jsonfile, setjsonfile] = useState({});
-  const [jsonfile2, setjsonfile2] = useState({});
 
   const [accountCreated, setAccountCreated] = useState(false);
 
@@ -104,7 +102,7 @@ export default function Home() {
       <ThemeProvider theme={customTheme}>
         <Box sx={{ display: "flex" }}>
           <Main open={open}>
-            {surveySubmitted === false && (<LaunchPage  setSurveySubmitted={setSurveySubmitted}/> )}
+            {surveySubmitted === false && (<LaunchPage  setemail={setemail} setsignout={setsignout} setSurveySubmitted={setSurveySubmitted}/> )}
             {surveySubmitted === true && signout ===false && <MainApp setsignout={setsignout} email={email} />}
           </Main>
         </Box>
