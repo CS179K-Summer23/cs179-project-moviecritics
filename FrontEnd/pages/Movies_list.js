@@ -92,6 +92,7 @@ const MovieList = () => {
     try {
       // Send the POST request to the server
       const response = await axios.post('http://localhost:8003/submit_rating', {
+
         movie_title: ratingMovieTitle,
         new_rating: rating,
         review: reviewText,

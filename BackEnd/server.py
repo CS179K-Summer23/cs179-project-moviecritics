@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import db, User, UserPreference, moviedetails
+from models import db, User, UserPreference, moviedetails, UserWatchlist
 import datetime
 #from datetime import datetime
 from movie_critics import MovieAnalyzerApp
@@ -61,10 +61,12 @@ def token_required(f):
 
     return decorated
 
-def todays_hottest(target_genres, age=None, min_vote_count=1000, limit=25):
+def todays_hottest(target_genres, movie_ids, age=None, min_vote_count=1000, limit=25):
     movies_list = []
    
     query = db.session.query(moviedetails)
+
+    # watchlist = UserWatchlist.query.filter_by(user_id=user_id).first()
     
     for movie in query.all():
         movie_title = movie.title
@@ -74,7 +76,7 @@ def todays_hottest(target_genres, age=None, min_vote_count=1000, limit=25):
         release_date = movie.release_date
         movie_rating = movie.rated
         
-        if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')):
+        if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')) and movie_title not in movie_ids:
             date_string = movie.release_date.strftime("%a, %d %b %Y")  # Format the date without time and timezone
             movie_info = {
                 'title': movie_title,
@@ -160,7 +162,6 @@ def login():
     user = request.get_json()
     email = user.get('email')
     password = user.get('password')
-    # print(email, password)
 
     if email is None or email == "" or password is None or password == "":
         return jsonify({"message": "Invalid credentials"}), 400
@@ -171,13 +172,13 @@ def login():
         print("Invalid Credentials")
         return jsonify({"message": "Invalid credentials"}), 401
     
-    # Generate a JWT token
     token = jwt.encode({'user_id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
                        app.config['SECRET_KEY'], algorithm='HS256')
     
     pref = UserPreference.query.filter_by(user_id = user.id).first()
     print("pref:", pref.genre)
     genrelist = json.loads(pref.genre)
+    glist = ""
     if(genrelist.get('Action')) : glist += "Action,"
     if(genrelist.get('Adventure')) : glist += "Adventure,"
     if(genrelist.get('Animation')) : glist += "Animation,"
@@ -200,11 +201,32 @@ def login():
 
 
     glist = glist[:-1]
-    #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
-    result = top25_by_genre('movies_db.csv', glist)
+    result = todays_hottest(glist, [])
 
     return jsonify({"message": "Login Successful", "token": token, "result": result}), 200
+
+@app.route('/addToWatchList/<string:movie_title>', methods=['POST'])
+@token_required
+def add_to_watchlist(current_user, movie_title):
+    user_id = current_user.id
+    # row = moviedetails.query.filter_by(title = movie_title).first()
+    # movie_id = row.id
+
+    watchlist = UserWatchlist.query.filter_by(user_id=user_id).first()
+
+    if not watchlist:
+        watchlist = UserWatchlist(user_id=user_id)
+
+    if not watchlist.movie_id or movie_title not in watchlist.movie_id:
+        if not watchlist.movie_id:
+            watchlist.movie_id = []
+        watchlist.movie_id.append(movie_title)
+        db.session.add(watchlist)
+        db.session.commit()
+        return jsonify({'message': 'Movie added to watchlist'}), 201
+    else:
+        return jsonify({'message': 'Movie is already in watchlist'}), 400
 
 @app.route('/usersurvey', methods=['POST'])
 @token_required
@@ -238,9 +260,7 @@ def usersurvey(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-
     result = top25_by_genre(glist)
-
     print('This is the result')
     print(result)
     return result
@@ -255,7 +275,8 @@ def movieratings(current_user):
     new_preference = UserPreference(user_id=current_user.id, genre=serialized_genrelist)
     db.session.add(new_preference)
     db.session.commit()
-    
+    watchlist = UserWatchlist.query.filter_by(user_id=current_user.id).first()
+
     glist = ""
 
     if(genrelist.get('Action')) : glist += "Action,"
@@ -283,8 +304,8 @@ def movieratings(current_user):
     
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
-   
-    result = todays_hottest(glist)
+    movielist = watchlist.movie_id if watchlist else []
+    result = todays_hottest(glist, movielist)
     print('Hot Arrivals: ')
     print(result)
 
@@ -336,24 +357,24 @@ def get_watched():
 @app.route('/getusers', methods=['POST'])
 def get_users():
     ids=[]
-    query = db.session.query(user_watchlist)
-    for user in query.all():
-        id = user.user_id
-        ids.append(id)
+    # query = db.session.query(user_watchlist)
+    # for user in query.all():
+    #     id = user.user_id
+    #     ids.append(id)
 
-    return ids
+    # return ids
 
 
 @app.route('/getlist', methods=['POST'])
 def get_list():
     movielist=[]
-    data = request.json
-    name = data.get('user_id')  
-    query = db.session.query(user_watchlist).filter_by(user_id = name)
-    for movie in query.all():
-        moviename = movie.user_id
-        movielist.append(moviename)
-    return movielist
+    # data = request.json
+    # name = data.get('user_id')  
+    # query = db.session.query(user_watchlist).filter_by(user_id = name)
+    # for movie in query.all():
+    #     moviename = movie.user_id
+    #     movielist.append(moviename)
+    # return movielist
 
 @app.route('/movie_data', methods=['POST'])
 def get_movie_data():
