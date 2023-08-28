@@ -29,6 +29,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MovieList from "./Movies_list"
 import ThreadList from "./thread"
+import Analytics  from "./analytics";
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -227,6 +229,14 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
                       <ListItemText primary="ThreadList" />
                     </ListItemButton>
                   </ListItem>
+                  <ListItem key="Analytics" disablePadding>
+                    <ListItemButton onClick={() => (setpage(7))}>
+                      <ListItemIcon>
+                          <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Analytics" />
+                    </ListItemButton>
+                  </ListItem>
                   
            
             </List>
@@ -240,6 +250,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
             {page===4 && <ProfilePage />}
             {page===5  && <MovieList />}
             {page === 6 && <ThreadList />}
+            {page === 7 && <Analytics />}
             
 
           </Main>
