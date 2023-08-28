@@ -48,7 +48,7 @@ export default function Threadlist() {
   const getUsers = async () => {
 
     try {
-      const res = await axios.post('http://localhost:8002/getusers');
+      const res = await axios.post('http://localhost:8003/getusers');
       console.log(res.data);
       console.log('here')
       setLists(res.data);
@@ -63,7 +63,7 @@ export default function Threadlist() {
     try {
 
       jsonchoose = "{ \"id\" : "+ " \"" + listchoose + "\" }" 
-      const res = await axios.post('http://localhost:8002/getlist', jsonchoose);
+      const res = await axios.post('http://localhost:8003/getlist', jsonchoose);
       console.log('Here is listchoose')
       console.log(listchoose)
       console.log(res.data);

@@ -77,7 +77,7 @@ function Analytics() {
 
   useEffect(() => {
     // Fetch pie chart data using Axios from the Flask endpoint
-    axios.get("http://localhost:8002/genreDistribution")
+    axios.get("http://localhost:8003/genreDistribution")
       .then((response) => {
         setPieData(response.data);
       })
@@ -89,7 +89,7 @@ function Analytics() {
   const handleAgeRangeChange = (event) => {
     setSelectedAgeRange(event.target.value);
     // Make an API call to fetch data based on the selected age range
-    axios.get(`http://localhost:8002/genreDistribution?ageRange=${event.target.value}`)
+    axios.get(`http://localhost:8003/genreDistribution?ageRange=${event.target.value}`)
       .then((response) => {
         setPieData(response.data);
       })

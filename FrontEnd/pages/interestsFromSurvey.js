@@ -39,7 +39,7 @@ const theme = createTheme({
   },
 });
 
-export default function MovieshowerFromInterests({ jsonfile }) {
+export default function MovieshowerFromInterests() {
   const [openReview, setOpenReview] = useState(false);
   const [openWatched, setOpenWatched] = useState(false);
   const [openWatchedConfirmation, setOpenWatchedConfirmation] = useState(false);
