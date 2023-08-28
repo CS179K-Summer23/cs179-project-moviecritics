@@ -15,8 +15,8 @@ from sqlalchemy import or_
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
-
-NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
+NEWS_API_KEY = " "
+# NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
 news_api = NewsAPI(NEWS_API_KEY)
 
 
@@ -359,23 +359,24 @@ def movieratings(current_user):
 # Route to fetch top movies based on choice and display as JSON
 @app.route('/pagination', methods=['POST'])
 def get_top_movies():
-    data = request.json  # Get JSON data from the request
+    data = request.json
     choice = data.get("choice")
     n = int(data.get("n", 30))
 
-    analyzer = MovieAnalyzerApp("movies_db.csv")
+    analyzer = MovieAnalyzerApp(db_params)
 
     if choice == "rating":
-        top_movies_df = analyzer.get_top_movies_by_rating_df(n)
+        top_movies = analyzer.get_top_movies_by_rating_df(n)
+        records = [{'rank': i + 1, 'title': row[1], 'rating': row[2], 'genre': row[3], 'release_date': row[4]} for i, row in enumerate(top_movies[:n])]
     elif choice == "profits":
-        top_movies_df = analyzer.get_top_movies_by_profit_df(n)
+        top_movies = analyzer.get_top_movies_by_profit_df(n)
+        records = [{'rank': row[0], 'title': row[1], 'profit': row[2], 'genre': row[3], 'release_date': row[5]} for row in top_movies]
     elif choice == "revenue":
-        top_movies_df = analyzer.get_top_movies_by_revenue_df(n)
+        top_movies = analyzer.get_top_movies_by_revenue_df(n)
+        records = [{'rank': i + 1, 'title': row[1], 'revenue': row[2], 'genre': row[3], 'release_date': row[5]} for i, row in enumerate(top_movies[:n])]
     else:
         return jsonify({"error": "Invalid choice"}), 400
 
-    records = top_movies_df.to_dict(orient="records")
-    print(records)
     return jsonify(records)
 
 
@@ -420,7 +421,6 @@ def get_list():
     #     movielist.append(moviename)
     # return movielist
 
-
 @app.route('/movie_data', methods=['POST'])
 def get_movie_data():
     movie_app = MovieList(db_params)
@@ -430,7 +430,7 @@ def get_movie_data():
         return jsonify({'movie_data': movie_data})
     else:
         return jsonify({'message': 'No movie data found.'}), 404
-
+    
 @app.route('/submit_rating', methods=['POST'])
 def submit_rating():
     data = request.get_json()
@@ -465,5 +465,5 @@ def get_time():
      
 # Running app
 if __name__ == '__main__':
-    app.run(debug=True, port=8002)
+    app.run(debug=True, port=8003)
 
