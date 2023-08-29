@@ -124,7 +124,6 @@ export default function HomeAccount() {
     getData();
   }, []);
 
-  getData();
 
   const moviesPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);

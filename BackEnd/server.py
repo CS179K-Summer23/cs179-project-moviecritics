@@ -326,9 +326,12 @@ def movieratings(current_user):
     
     #serialized_genrelist = json.dumps(genrelist)
 
+    user_id = current_user.id
+    watchlist = UserWatchlist.query.filter_by(user_id=user_id).first()
+
     query = UserPreference.query.filter_by(user_id=current_user.id).first()
     glist = query.genre
-    glist = ""
+    # glist = ""
     
     #genrelist_str = json.dumps(glist)
     movielist = watchlist.movie_id.split('|') if watchlist else []

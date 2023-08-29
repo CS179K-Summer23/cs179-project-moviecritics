@@ -29,8 +29,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   backgroundColor: theme.palette.common.black,
 }));
 
-const jsonfile = [
-  // Your JSON data
+const jsonfile1 = [
+  { id: 1, title: "Movie 1", genres: "Action", vote_average: 9.5, Rated: "PG-13" },
 ];
 
 export default function MovieRatings() {
@@ -39,7 +39,7 @@ export default function MovieRatings() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [sliderValue, setSliderValue] = useState(0);
   const [reviewedMovies, setReviewedMovies] = useState([]);
-  const [jsonfile, setjsonfile] = useState({});
+  const [jsonfile, setjsonfile] = useState(jsonfile1);
 
   const handleOpenReview = (movie) => {
     setSelectedMovie(movie);
@@ -117,8 +117,6 @@ export default function MovieRatings() {
   useEffect(() => {
     getData2();
   }, []);
-
-  getData2();
 
   return (
     <>
