@@ -15,9 +15,9 @@ from sqlalchemy import or_
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
-from surprise import Dataset, Reader, SVD
-from surprise.model_selection import train_test_split
-from movie_recommendation import MovieRecommendationSystem
+#from surprise import Dataset, Reader, SVD
+#from surprise.model_selection import train_test_split
+#from movie_recommendation import MovieRecommendationSystem
 
 #NEWS_API_KEY = " "
 NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
@@ -53,12 +53,13 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = request.headers.get('Authorization')
-
+        print('token', token)
         if not token:
             return jsonify({'message': 'Token is missing'}), 401
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+            #print('\n',data.user_id,'\n')
             current_user = User.query.get(data['user_id'])
         except:
             return jsonify({'message': 'Token is invalid'}), 401
@@ -98,7 +99,7 @@ def todays_hottest(target_genres, movie_ids, age=None, min_vote_count=1000, limi
     return sorted_movies[:limit]
 
 
-def top25_by_genre(target_genres, min_vote_count=1000, limit=25, age=None):
+def top25_by_genre(target_genres, age, min_vote_count=1000, limit=25):
     movies_list = []
 
     ilike_conditions = [
@@ -151,18 +152,18 @@ def signup():
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    newUser = User(name = name, email = email, password = hashed_password, age = age)
+    newUser = User(name = name, email = email, password = hashed_password, age = age, sharewatchlist = False)
     db.session.add(newUser)
     db.session.commit()
     # Generate a JWT token
     token = jwt.encode({'user_id': newUser.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
                        app.config['SECRET_KEY'], algorithm='HS256')
-    # print(user)
+    print(user)
     return jsonify({'message': 'Signup Successful', 'token': token}), 201
-    # response = make_response(jsonify({'message': 'Signup Successful'}), 201)
-    # response.set_cookie('authToken', token, httponly=True)
+    #response = make_response(jsonify({'message': 'Signup Successful'}), 201)
+    #response.set_cookie('authToken', token, httponly=True)
 
-    # return response
+    #return response
 
 
 
@@ -310,55 +311,46 @@ def usersurvey(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-    result = top25_by_genre(glist)
+    newUser = UserPreference(user_id = current_user.id, genre=glist)
+    db.session.add(newUser)
+    db.session.commit()
+    print(newUser)
+    
     print('This is the result')
-    print(result)
-    return result
+    
+    return jsonify({'message': 'Genre Preference Has Been Set'}), 200
 
-@app.route('/movieratings', methods=['POST'])
+@app.route('/movierating', methods=['POST'])
 @token_required
 def movieratings(current_user):
-    genrelist = request.get_json()
-    serialized_genrelist = json.dumps(genrelist)
+    
+    #serialized_genrelist = json.dumps(genrelist)
 
-    # Insert the serialized JSON string into the database
-    new_preference = UserPreference(user_id=current_user.id, genre=serialized_genrelist)
-    db.session.add(new_preference)
-    db.session.commit()
-    watchlist = UserWatchlist.query.filter_by(user_id=current_user.id).first()
-
+    query = UserPreference.query.filter_by(user_id=current_user.id).first()
+    glist = query.genre
     glist = ""
-
-    if(genrelist.get('Action')) : glist += "Action,"
-    if(genrelist.get('Adventure')) : glist += "Adventure,"
-    if(genrelist.get('Animation')) : glist += "Animation,"
-    if(genrelist.get('Comedy')) : glist += "Comedy,"
-    if(genrelist.get('Crime')) : glist += "Crime,"
-    if(genrelist.get('Documentary')) : glist += "Documentary,"
-    if(genrelist.get('Drama')) : glist += "Drama,"
-    if(genrelist.get('Family')) : glist += "Family,"
-    if(genrelist.get('Fantasy')) : glist += "Fantasy,"
-    if(genrelist.get('History')) : glist += "History,"
-    if(genrelist.get('Horror')) : glist += "Horror,"
-    if(genrelist.get('Music')) : glist += "Music,"
-    if(genrelist.get('Mystery')) : glist += "Mystery,"
-    if(genrelist.get('Romance')) : glist += "Romance,"
-    if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
-    if(genrelist.get('TVMovie')) : glist += "TVMovie,"
-    if(genrelist.get('Thriller')) : glist += "Thriller,"
-    if(genrelist.get('War')) : glist += "War,"
-    if(genrelist.get('Western')) : glist += "Western,"
-
-
-    glist = glist[:-1]
     
     #genrelist_str = json.dumps(glist)
-    glist = [genre.strip().lower() for genre in glist.split(",")]
     movielist = watchlist.movie_id.split('|') if watchlist else []
     result = todays_hottest(glist, movielist)
     print('Hot Arrivals: ')
     print(result)
 
+    return result
+
+@app.route('/suggestions', methods=['POST'])
+@token_required
+def suggesttionfunction(current_user):
+    print('hi')
+    query = UserPreference.query.filter_by(user_id=current_user.id).first()
+    glist = query.genre
+    print('hi2')
+    query2 = User.query.filter_by(id=current_user.id).first()
+    age = query2.age
+    print('hi3')
+    result = top25_by_genre(glist, age)
+    print('hi4')
+    print(result)
     return result
 
 # Route to fetch top movies based on choice and display as JSON

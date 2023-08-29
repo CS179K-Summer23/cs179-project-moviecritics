@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCreation from "./accountCreation";
 import UserSurveyApp from "./UserSurvey";
@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MovieList from "./Movies_list";
 import ThreadList from "./thread";
 import { Tooltip, Avatar, IconButton } from "@mui/material";
-import Settings from '@mui/icons-material/Settings';
+import Settings from "@mui/icons-material/Settings";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -26,15 +26,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DescriptionIcon from "@mui/icons-material/Description";
 import CloseIcon from "@mui/icons-material/Close";
-import Analytics  from "./analytics";
+import Analytics from "./analytics";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { styled } from "@mui/system";
-
-
 
 function AccountMenu({ logoutfunction, toggleTheme, themeMode }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -54,10 +52,10 @@ function AccountMenu({ logoutfunction, toggleTheme, themeMode }) {
         <IconButton
           onClick={handleClick}
           size="small"
-          sx={{ ml: 'auto' }}
-          aria-controls={open ? 'account-menu' : undefined}
+          sx={{ ml: "auto" }}
+          aria-controls={open ? "account-menu" : undefined}
           aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
+          aria-expanded={open ? "true" : undefined}
         >
           <Avatar sx={{ width: 32, height: 32 }}>P</Avatar>
         </IconButton>
@@ -71,31 +69,31 @@ function AccountMenu({ logoutfunction, toggleTheme, themeMode }) {
         PaperProps={{
           elevation: 0,
           sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             mt: 1.5,
-            '& .MuiAvatar-root': {
+            "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
             },
-            '&:before': {
+            "&:before": {
               content: '""',
-              display: 'block',
-              position: 'absolute',
+              display: "block",
+              position: "absolute",
               top: 0,
               right: 14,
               width: 10,
               height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
               zIndex: 0,
             },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
@@ -111,7 +109,7 @@ function AccountMenu({ logoutfunction, toggleTheme, themeMode }) {
         </MenuItem>
         <MenuItem onClick={toggleTheme}>
           <ListItemIcon>
-            {themeMode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+            {themeMode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </ListItemIcon>
           Theme
         </MenuItem>
@@ -158,10 +156,10 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
+export default function MainApp({ setsignout, email }) {
   const [open, setOpen] = React.useState(false);
   const [page, setpage] = React.useState(0);
-  const [themeMode, setThemeMode] = React.useState('dark'); // Default to dark theme
+  const [themeMode, setThemeMode] = React.useState("dark"); // Default to dark theme
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -177,7 +175,7 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
 
   const toggleTheme = () => {
     // Toggle between 'dark' and 'light' themes
-    const newThemeMode = themeMode === 'dark' ? 'light' : 'dark';
+    const newThemeMode = themeMode === "dark" ? "light" : "dark";
     setThemeMode(newThemeMode);
   };
 
@@ -197,33 +195,37 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
   });
 
   // Determine which theme object to use based on the themeMode state
-  const theme = themeMode === 'dark' ? darkTheme : lightTheme;
+  const theme = themeMode === "dark" ? darkTheme : lightTheme;
 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="fixed" color={"secondary"} open={open}>
-  <Toolbar>
-    <IconButton
-      color="primary"
-      aria-label="open drawer"
-      onClick={handleDrawerOpen}
-      edge="start"
-      sx={{ mr: 2, ...(open && { display: "none" }) }}
-    >
-      <MenuIcon />
-    </IconButton>
-    {/* Center the title */}
-<div style={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-  <Typography variant="h6" noWrap component="div">
-    MovieCritics
-  </Typography>
-</div>
-{/* AccountMenu on the right */}
-<AccountMenu logoutfunction={logoutfunction} toggleTheme={toggleTheme} themeMode={themeMode} />
-  </Toolbar>
-</AppBar>
+          <Toolbar>
+            <IconButton
+              color="primary"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: "none" }) }}
+            >
+              <MenuIcon />
+            </IconButton>
+            {/* Center the title */}
+            <div style={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
+              <Typography variant="h6" noWrap component="div">
+                MovieCritics
+              </Typography>
+            </div>
+            {/* AccountMenu on the right */}
+            <AccountMenu
+              logoutfunction={logoutfunction}
+              toggleTheme={toggleTheme}
+              themeMode={themeMode}
+            />
+          </Toolbar>
+        </AppBar>
         <Drawer
           sx={{
             width: drawerWidth,
@@ -238,93 +240,110 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
           open={open}
           color="secondary"
         >
-              <IconButton color="secondary" onClick={handleDrawerClose}>
-                <CloseIcon color="primary" />
-              </IconButton>
-            <Divider />
-            <List>
-                   <ListItem key="Home" disablePadding>
-                    <ListItemButton onClick={() => (setpage(0))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="HOME" style={{ color: '#178582' ,fontWeight: 'bold'}} />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="Suggestions" disablePadding>
-                    <ListItemButton onClick={() => (setpage(1))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="SUGGESTIONS" style={{ color: '#178582' ,fontWeight: 'bold'}}/>
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="MovieDB"disablePadding>
-                    <ListItemButton onClick={() => (setpage(2))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="MOVIE-DB" style={{ color: '#178582' ,fontWeight: 'bold'}} />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="LatestMovies" disablePadding>
-                    <ListItemButton onClick={() => (setpage(3))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="LATESTMOVIES" style={{ color: '#178582' ,fontWeight: 'bold'}} />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="Profile" disablePadding>
-                    <ListItemButton onClick={() => (setpage(4))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="PROFILE" style={{ color: '#178582' ,fontWeight: 'bold'}} />
-                    </ListItemButton>
-                    </ListItem>
-                  <ListItem key="MovieList" disablePadding>
-                    <ListItemButton onClick={() => (setpage(5))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="MOVIELIST" style={{ color: '#178582' ,fontWeight: 'bold'}}/>
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="ThreadList" disablePadding>
-                    <ListItemButton onClick={() => (setpage(6))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="THREADLIST" style={{ color: '#178582' ,fontWeight: 'bold'}}/>
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem key="Analytics" disablePadding>
-                    <ListItemButton onClick={() => (setpage(7))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Analytics" />
-                    </ListItemButton>
-                  </ListItem>
-                  
-           
-            </List>
-            <Divider />
-          </Drawer>
-          <Main open={open} >  
-            {page === 0 && <HomeAccount /> }
-            {page===1 && <MovieshowerFromInterests  />  }
-            {page===2 && <PaginationApp />  }
-            {page===3 && <MovieRatings /> }
-            {page===4 && <ProfilePage />}
-            {page===5  && <MovieList />}
-            {page === 6 && <ThreadList />}
-            {page === 7 && <Analytics />}
-            
-
-          </Main>
-        </Box>
-      </ThemeProvider>
+          <IconButton color="secondary" onClick={handleDrawerClose}>
+            <CloseIcon color="primary" />
+          </IconButton>
+          <Divider />
+          <List>
+            <ListItem key="Home" disablePadding>
+              <ListItemButton onClick={() => setpage(0)}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="HOME"
+                  style={{ color: "#178582", fontWeight: "bold" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="Suggestions" disablePadding>
+              <ListItemButton onClick={() => setpage(1)}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="SUGGESTIONS"
+                  style={{ color: "#178582", fontWeight: "bold" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="MovieDB" disablePadding>
+              <ListItemButton onClick={() => setpage(2)}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="MOVIE-DB"
+                  style={{ color: "#178582", fontWeight: "bold" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="LatestMovies" disablePadding>
+              <ListItemButton onClick={() => setpage(3)}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="LATESTMOVIES"
+                  style={{ color: "#178582", fontWeight: "bold" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="Profile" disablePadding>
+              <ListItemButton onClick={() => setpage(4)}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="PROFILE"
+                  style={{ color: "#178582", fontWeight: "bold" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="MovieList" disablePadding>
+              <ListItemButton onClick={() => setpage(5)}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="MOVIELIST"
+                  style={{ color: "#178582", fontWeight: "bold" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="ThreadList" disablePadding>
+              <ListItemButton onClick={() => setpage(6)}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="THREADLIST"
+                  style={{ color: "#178582", fontWeight: "bold" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="Analytics" disablePadding>
+              <ListItemButton onClick={() => setpage(7)}>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText primary="Analytics" />
+              </ListItemButton>
+            </ListItem>
+          </List>
+          <Divider />
+        </Drawer>
+        <Main open={open}>
+          {page === 0 && <HomeAccount />}
+          {page === 1 && <MovieshowerFromInterests />}
+          {page === 2 && <PaginationApp />}
+          {page === 3 && <MovieRatings />}
+          {page === 4 && <ProfilePage />}
+          {page === 5 && <MovieList />}
+          {page === 6 && <ThreadList />}
+          {page === 7 && <Analytics />}
+        </Main>
+      </Box>
+    </ThemeProvider>
   );
 }

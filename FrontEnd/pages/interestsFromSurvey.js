@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Table from "@mui/material/Table";
@@ -16,6 +17,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 const lightTheme = createTheme({
   palette: {
@@ -102,6 +104,31 @@ export default function MovieshowerFromInterests() {
     handleCloseWatchedConfirmation();
   };
 
+  const getData3 = async () => {
+    try {
+      console.log('before')
+      const res = await axios.post(
+        "http://localhost:8003/suggestions", {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("authToken"),
+          },
+        }
+      );
+      console.log('after')
+      setMovies(res.data);
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getData3();
+  }, []);
+
+  
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -136,8 +163,9 @@ export default function MovieshowerFromInterests() {
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                {movies.map((list, index) => {
-                  return (
+
+                {movies.map((list, index) => {       
+                  return(           
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{list.title}</TableCell>
@@ -165,7 +193,7 @@ export default function MovieshowerFromInterests() {
                       </TableCell>
                     </TableRow>
                   );
-                })}
+                  })};
               </TableBody>
             </Table>
           </TableContainer>
