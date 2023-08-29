@@ -241,10 +241,27 @@ function Analytics() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Button variant="outlined" onClick={openPieChartDialog}>
             Open Pie Chart
-          </Button>
+            </Button>
           <Dialog open={isPieChartOpen} onClose={closePieChartDialog}>
-            <DialogTitle>Pie Chart</DialogTitle>
-            <DialogContent>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", p: 3 }}>
+            <Select
+                value={selectedAgeRange}
+                onChange={handleAgeRangeChange}
+                label="Age Range"
+                sx={{ marginBottom: 2, minWidth: 120 }}
+              >
+                <MenuItem value={null}>Select Age Range</MenuItem>
+                <MenuItem value="0-10">0-10</MenuItem>
+                <MenuItem value="11-20">11-20</MenuItem>
+                <MenuItem value="21-30">21-30</MenuItem>
+                <MenuItem value="31-40">31-40</MenuItem>
+                <MenuItem value="41-50">41-50</MenuItem>
+                <MenuItem value="51-60">51-60</MenuItem>
+                <MenuItem value="61-70">61-70</MenuItem>
+                <MenuItem value="71-80">71-80</MenuItem>
+                <MenuItem value="81-90">81-90</MenuItem>
+                <MenuItem value="91-100">91-100</MenuItem>
+              </Select>
               <PieChart width={400} height={300}>
                 <Pie
                   data={filteredPieData}
@@ -262,7 +279,7 @@ function Analytics() {
                 </Pie>
                 <Tooltip formatter={(value) => `No. of users - ${value}`} />
               </PieChart>
-            </DialogContent>
+              </Box>
             <DialogActions>
               <Button onClick={closePieChartDialog}>Close</Button>
             </DialogActions>
