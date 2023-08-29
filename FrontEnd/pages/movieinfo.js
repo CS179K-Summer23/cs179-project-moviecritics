@@ -60,6 +60,8 @@ const rows = [
 
 export default function MovieInfoApp({ moviename }) {
   const [movieinfo, setmovieinfo] = useState(jsonfile);
+  const [reviews, setreviews] = useState([]);
+  const [streaminfo, setstreaminfo] = useState({});
 
   const moviedata = async () => {
     try {
@@ -78,8 +80,41 @@ export default function MovieInfoApp({ moviename }) {
     }
   };
 
+  const revmovie = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8003/reviews", moviename,
+      );
+      console.log(res.data);
+      setreviews(res.data);
+      if (res.status === 200) {
+      } else {
+        alert("Failed to Retrieve");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getstream = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8003/streaminfo", moviename,
+      );
+      console.log(res.data);
+      setreviews(res.data);
+      if (res.status === 200) {
+      } else {
+        alert("Failed to Retrieve");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     moviedata();
+    revmovie();
   }, []);
 
 

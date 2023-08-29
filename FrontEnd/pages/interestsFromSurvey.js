@@ -47,6 +47,7 @@ export default function MovieshowerFromInterests({ jsonfile }) {
   const [sliderValue, setSliderValue] = useState(0);
   const [reviewedMovies, setReviewedMovies] = useState(new Set()); // Use a Set
   const [movies, setMovies] = useState(jsonfile); // State to hold movie data
+  const [openmovie, setopenmovie] = useState(false);
 
   const isMovieReviewed = (movie) => reviewedMovies.has(movie.id);
 
@@ -102,6 +103,14 @@ export default function MovieshowerFromInterests({ jsonfile }) {
     handleCloseWatchedConfirmation();
   };
 
+  const handleOpeninfo = (value) => {
+    setopenmovie(true);
+  };
+
+  const handleCloseinfo = (value) => {
+    setopenmovie(false);
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -140,7 +149,12 @@ export default function MovieshowerFromInterests({ jsonfile }) {
                   return (
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{list.title}</TableCell>
+                      <TableCell><Button
+                          variant="outlined"
+                          onClick={() => handleOpeninfo(list.title)}
+                        >
+                          {list.title}
+                        </Button></TableCell>
                       <TableCell>{list.genres}</TableCell>
                       <TableCell>{list.vote_average}</TableCell>
                       <TableCell>
@@ -211,6 +225,26 @@ export default function MovieshowerFromInterests({ jsonfile }) {
           </DialogActions>
         </Dialog>
       )}
+
+       { !openmovie && <Dialog onClose={handleCloseinfo}>
+          <DialogTitle>Review Movie</DialogTitle>
+          <DialogContent>
+            <DialogContentText>Please rate the movie below:</DialogContentText>
+            <Typography gutterBottom>Rating: {sliderValue}</Typography>
+            <Slider
+              value={sliderValue}
+              onChange={(event, newValue) => setSliderValue(newValue)}
+              valueLabelDisplay="auto"
+              min={0}
+              max={10}
+              step={0.1}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSubmitReview}>Submit Review</Button>
+          </DialogActions>
+        </Dialog> }
     </>
   );
 }
