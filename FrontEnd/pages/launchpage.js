@@ -29,7 +29,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function LaunchPage({setsignout, setemail, setjsonfile, setSurveySubmitted, setjsonfile2}) {
+export default function LaunchPage({setsignout, setemail, setSurveySubmitted}) {
 
   const [buttonstate, setbuttonstate] = useState(0);
   const [onLogin, setonLogin] = useState(false)
@@ -84,6 +84,7 @@ export default function LaunchPage({setsignout, setemail, setjsonfile, setSurvey
       >
     <form  onSubmit={onSubmit}>
     <h1>Welcome to MovieCritic!</h1>
+    <img src="FrontEnd\pages\movie_logo.png" alt="movie" width="500" height="600"></img>
       <Button
         onClick={() => (setbuttonstate(1))}
         type="submit"
@@ -108,7 +109,7 @@ export default function LaunchPage({setsignout, setemail, setjsonfile, setSurvey
       </Box>
         
         {buttonstate===1 && !accountCreated && (<><AccountCreation setsignout={setsignout} onSuccess={handleAccountCreationSuccess} setemail={setemail} /> </>)}
-        {buttonstate===1 && accountCreated && (<><UserSurveyApp  setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} onSuccess={handlesurverySubmit} /></>) }
+        {buttonstate===1 && accountCreated && (<><UserSurveyApp   onSuccess={handlesurverySubmit} /></>) }
         {buttonstate===2 && !onLogin && (<> <Login setsignout={setsignout} onLogin={handleLoginSuccess} setemail={setemail} setSurveySubmitted={setSurveySubmitted}/> </>)}
         {buttonstate===3}
         
