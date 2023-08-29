@@ -127,10 +127,8 @@ export default function HomeAccount() {
 
   const moviesPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
-  //const totalMovies = jsonfile2.length;
   const lastMovieIndex = currentPage * moviesPerPage;
   const firstMovieIndex = lastMovieIndex - moviesPerPage;
-  //const currentMovies = jsonfile2.slice(firstMovieIndex, lastMovieIndex);
 
 
   return (

@@ -85,6 +85,18 @@ function Analytics() {
         console.error("Error fetching pie chart data:", error);
       });
   }, []);
+  
+  const [genreMeanVoteData, setGenreMeanVoteData] = useState([]);
+  useEffect(() => {
+    // Fetch mean vote_average data using Axios from the Flask endpoint
+    axios.get("http://localhost:8003/meanVotePerGenre")
+      .then((response) => {
+        setGenreData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching mean vote data:", error);
+      });
+  }, []);
 
   const handleAgeRangeChange = (event) => {
     setSelectedAgeRange(event.target.value);
@@ -98,6 +110,8 @@ function Analytics() {
       });
   };
   const filteredPieData = pieData.filter(entry => entry.count > 0);
+
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
@@ -131,33 +145,33 @@ function Analytics() {
           <Typography variant="h6" sx={{ marginBottom: 2, color: "white" }}>
             Bar Chart
           </Typography>
-          <BarChart width={300} height={200} data={dummyBarData}>
+          <BarChart width={300} height={200} data={genreMeanVoteData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="label" />
+            <XAxis dataKey="genre" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="value" fill={COLORS[0]} />
+            <Bar dataKey="mean_vote_average" fill={COLORS[0]} />
           </BarChart>
-        <Button variant="outlined" onClick={openBarChartDialog}>
+          <Button variant="outlined" onClick={openBarChartDialog}>
             Open Bar Chart
-        </Button>
-        <Dialog open={isBarChartOpen} onClose={closeBarChartDialog}>
+          </Button>
+          <Dialog open={isBarChartOpen} onClose={closeBarChartDialog}>
             <DialogTitle>Bar Chart</DialogTitle>
             <DialogContent>
-            <BarChart width={300} height={200} data={dummyBarData}>
-            <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="value" fill={COLORS[0]} />
-            </BarChart>
+              <BarChart width={300} height={200} data={genreMeanVoteData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="label" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="value" fill={COLORS[0]} />
+              </BarChart>
             </DialogContent>
             <DialogActions>
-            <Button onClick={closeBarChartDialog}>Close</Button>
+              <Button onClick={closeBarChartDialog}>Close</Button>
             </DialogActions>
-        </Dialog>
+          </Dialog>
         </div>
 
         {/* Line Chart */}

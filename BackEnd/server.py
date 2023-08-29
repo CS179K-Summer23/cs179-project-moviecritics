@@ -12,10 +12,12 @@ import csv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_
+from sqlalchemy import func
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
 from movie_recommendation import MovieRecommendationSystem
+from collections import defaultdict
 
 #from surprise import Dataset, Reader, SVD
 #from surprise.model_selection import train_test_split
@@ -277,8 +279,35 @@ def getGenreByAgeData():
 
     genre_data = [{"genre": genre, "count": count} for genre, count in genre_counts.items()]
 
-
+    print('genre_data:', genre_data)
     return jsonify(genre_data)
+
+
+@app.route('/meanVotePerGenre', methods=['GET'])
+def getMeanVotePerGenre():
+    genre_sums = defaultdict(float)
+    genre_counts = Counter()
+
+    movies = db.session.query(moviedetails.genre, moviedetails.vote_average).all()
+
+    for movie_genre, mean_vote_average in movies:
+        individual_genres = movie_genre.split('-')
+        for genre in individual_genres:
+            genre_sums[genre] += mean_vote_average
+            genre_counts[genre] += 1
+    
+    print('Genres', genre_counts)
+
+    genre_mean_vote_data = [
+        {"genre": genre, "mean_vote_average": round(genre_sums[genre] / genre_counts[genre], 2)}
+        for genre in genre_counts.keys()
+    ]
+    
+    #print('mean__vote_genres', genre_mean_vote_data)
+    genre_mean_vote_data.sort(key=lambda x: x["mean_vote_average"], reverse=True)
+    top_10_genre_mean_vote_data = genre_mean_vote_data[:10]
+    print('top_10_genre_mean_vote_data', top_10_genre_mean_vote_data)
+    return jsonify(top_10_genre_mean_vote_data)
 
 
 @app.route('/usersurvey', methods=['POST'])
