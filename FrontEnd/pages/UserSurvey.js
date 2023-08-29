@@ -80,15 +80,8 @@ export default function UserSurveyApp({ onSuccess, setjsonfile, setjsonfile2 }) 
             },
           }
         );
-        const jsonfileresult = res.data;
-        const jsonfileresult2 = res2.data;
-        console.log(jsonfileresult);
-        console.log(jsonfileresult2);
-        setloading(false);
-        setjsonfile(jsonfileresult);
-        setjsonfile2(jsonfileresult2);
-        //setjsonfilevar(res.data);
-        alert(res2.data);
+        
+        
         if (res.data && res.status === 200) {
           if (onSuccess) {
             onSuccess();
