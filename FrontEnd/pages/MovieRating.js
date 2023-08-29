@@ -19,9 +19,9 @@ import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 
-const lightTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
-    mode: "light",
+    mode: "dark",
   },
 });
 
@@ -120,20 +120,23 @@ export default function MovieRatings() {
 
   return (
     <>
-      <ThemeProvider theme={lightTheme}>
+      <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <h1>___________Suggestions Based on ReleaseDate</h1>
+        <div style={{ textAlign: "center" }}>
+        <h1 style={{ color: "#178582" }}>Suggestions Based on ReleaseDate</h1>
+        </div>
         <Box
           sx={{
             marginTop: 8,
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "white",
+            backgroundColor: "black",
             align: "center",
             width: "950px",
             borderRadius: 8,
             marginLeft: "auto",
             marginRight: "auto",
+            color: "#178582"
           }}
         >
           <TableContainer>
@@ -141,30 +144,37 @@ export default function MovieRatings() {
               <caption>Generated from Movie Rating</caption>
               <TableHead>
                 <StyledTableRow>
-                  <TableCell>Rank</TableCell>
-                  <TableCell>Movie Title</TableCell>
-                  <TableCell>Genres</TableCell>
-                  <TableCell>Votes</TableCell>
-                  <TableCell>Rating</TableCell>
-                  <TableCell>Release Date</TableCell>
-                  <TableCell>Watched?</TableCell>
-                  <TableCell>Review?</TableCell>
-                  <TableCell>Reviewed</TableCell>
+                  <TableCell sx={{ color: '#B2B5E0'}}>RANK</TableCell>
+                  <TableCell sx={{ color: '#B2B5E0' }}>MOVIE TITLE</TableCell>
+                  <TableCell sx={{ color: '#B2B5E0' }}>GENRE(S)</TableCell>
+                  <TableCell sx={{ color: '#B2B5E0' }}>VOTES</TableCell>
+                  <TableCell sx={{ color: '#B2B5E0' }}>RATING</TableCell>
+                  <TableCell sx={{ color: '#B2B5E0' }}>RELEASE DATE</TableCell>
+                  <TableCell sx={{ color: '#B2B5E0' }}>WATCHED?</TableCell>
+                  <TableCell sx={{ color: '#B2B5E0' }}>REVIEW?</TableCell>
+                  <TableCell sx={{ color: '#B2B5E0' }}>REVIEWED</TableCell>
                 </StyledTableRow>
               </TableHead>
               <TableBody>
                 {jsonfile.map((movie) => {
                   return(
                   <TableRow key={movie.id}>
-                    <TableCell>{movie.id}</TableCell>
-                    <TableCell>{movie.title}</TableCell>
-                    <TableCell>{movie.genres}</TableCell>
-                    <TableCell>{movie.vote_count}</TableCell>
-                    <TableCell>{movie.vote_average}</TableCell>
-                    <TableCell>{movie.release_date}</TableCell>
+                    <TableCell sx={{ color: '#178582' }}>{movie.id}</TableCell>
+                    <TableCell sx={{ color: '#178582' }}>{movie.title}</TableCell>
+                    <TableCell sx={{ color: '#178582' }}>{movie.genres}</TableCell>
+                    <TableCell sx={{ color: '#178582' }}>{movie.vote_count}</TableCell>
+                    <TableCell sx={{ color: '#178582' }}>{movie.vote_average}</TableCell>
+                    <TableCell sx={{ color: '#178582' }}>{movie.release_date}</TableCell>
                     <TableCell>
                       <Button
                         variant="outlined"
+                        sx={{
+                          backgroundColor: "#178582",
+                          color: "white",
+                          "&:hover": {
+                            backgroundColor: "#178582",
+                          },
+                        }}
                         onClick={() => handleOpenWatched(movie)}
                       >
                         Watch
@@ -173,12 +183,19 @@ export default function MovieRatings() {
                     <TableCell>
                       <Button
                         variant="outlined"
+                        sx={{
+                          backgroundColor: "#178582",
+                          color: "white",
+                          "&:hover": {
+                            backgroundColor: "#178582",
+                          },
+                        }}
                         onClick={() => handleOpenReview(movie)}
                       >
                         Review
                       </Button>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ color: "#178582" }}>
                       {reviewedMovies.includes(movie.id) ? "True" : "False"}
                     </TableCell>
                   </TableRow>

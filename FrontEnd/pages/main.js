@@ -323,13 +323,16 @@ export default function MainApp({ setsignout, email }) {
               </ListItemButton>
             </ListItem>
             <ListItem key="Analytics" disablePadding>
-              <ListItemButton onClick={() => setpage(7)}>
-                <ListItemIcon>
-                  <DescriptionIcon />
-                </ListItemIcon>
-                <ListItemText primary="Analytics" />
-              </ListItemButton>
-            </ListItem>
+  <ListItemButton onClick={() => setpage(7)}>
+    <ListItemIcon>
+      <DescriptionIcon />
+    </ListItemIcon>
+    <ListItemText
+      primary="ANALYTICS"
+      style={{ color: "#178582", fontWeight: "bold" }}
+    />
+  </ListItemButton>
+</ListItem>
           </List>
           <Divider />
         </Drawer>
