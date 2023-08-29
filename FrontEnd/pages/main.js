@@ -26,7 +26,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DescriptionIcon from "@mui/icons-material/Description";
 import CloseIcon from "@mui/icons-material/Close";
-import Analytics  from "./analytics";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -299,14 +298,6 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
                       <ListItemText primary="THREADLIST" style={{ color: '#178582' ,fontWeight: 'bold'}}/>
                     </ListItemButton>
                   </ListItem>
-                  <ListItem key="Analytics" disablePadding>
-                    <ListItemButton onClick={() => (setpage(7))}>
-                      <ListItemIcon>
-                          <DescriptionIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Analytics" />
-                    </ListItemButton>
-                  </ListItem>
                   
            
             </List>
@@ -314,13 +305,12 @@ export default function MainApp({ setsignout, jsonfile, jsonfile2, email }) {
           </Drawer>
           <Main open={open} >  
             {page === 0 && <HomeAccount /> }
-            {page===1 && <MovieshowerFromInterests  />  }
+            {page===1 && <MovieshowerFromInterests jsonfile={jsonfile} />  }
             {page===2 && <PaginationApp />  }
-            {page===3 && <MovieRatings /> }
+            {page===3 && <MovieRatings jsonfile2={jsonfile2}/> }
             {page===4 && <ProfilePage />}
             {page===5  && <MovieList />}
             {page === 6 && <ThreadList />}
-            {page === 7 && <Analytics />}
             
 
           </Main>

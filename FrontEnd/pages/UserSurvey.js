@@ -21,7 +21,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function UserSurveyApp({ onSuccess }) {
+export default function UserSurveyApp({ onSuccess, setjsonfile, setjsonfile2 }) {
   const [loading, setloading] = useState(false);
   const [open, setOpen] = useState(true);
   const [preferences, setPreferences] = useState({
@@ -63,7 +63,7 @@ export default function UserSurveyApp({ onSuccess }) {
       try {
         setloading(true);
         const res = await axios.post(
-          "http://localhost:8003/usersurvey",
+          "http://localhost:8002/usersurvey",
           preferences,
           {
             headers: {
@@ -71,8 +71,24 @@ export default function UserSurveyApp({ onSuccess }) {
             },
           }
         );
-        
-        alert(res.data);
+        const res2 = await axios.post(
+          "http://localhost:8002/movieratings",
+          preferences,
+          {
+            headers: {
+              Authorization: localStorage.getItem('authToken'),
+            },
+          }
+        );
+        const jsonfileresult = res.data;
+        const jsonfileresult2 = res2.data;
+        console.log(jsonfileresult);
+        console.log(jsonfileresult2);
+        setloading(false);
+        setjsonfile(jsonfileresult);
+        setjsonfile2(jsonfileresult2);
+        //setjsonfilevar(res.data);
+        alert(res2.data);
         if (res.data && res.status === 200) {
           if (onSuccess) {
             onSuccess();

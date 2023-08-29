@@ -32,7 +32,7 @@ const jsonfile = [
   // Your JSON data
 ];
 
-export default function MovieRatings() {
+export default function MovieRatings({ jsonfile2 }) {
   const [openReview, setOpenReview] = useState(false);
   const [openWatchedConfirmation, setOpenWatchedConfirmation] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -75,7 +75,7 @@ export default function MovieRatings() {
     console.log("handleConfirmWatched")
     try {
       const response = await axios.post(
-        `http://localhost:8003/addToWatchList/${selectedMovie.title}`,
+        `http://localhost:8002/addToWatchList/${selectedMovie.title}`,
         {},
         {
           headers: {

@@ -104,8 +104,8 @@ export default function Home() {
       <ThemeProvider theme={customTheme}>
         <Box sx={{ display: "flex" }}>
           <Main open={open}>
-            {surveySubmitted === false && (<LaunchPage  setSurveySubmitted={setSurveySubmitted}/> )}
-            {surveySubmitted === true && signout ===false && <MainApp setsignout={setsignout} email={email} />}
+            {surveySubmitted === false && (<LaunchPage setsignout={setsignout} setemail={setemail} setjsonfile={setjsonfile} setjsonfile2={setjsonfile2} setSurveySubmitted={setSurveySubmitted}/> )}
+            {surveySubmitted === true && signout ===false && <MainApp setsignout={setsignout} jsonfile={jsonfile} jsonfile2={jsonfile2} email={email} />}
           </Main>
         </Box>
       </ThemeProvider>

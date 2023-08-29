@@ -29,7 +29,7 @@ const darkTheme = createTheme({
   },
 });
 
-export default function LaunchPage({setsignout, setemail, setSurveySubmitted}) {
+export default function LaunchPage({setsignout, setemail, setjsonfile, setSurveySubmitted, setjsonfile2}) {
 
   const [buttonstate, setbuttonstate] = useState(0);
   const [onLogin, setonLogin] = useState(false)

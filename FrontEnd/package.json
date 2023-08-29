@@ -29,7 +29,6 @@
     "react-scripts": "^5.0.1",
     "react-scrollbars-custom": "^4.1.1",
     "react-virtualized": "^9.22.5",
-    "recharts": "^2.8.0",
     "styled-components": "^5.3.11"
   },
   "browserslist": {
