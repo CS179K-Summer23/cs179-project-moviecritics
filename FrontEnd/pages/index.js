@@ -99,10 +99,11 @@ export default function Home() {
 
   return (
     <>
+    
       <ThemeProvider theme={customTheme}>
         <Box sx={{ display: "flex" }}>
           <Main open={open}>
-            {surveySubmitted === false && (<LaunchPage  setemail={setemail} setsignout={setsignout} setSurveySubmitted={setSurveySubmitted}/> )}
+            {surveySubmitted === false && (<LaunchPage setsignout={setsignout} setemail={setemail} setSurveySubmitted={setSurveySubmitted}/> )}
             {surveySubmitted === true && signout ===false && <MainApp setsignout={setsignout} email={email} />}
           </Main>
         </Box>

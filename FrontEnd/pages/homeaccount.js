@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Table from "@mui/material/Table";
@@ -16,7 +17,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
-import { Container,Link } from "@mui/material";
+import { Container, Link } from "@mui/material";
 import axios from "axios";
 
 const lightTheme = createTheme({
@@ -31,31 +32,37 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function HomeAccount() {
   const [openReview, setOpenReview] = useState(false);
-  const [openWatchedConfirmation, setOpenWatchedConfirmation] = useState(false);
+  const [openWatchedConfirmation, setOpenWatchedConfirmation] =useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [sliderValue, setSliderValue] = useState(0);
   const [reviewedMovies, setReviewedMovies] = useState([]);
   const [isBackdropView, setIsBackdropView] = useState({});
   const [jsonfile, setjsonfile] = useState({})
+  const [currentMovies, setcurrentMovies] = useState([]);
+  const [totalMovies, settotalMovies] = useState(0);
 
   const [news, setNews] = useState([]);
 
-  const getData = async() => {
+  const getData = async () => {
     try {
-      setloading(true);
+      console.log('before')
       const res = await axios.post(
-        "http://localhost:8003/movierating",
-        preferences,
+        "http://localhost:8003/movierating",{},
         {
           headers: {
-            Authorization: localStorage.getItem('authToken'),
+            Authorization: localStorage.getItem("authToken"),
           },
         }
       );
+      console.log('after')
+      setjsonfile(res.data);
+      console.log(res.data);
+      setcurrentMovies(jsonfile.slice(firstMovieIndex, lastMovieIndex));
+      settotalMovies(jsonfile.length);
     } catch (err) {
       console.error(err);
     }
-}
+  };
 
   useEffect(() => {
     fetch("http://localhost:8003/news")
@@ -104,7 +111,7 @@ export default function HomeAccount() {
     handleClose();
   };
 
-  const handleConfirmWatched = async() => {
+  const handleConfirmWatched = async () => {
     // Mark the movie as watched or perform other actions
     // You can add your logic here to update the state or perform any other actions.
     // For example, you can set a "watched" flag for the selected movie.
@@ -112,6 +119,11 @@ export default function HomeAccount() {
     // Close the watched confirmation dialog
     handleCloseWatchedConfirmation();
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
 
   const moviesPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -154,9 +166,10 @@ export default function HomeAccount() {
           backgroundColor: "#333",
         }}
       >
-        <Typography variant="h4" sx={{ marginBottom: 2, color: "white" }}>
-          
-        </Typography>
+        <Typography
+          variant="h4"
+          sx={{ marginBottom: 2, color: "white" }}
+        ></Typography>
         <Box
           sx={{
             display: "flex",
@@ -165,78 +178,102 @@ export default function HomeAccount() {
             width: "100%", // Add this to make sure pagination buttons stay within the container
           }}
         >
-          {currentMovies.map((movie) => (
-            <Box
-              key={movie.id}
-              sx={{
-                width: "300px",
-                backgroundColor: "#333",
-                color: "#fff",
-                padding: "16px",
-                borderRadius: 8,
-                margin: "8px",
-              }}
-            >
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                <Typography variant="h5">{movie.title}</Typography>
-                <Typography variant="h8">{movie.genre}</Typography>
-              </Box>
+          {currentMovies.map((movie) => {
+            return (
               <Box
+                key={movie.id}
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginBottom: "8px",
                   width: "300px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  padding: "16px",
+                  borderRadius: 8,
+                  margin: "8px",
                 }}
               >
                 <Box
                   sx={{
-                    width: "200px",
-                    height: "200px",
-                    overflow: "hidden",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "8px",
                   }}
                 >
-                  <img
-                    src={
-                      isBackdropView[movie.id]
-                        ? `https://image.tmdb.org/t/p/w1280/${movie.backdrop_path}`
-                        : `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-                    }
-                    alt={`Image for ${movie.title}`}
-                    height="200"
-                    width="200"
-                    onClick={() => toggleBackdropView(movie.id)}
-                    style={{
-                      cursor: "pointer",
-                      display: "block",
-                      margin: "auto",
+                  <Typography variant="h5">{movie.title}</Typography>
+                  <Typography variant="h8">{movie.genre}</Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "8px",
+                    width: "300px",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: "200px",
+                      height: "200px",
+                      overflow: "hidden",
                     }}
-                  />
+                  >
+                    <img
+                      src={
+                        isBackdropView[movie.id]
+                          ? `https://image.tmdb.org/t/p/w1280/${movie.backdrop_path}`
+                          : `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+                      }
+                      alt={`Image for ${movie.title}`}
+                      height="200"
+                      width="200"
+                      onClick={() => toggleBackdropView(movie.id)}
+                      style={{
+                        cursor: "pointer",
+                        display: "block",
+                        margin: "auto",
+                      }}
+                    />
+                  </Box>
+                </Box>
+                <Box>
+                  <Typography>
+                    Votes: {movie.vote_count} | Rating: {movie.vote_average} |
+                    Release Date: {movie.release_date}
+                  </Typography>
+                  <Typography variant="h7">{movie.rated}</Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginTop: "8px",
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleOpenWatched(movie)}
+                    >
+                      Watch
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleOpenReview(movie)}
+                    >
+                      Review
+                    </Button>
+                    {reviewedMovies.includes(movie.id) ? (
+                      <Typography color="success">Reviewed</Typography>
+                    ) : (
+                      <Typography color="error">Not Reviewed</Typography>
+                    )}
+                  </Box>
                 </Box>
               </Box>
-              <Box>
-                <Typography>
-                  Votes: {movie.vote_count} | Rating: {movie.vote_average} | Release Date: {movie.release_date}
-                </Typography>
-                <Typography variant="h7">{movie.rated}</Typography>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
-                  <Button variant="outlined" onClick={() => handleOpenWatched(movie)}>
-                    Watch
-                  </Button>
-                  <Button variant="outlined" onClick={() => handleOpenReview(movie)}>
-                    Review
-                  </Button>
-                  {reviewedMovies.includes(movie.id) ? (
-                    <Typography color="success">Reviewed</Typography>
-                  ) : (
-                    <Typography color="error">Not Reviewed</Typography>
-                  )}
-                </Box>
-              </Box>
-            </Box>
-          ))}
+            );
+          })}
+          ;
         </Box>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Button
@@ -270,7 +307,8 @@ export default function HomeAccount() {
         <Typography variant="h4" sx={{ marginBottom: 2, color: "white" }}>
           Latest News
         </Typography>
-        {news.map((article, index) => (
+        {news.map((article, index) => {
+          return(
           <Container
             key={index}
             sx={{
@@ -291,7 +329,8 @@ export default function HomeAccount() {
               Read more
             </Link>
           </Container>
-        ))}
+          );
+          })};
       </Box>
     </ThemeProvider>
   );

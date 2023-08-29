@@ -84,6 +84,7 @@ export default function LaunchPage({setsignout, setemail, setSurveySubmitted}) {
       >
     <form  onSubmit={onSubmit}>
     <h1>Welcome to MovieCritic!</h1>
+    <img src="FrontEnd\pages\movie_logo.png" alt="movie" width="500" height="600"></img>
       <Button
         onClick={() => (setbuttonstate(1))}
         type="submit"

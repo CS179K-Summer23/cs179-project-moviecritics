@@ -71,11 +71,13 @@ export default function UserSurveyApp({ onSuccess }) {
             },
           }
         );
-
-
-        setloading(false);
-        onSuccess();
-
+        
+        
+        if (res.data && res.status === 200) {
+          if (onSuccess) {
+            onSuccess();
+          }
+        }
       } catch (err) {
         console.error(err);
       }

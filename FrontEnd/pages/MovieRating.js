@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Table from "@mui/material/Table";
@@ -28,8 +29,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   backgroundColor: theme.palette.common.black,
 }));
 
-const jsonfile = [
-  // Your JSON data
+const jsonfile1 = [
+  { id: 1, title: "Movie 1", genres: "Action", vote_average: 9.5, Rated: "PG-13" },
 ];
 
 export default function MovieRatings() {
@@ -38,7 +39,7 @@ export default function MovieRatings() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [sliderValue, setSliderValue] = useState(0);
   const [reviewedMovies, setReviewedMovies] = useState([]);
-  
+  const [jsonfile, setjsonfile] = useState(jsonfile1);
 
   const handleOpenReview = (movie) => {
     setSelectedMovie(movie);
@@ -95,6 +96,28 @@ export default function MovieRatings() {
     }
   };
 
+  const getData2 = async () => {
+    try {
+      console.log('before')
+      const res = await axios.post(
+        "http://localhost:8003/movierating", {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("authToken"),
+          },
+        }
+      );
+      console.log('after')
+      setjsonfile(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getData2();
+  }, []);
+
   return (
     <>
       <ThemeProvider theme={lightTheme}>
@@ -130,7 +153,8 @@ export default function MovieRatings() {
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                {jsonfile2.map((movie) => (
+                {jsonfile.map((movie) => {
+                  return(
                   <TableRow key={movie.id}>
                     <TableCell>{movie.id}</TableCell>
                     <TableCell>{movie.title}</TableCell>
@@ -158,7 +182,8 @@ export default function MovieRatings() {
                       {reviewedMovies.includes(movie.id) ? "True" : "False"}
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                  })};
               </TableBody>
             </Table>
           </TableContainer>
