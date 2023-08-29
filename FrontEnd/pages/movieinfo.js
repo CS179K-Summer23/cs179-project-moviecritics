@@ -1,6 +1,6 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useState } from "react";
 import { Box } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -64,11 +64,11 @@ export default function MovieInfoApp({ moviename }) {
   const moviedata = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8002/movieInfo",
+        "http://localhost:8003/movieInfo",
         moviename
       );
       console.log(res.data);
-      setmovieinfo(movieinfo);
+      setmovieinfo(res.data);
       if (res.status === 200) {
       } else {
         alert("Failed to Retrieve");
@@ -77,6 +77,11 @@ export default function MovieInfoApp({ moviename }) {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    moviedata();
+  }, []);
+
 
   return (
     <>

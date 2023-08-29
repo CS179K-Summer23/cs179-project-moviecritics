@@ -404,6 +404,15 @@ def get_news():
     articles = news_api.fetch_news()
     return jsonify(articles)
 
+@app.route('/movieInfo')
+def get_movieinfo():
+    data = request.json()
+    name = data.get('id')
+    data = moviedetails.query.filter_by(id=name).first()
+    revs = movie_reviews.query.filter_by(id=name)
+    
+        
+    return data
 
 # Route for seeing a data
 @app.route('/data')
