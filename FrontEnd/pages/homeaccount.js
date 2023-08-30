@@ -30,15 +30,31 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   backgroundColor: theme.palette.common.black,
 }));
 
+const jsonfile1 = [
+  {
+    id: 1,
+    title: "Movie 1",
+    genres: "Action",
+    vote_average: 9.5,
+    Rated: "PG-13",
+  },
+  { id: 2, title: "Movie 2", genres: "Drama", vote_average: 8.7, Rated: "R" },
+
+];
 export default function HomeAccount() {
+  
+  
+  
   const [openReview, setOpenReview] = useState(false);
   const [openWatchedConfirmation, setOpenWatchedConfirmation] =useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [sliderValue, setSliderValue] = useState(0);
   const [reviewedMovies, setReviewedMovies] = useState([]);
   const [isBackdropView, setIsBackdropView] = useState({});
+
   const [jsonfile, setjsonfile] = useState({});
   const [currentMovies, setcurrentMovies] = useState([]);
+
   const [totalMovies, settotalMovies] = useState(0);
 
   const [news, setNews] = useState([]);
@@ -57,7 +73,6 @@ export default function HomeAccount() {
       console.log('after')
       setjsonfile(res.data);
       console.log(res.data);
-      setcurrentMovies(jsonfile.slice(firstMovieIndex, lastMovieIndex));
       settotalMovies(jsonfile.length);
     } catch (err) {
       console.error(err);
@@ -125,10 +140,8 @@ export default function HomeAccount() {
   }, []);
 
 
-  const moviesPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-  const lastMovieIndex = currentPage * moviesPerPage;
-  const firstMovieIndex = lastMovieIndex - moviesPerPage;
+  
+
 
   return (
     <ThemeProvider theme={lightTheme}>
@@ -175,7 +188,7 @@ export default function HomeAccount() {
             width: "100%", // Add this to make sure pagination buttons stay within the container
           }}
         >
-          {currentMovies.map((movie) => {
+          {jsonfile.map((movie) => {
             return (
               <Box
                 key={movie.id}
@@ -270,23 +283,8 @@ export default function HomeAccount() {
               </Box>
             );
           })}
-          ;
         </Box>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-            sx={{ marginRight: "10px" }}
-          >
-            Previous
-          </Button>
-          <Button
-            disabled={lastMovieIndex >= totalMovies}
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
-            Next
-          </Button>
-        </Box>
+        
       </Container>
 
       {/* Latest News */}

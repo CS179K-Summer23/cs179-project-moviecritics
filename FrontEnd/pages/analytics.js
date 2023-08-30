@@ -13,6 +13,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { Container, Typography, Button, Dialog, Select, MenuItem, Box, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import axios from "axios";
+import { FormControlLabel, Checkbox } from "@mui/material";
+import Switch from '@mui/material/Switch';
 
 const darkTheme = createTheme({
   palette: {
@@ -42,6 +44,7 @@ const dummyPieData = [
 ];
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042"];  
+
 
 function Analytics() {
     const [isBarChartOpen, setIsBarChartOpen] = useState(false);
@@ -98,6 +101,94 @@ function Analytics() {
       });
   };
   const filteredPieData = pieData.filter(entry => entry.count > 0);
+
+
+
+  const [barData, setBarData] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [showTotalMovies, setShowTotalMovies] = useState(false);
+  const [showOnPage, setShowOnPage] = useState(true); 
+
+  useEffect(() => {
+    axios.get("http://localhost:8003/meanVotePerGenre")
+      .then((response) => {
+        setBarData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching mean vote data:", error);
+      });
+  }, []);
+
+  const handleGenreCheckboxChange = (event) => {
+    const genre = event.target.value;
+    if (event.target.checked) {
+      setSelectedGenres([...selectedGenres, genre]);
+    } else {
+      setSelectedGenres(selectedGenres.filter((selectedGenre) => selectedGenre !== genre));
+    }
+  };
+
+  const toggleShowTotalMovies = () => {
+    setShowTotalMovies(!showTotalMovies);
+  };
+
+  const toggleBarChartDialog = () => {
+    setIsBarChartOpen(!isBarChartOpen);
+  };
+
+  const toggleShowOnPage = () => {
+    setShowOnPage(!showOnPage);
+  };
+
+  const filteredBarData = barData.filter((data) =>
+    selectedGenres.includes(data.genre)
+  );
+
+
+
+
+const [lineData, setLineData] = useState([]);
+const [isTopGenres, setIsTopGenres] = useState(true);
+const [activeDataKey, setActiveDataKey] = useState('rating');
+
+const toggleDataKey = () => {
+  const newDataKey = activeDataKey === 'rating' ? 'budget' :
+                    activeDataKey === 'budget' ? 'revenue' :
+                    activeDataKey === 'revenue' ? 'profit' : 'rating';
+  setActiveDataKey(newDataKey);
+};
+
+useEffect(() => {
+  axios.get("http://localhost:8003/topGenresAndCompanies")
+    .then((response) => {
+      setLineData(response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+}, [activeDataKey]);
+
+let lineChartData = [];
+
+if (lineData) {
+  const dataPoints = isTopGenres ? lineData.top_genres : lineData.top_companies;
+
+  if (dataPoints) {
+    lineChartData = dataPoints.map((dataPoint) => ({
+      label: isTopGenres ? dataPoint.genre : dataPoint.company,
+      rating: isTopGenres ? dataPoint.rating : dataPoint[activeDataKey],
+      budget: parseFloat(dataPoint.budget.replace(/[$,]/g, '')),
+      revenue: parseFloat(dataPoint.revenue.replace(/[$,]/g, '')),
+      profit: parseFloat(dataPoint.profit.replace(/[$,]/g, '')),
+    }));
+  }
+}
+
+const toggleChartType = () => {
+  setIsTopGenres(!isTopGenres);
+};
+
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
@@ -126,70 +217,245 @@ function Analytics() {
           backgroundColor: "#333",
         }}
       >
-        {/* Bar Chart */}
-        <div>
-          <Typography variant="h6" sx={{ marginBottom: 2, color: "white" }}>
+      {/* Bar Chart */}
+      <div>
+          <Typography variant="h6" sx={{ marginBottom: 1, color: "white" }}>
             Bar Chart
           </Typography>
-          <BarChart width={300} height={200} data={dummyBarData}>
+          <BarChart width={300} height={200} data={filteredBarData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="label" />
+            <XAxis dataKey="genre" angle={-90} textAnchor="end" interval={0} tickMargin={10} />
             <YAxis />
-            <Tooltip />
+            <Tooltip formatter={(value, name, props) => [value, props.payload.genre]} />
             <Legend />
-            <Bar dataKey="value" fill={COLORS[0]} />
+            <Bar dataKey={showOnPage ? (showTotalMovies ? "total_movies" : "mean_vote_average") : "mean_vote_average"}>
+              {filteredBarData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Bar>
           </BarChart>
-        <Button variant="outlined" onClick={openBarChartDialog}>
+          <Button variant="outlined" onClick={toggleBarChartDialog}>
             Open Bar Chart
-        </Button>
-        <Dialog open={isBarChartOpen} onClose={closeBarChartDialog}>
+          </Button>
+        </div>
+
+        {/* Dialog */}
+        {isBarChartOpen && (
+          <Dialog open={isBarChartOpen} onClose={toggleBarChartDialog}>
             <DialogTitle>Bar Chart</DialogTitle>
             <DialogContent>
-            <BarChart width={300} height={200} data={dummyBarData}>
-            <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="value" fill={COLORS[0]} />
-            </BarChart>
+              {/* Graph content inside dialog */}
+              <div>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={showTotalMovies}
+                      onChange={toggleShowTotalMovies}
+                      color="primary"
+                    />
+                  }
+                  label="Show Total Movies"
+                />
+                <div>
+                  {barData.map((genreData, index) => (
+                    <FormControlLabel
+                      key={index}
+                      control={
+                        <Checkbox
+                          checked={selectedGenres.includes(genreData.genre)}
+                          onChange={handleGenreCheckboxChange}
+                          value={genreData.genre}
+                        />
+                      }
+                      label={genreData.genre}
+                    />
+                  ))}
+                </div>
+                <BarChart width={600} height={400} data={filteredBarData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="genre"
+                    label={{ value: "Genres", position: "insideBottom", offset: -5 }}
+                    angle={-90}
+                    textAnchor="end"
+                    interval={0}
+                    tickMargin={10}
+                  />
+                  <YAxis
+                    label={{
+                      value: showTotalMovies ? "Total Movies" : "Avg Rating",
+                      angle: -90,
+                      position: "insideLeft",
+                    }}
+                  />
+                  <Tooltip formatter={(value, name, props) => [value, props.payload.genre]} />
+                  <Legend />
+                  <Bar dataKey={showTotalMovies ? "total_movies" : "mean_vote_average"}>
+                    {filteredBarData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </div>
             </DialogContent>
             <DialogActions>
-            <Button onClick={closeBarChartDialog}>Close</Button>
+              <Button onClick={toggleBarChartDialog}>Close</Button>
             </DialogActions>
-        </Dialog>
-        </div>
+          </Dialog>
+        )}
+
+        
 
         {/* Line Chart */}
         <div>
-          <Typography variant="h6" sx={{ marginBottom: 2, color: "white" }}>
+          <Typography variant="h6" sx={{ marginBottom: 1, color: "white" }}>
             Line Chart
           </Typography>
-          <LineChart width={300} height={200} data={dummyLineData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="label" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="value" stroke={COLORS[1]} />
-          </LineChart>
-          <Button variant="outlined" onClick={openLineChartDialog}>
-            Open Line Chart
-          </Button>
+          <LineChart width={300} height={200} data={lineChartData}>
+  <CartesianGrid strokeDasharray="3 3" />
+  <XAxis
+    dataKey="label"
+    angle={-45}
+    textAnchor="end"
+    interval={0}
+    tickMargin={10}
+  />
+  <YAxis
+    label={{
+      value:
+        activeDataKey === "rating"
+          ? "Rating"
+          : activeDataKey === "budget"
+          ? "Budget"
+          : activeDataKey === "revenue"
+          ? "Revenue"
+          : activeDataKey === "profit"
+          ? "Profit"
+          : "",
+      angle: -90,
+      position: "insideLeft",
+    }}
+  />
+ <Tooltip
+    labelFormatter={(value) => {
+      return value; // Use the x-axis label directly as the tooltip label
+    }}
+    formatter={(value, name, props) => {
+      if (activeDataKey === "budget" || activeDataKey === "revenue" || activeDataKey === "profit") {
+        // Format the value with dollar signs and commas
+        const formattedValue = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(value);
+        return [`${props.payload.label}: ${formattedValue}`];
+      } else {
+        return [`${props.payload.label}: ${value}`]; // Display only the x-axis label and the value
+      }
+    }}
+  />
+  <Legend />
+  <Line
+    type="monotone"
+    dataKey={activeDataKey}
+    stroke={COLORS[0]}
+    strokeWidth={2}
+  />
+</LineChart>
           <Dialog open={isLineChartOpen} onClose={closeLineChartDialog}>
-            <LineChart width={400} height={300} data={dummyLineData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="value" stroke={COLORS[1]} />
-            </LineChart>
+            <DialogTitle>Line Chart</DialogTitle>
+            <DialogContent>
+              <div>
+                <div>
+                  <Button variant="outlined" onClick={toggleChartType}>
+                    Toggle Chart Type
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={toggleDataKey}
+                    style={{ marginLeft: 10 }}
+                  >
+                    Toggle Data Type
+                  </Button>
+                </div>
+              </div>
+              <div>
+              <LineChart width={600} height={400} data={lineChartData}>
+  <CartesianGrid strokeDasharray="3 3" />
+  <XAxis
+    dataKey="label"
+    angle={-45}
+    textAnchor="end"
+    interval={0}
+    tickMargin={10}
+  />
+  <YAxis
+    label={{
+      value:
+        activeDataKey === "rating"
+          ? "Rating"
+          : activeDataKey === "budget"
+          ? "Budget"
+          : activeDataKey === "revenue"
+          ? "Revenue"
+          : activeDataKey === "profit"
+          ? "Profit"
+          : "",
+      angle: -90,
+      position: "insideLeft",
+    }}
+  />
+  <Tooltip
+    labelFormatter={(value) => {
+      return value; // Use the x-axis label directly as the tooltip label
+    }}
+    formatter={(value, name, props) => {
+      if (activeDataKey === "budget" || activeDataKey === "revenue" || activeDataKey === "profit") {
+        // Format the value with dollar signs and commas
+        const formattedValue = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(value);
+        return [`${props.payload.label}: ${formattedValue}`];
+      } else {
+        return [`${props.payload.label}: ${value}`]; // Display only the x-axis label and the value
+      }
+    }}
+  />
+  <Legend />
+  {activeDataKey === "rating" ? (
+    <Line
+      type="monotone"
+      dataKey={activeDataKey}
+      stroke={COLORS[0]}
+      strokeWidth={2}
+    />
+  ) : (
+    <Line
+      type="monotone"
+      dataKey={activeDataKey}
+      stroke={COLORS[1]} // Use different color for budget, revenue, profit
+      strokeWidth={2}
+    />
+  )}
+</LineChart>
+              </div>
+            </DialogContent>
             <DialogActions>
-            <Button onClick={closeLineChartDialog}>Close</Button>
+              <Button onClick={closeLineChartDialog}>Close</Button>
             </DialogActions>
           </Dialog>
+          <div>
+            <Button variant="outlined" onClick={openLineChartDialog}>
+              Open Line Chart
+            </Button>
+          </div>
         </div>
+
+
 
         {/* Pie Chart */}
         <div>
@@ -197,21 +463,24 @@ function Analytics() {
             Pie Chart
           </Typography>
           <PieChart width={300} height={200}>
-            <Pie
-              data={pieData}
-              dataKey="count"
-              nameKey="genre"
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              fill="#8884d8"
-              label={(entry) => entry.label}
-            >
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-          </PieChart>
+  <Pie
+    data={pieData}
+    dataKey="count"
+    nameKey="genre"
+    cx="50%"
+    cy="50%"
+    outerRadius={80}
+    fill="#8884d8"
+    label={(entry) => entry.genre}
+  >
+    {pieData.map((entry, index) => (
+      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+    ))}
+  </Pie>
+  <Tooltip
+    formatter={(value, name, props) => [`${props.payload.genre}: ${value}`]} // Display genre and value in tooltip
+  />
+</PieChart>
           <Button variant="outlined" onClick={openPieChartDialog}>
             Open Pie Chart
           </Button>
@@ -235,7 +504,7 @@ function Analytics() {
                 <MenuItem value="81-90">81-90</MenuItem>
                 <MenuItem value="91-100">91-100</MenuItem>
               </Select>
-            <PieChart width={400} height={300}>
+            <PieChart width={600} height={400}>
               <Pie
                 data={filteredPieData}
                 dataKey="count"
