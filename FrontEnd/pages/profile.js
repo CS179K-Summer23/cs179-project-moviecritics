@@ -59,10 +59,17 @@ const revlist1 = [
   { id: 2, title: "Movie2", rating: "9", comment: "test2" },
 ];
 export default function ProfilePage(email) {
-  const [formdata, setformdata] = useState({
-    Email: email,
-    Password: "Filler.password",
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
   });
+
+  const handleChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.id]: event.target.value,
+    });
+  };
   const [watchedlist, setwatchedlist] = useState(watchedlist1);
   const [revlist, setrevlist] = useState(revlist1);
   const [open, setOpen] = useState(false);
@@ -92,6 +99,34 @@ export default function ProfilePage(email) {
       ...preferences,
       [event.target.name]: event.target.checked,
     });
+  };
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    console.log(formData)
+
+    try {
+      const res = await axios.post("http://localhost:8003/updateaccount", formData, {
+        headers: {
+          Authorization: localStorage.getItem('authToken'),
+        },
+      } );
+      console.log(res);
+      alert(res.data);
+     
+      if (res.data && res.status === 200) {
+        setSurveySubmitted(true);
+        const token = res.data.token;
+        localStorage.setItem('authToken', token);
+        if (onLogin) {
+          setemail(formData.email);
+          setsignout(false);
+          onLogin(); // Call the callback function passed to the component
+        }
+      }
+    } catch (err) {
+      alert("Invalid username or password. Please try again.");
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -128,34 +163,9 @@ export default function ProfilePage(email) {
     }
   };
 
-  const handleChange = (event) => {
-    setformdata({
-      ...formdata,
-      [event.target.id]: event.target.value,
-    });
-  };
 
-  const UpdateAccount = async (event) => {
-    event.preventDefault();
-  };
+  
 
-  const SaveProfile = async (event) => {
-    event.preventDefault();
-    try {
-      const res = await axios.post(
-        "http://localhost:8003/saveprofile",
-        formData
-      );
-      alert(res.data);
-      if (res.data && res.status === 200) {
-        if (onSuccess) {
-          onSuccess();
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const getWatched = async (event) => {
     try {
@@ -223,23 +233,23 @@ export default function ProfilePage(email) {
           }}
         >
           <h1 align="center">Profile Page</h1>
-          <form onSubmit={UpdateAccount}>
+          <form onSubmit={handleLogin}>
             <p></p>
             <StyledInput
               label="Email"
               name="email"
+              id="email"
               onChange={handleChange}
               required
-              value={formdata.Email}
               variant="outlined"
             />
             <p></p>
             <StyledInput
+            id = "password"
               label="Password"
-              name="Password"
+              name="password"
               onChange={handleChange}
               required
-              value={formdata.Password}
               variant="outlined"
             />
             <p></p>
@@ -247,7 +257,7 @@ export default function ProfilePage(email) {
               id="sub_button"
               variant="contained"
               type="submit"
-              onClick={SaveProfile}
+              onClick={handleLogin}
             >
               Update
             </Button>

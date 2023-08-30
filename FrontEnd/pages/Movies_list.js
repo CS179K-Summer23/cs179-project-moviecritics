@@ -95,7 +95,11 @@ const MovieList = () => {
 
         movie_title: ratingMovieTitle,
         new_rating: rating,
-        review: reviewText,
+        comment: reviewText,
+      }, {
+        headers: {
+          Authorization: localStorage.getItem('authToken'),
+        },
       });
 
       // Check if the review was submitted successfully (adjust the condition based on your response format)

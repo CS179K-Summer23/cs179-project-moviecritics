@@ -194,36 +194,60 @@ def login():
     token = jwt.encode({'user_id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
                        app.config['SECRET_KEY'], algorithm='HS256')
     
-    pref = UserPreference.query.filter_by(user_id = user.id).first()
-    print("pref:", pref.genre)
-    genrelist = json.loads(pref.genre)
-    glist = ""
-    if(genrelist.get('Action')) : glist += "Action,"
-    if(genrelist.get('Adventure')) : glist += "Adventure,"
-    if(genrelist.get('Animation')) : glist += "Animation,"
-    if(genrelist.get('Comedy')) : glist += "Comedy,"
-    if(genrelist.get('Crime')) : glist += "Crime,"
-    if(genrelist.get('Documentary')) : glist += "Documentary,"
-    if(genrelist.get('Drama')) : glist += "Drama,"
-    if(genrelist.get('Family')) : glist += "Family,"
-    if(genrelist.get('Fantasy')) : glist += "Fantasy,"
-    if(genrelist.get('History')) : glist += "History,"
-    if(genrelist.get('Horror')) : glist += "Horror,"
-    if(genrelist.get('Music')) : glist += "Music,"
-    if(genrelist.get('Mystery')) : glist += "Mystery,"
-    if(genrelist.get('Romance')) : glist += "Romance,"
-    if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
-    if(genrelist.get('TVMovie')) : glist += "TVMovie,"
-    if(genrelist.get('Thriller')) : glist += "Thriller,"
-    if(genrelist.get('War')) : glist += "War,"
-    if(genrelist.get('Western')) : glist += "Western,"
+    # pref = UserPreference.query.filter_by(user_id = user.id).first()
+    # print("pref:", pref.genre)
+    # genrelist = json.loads(pref.genre)
+    # glist = ""
+    # if(genrelist.get('Action')) : glist += "Action,"
+    # if(genrelist.get('Adventure')) : glist += "Adventure,"
+    # if(genrelist.get('Animation')) : glist += "Animation,"
+    # if(genrelist.get('Comedy')) : glist += "Comedy,"
+    # if(genrelist.get('Crime')) : glist += "Crime,"
+    # if(genrelist.get('Documentary')) : glist += "Documentary,"
+    # if(genrelist.get('Drama')) : glist += "Drama,"
+    # if(genrelist.get('Family')) : glist += "Family,"
+    # if(genrelist.get('Fantasy')) : glist += "Fantasy,"
+    # if(genrelist.get('History')) : glist += "History,"
+    # if(genrelist.get('Horror')) : glist += "Horror,"
+    # if(genrelist.get('Music')) : glist += "Music,"
+    # if(genrelist.get('Mystery')) : glist += "Mystery,"
+    # if(genrelist.get('Romance')) : glist += "Romance,"
+    # if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
+    # if(genrelist.get('TVMovie')) : glist += "TVMovie,"
+    # if(genrelist.get('Thriller')) : glist += "Thriller,"
+    # if(genrelist.get('War')) : glist += "War,"
+    # if(genrelist.get('Western')) : glist += "Western,"
 
 
-    glist = glist[:-1]
-    glist = [genre.strip().lower() for genre in glist.split(",")]
-    result = todays_hottest(glist, [])
+    # glist = glist[:-1]
+    # glist = [genre.strip().lower() for genre in glist.split(",")]
+    # result = todays_hottest(glist, [])
 
-    return jsonify({"message": "Login Successful", "token": token, "result": result}), 200
+    # return jsonify({"message": "Login Successful", "token": token, "result": result}), 200
+    return jsonify({"message": "Login Successful", "token": token}), 200
+
+@app.route('/updateaccount', methods=['POST'])
+@token_required
+def updateaccount(current_user):
+    data=request.get_json()
+    u = data.get(':r1u:')
+    p = data.get(':r1v:')
+    print('\n something')
+    print(u)
+    print(p)
+    print('\n')
+    hashed_password = bcrypt.generate_password_hash(p).decode('utf-8')
+    print('\n else')
+    print(hashed_password)
+    print('\n')
+    query = User.query.filter_by(id=current_user.id).first()
+    query.email = u
+    query.password = hashed_password
+    db.session.add(query)
+    # db.session.flush()
+    db.session.commit()
+    return jsonify({'message': 'Account Credentials Updated'}), 201
+
 
 @app.route('/addToWatchList/<string:movie_title>', methods=['POST'])
 @token_required
@@ -444,15 +468,6 @@ def get_top_movies():
     return jsonify(records)
 
 
-@app.route('/saveprofile', methods=['POST'])
-def set_saveprofile():
-    data = request.json  
-
-    #data.Email find in user detail database
-    #encrypt given data.Password
-    #replace password
-
-    return  
 
 @app.route('/getwatched', methods=['POST'])
 @token_required

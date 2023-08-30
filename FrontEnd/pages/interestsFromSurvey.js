@@ -209,7 +209,7 @@ export default function MovieshowerFromInterests() {
 
   useEffect(() => {
     getData3();
-  }, []);
+  }, [selectedMovie, openReview]);
 
   const handleOpeninfo = (value) => {
     console.log("pressed", value);
