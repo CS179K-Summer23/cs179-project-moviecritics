@@ -91,7 +91,30 @@ export default function MovieshowerFromInterests() {
     }
 
     handleClose();
+
+    try {
+      const res = await axios.post(
+        "http://localhost:8003/submit_rating",
+        [],
+        {
+          headers: {
+            Authorization: localStorage.getItem('authToken'),
+          },
+        }
+      );
+      
+      
+      if (res.data && res.status === 200) {
+        if (onSuccess) {
+          onSuccess();
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+
 
   const handleCloseWatchedConfirmation = () => {
     setOpenWatchedConfirmation(false);
