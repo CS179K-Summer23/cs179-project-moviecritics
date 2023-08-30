@@ -11,7 +11,7 @@ const PaginationApp = () => {
 
   const fetchTopMovies = async (choice) => {
     try {
-      const response = await fetch('http://localhost:8002/pagination', {
+      const response = await fetch('http://localhost:8003/pagination', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

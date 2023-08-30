@@ -9,7 +9,7 @@ db_params = {
     'port': '5432'
 }
 
-csv_file_path = 'movies_db.csv'
+csv_file_path = 'movie_db.csv'
 
 insert_columns = [
     'id', 'title', 'genre', 'language', 'overview', 'popularity',

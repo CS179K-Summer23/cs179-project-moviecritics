@@ -8,6 +8,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    sharewatchlist = db.Column(db.Boolean, default=False)
 
 class UserPreference(db.Model):
     __tablename__ = 'user_preference'
@@ -25,10 +26,23 @@ class UserWatchlist(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    movie_id = db.Column(db.ARRAY(db.Text))
+    movie_id = db.Column(db.String(10000))
 
     user = db.relationship('User', backref=db.backref('watchlist', lazy=True))
     
+class MovieReviews(db.Model):
+    __tablename__ = 'movie_reviews'
+
+    id = db.Column(db.Integer , primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    movie_id = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
+    comment = db.Column(db.String(1000))
+
+    # def __init__(self, user_id, genre):
+    #     self.user_id = user_id
+
+
 
 class moviedetails(db.Model):
     id = db.Column(db.Integer, primary_key=True)
