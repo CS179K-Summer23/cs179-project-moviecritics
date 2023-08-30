@@ -483,6 +483,10 @@ def get_recommendations():
     
     return recommendations_json_string
 
+@app.route('/totalMovies', methods=['GET'])
+def get_total_movies():
+    total_movies = moviedetails.query.count()  # Assuming 'moviedetails' is your movie table
+    return jsonify({'total_movies': total_movies})
 
 # Route for seeing a data
 @app.route('/data')
