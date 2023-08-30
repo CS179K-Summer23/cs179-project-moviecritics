@@ -98,22 +98,21 @@ export default function MovieRatings() {
 
   const getData2 = async () => {
     try {
-      console.log('before')
-      const res = await axios.post(
-        "http://localhost:8003/movierating", {},
+      const response = await axios.post(
+        "http://localhost:8003/recommendations",  // Use the correct URL for your Flask server
+        { user_id: 1 },  // Replace with the appropriate user ID
         {
           headers: {
             Authorization: localStorage.getItem("authToken"),
           },
         }
       );
-      console.log('after')
-      setjsonfile(res.data);
+      setjsonfile(response.data);
     } catch (err) {
       console.error(err);
     }
   };
-
+  
   useEffect(() => {
     getData2();
   }, []);
@@ -122,7 +121,7 @@ export default function MovieRatings() {
     <>
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
-        <h1>___________Suggestions Based on ReleaseDate</h1>
+        <h1>___________You may also like!!...</h1>
         <Box
           sx={{
             marginTop: 8,

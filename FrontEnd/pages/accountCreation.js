@@ -100,9 +100,9 @@ export default function AccountCreation({setsignout, setemail, onSuccess}) {
           marginBottom:'auto',
           justifyContent: 'flex-reverse',
           flexDirection: 'column',
-          backgroundColor: 'black',
+          backgroundColor: 'rgba(0, 0, 0, 0.9)', // Semi-transparent black background
           align: 'center',
-          width: '500px',
+          width: '650px',
           borderRadius: 5,
           overflow:'hidden',
         }}

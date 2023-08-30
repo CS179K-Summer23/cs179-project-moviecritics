@@ -16,7 +16,12 @@ from sqlalchemy import func
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
+from surprise import Dataset, Reader, SVD
+from surprise.model_selection import train_test_split
 from movie_recommendation import MovieRecommendationSystem
+import pandas as pd
+
+movie_system = MovieRecommendationSystem()
 from collections import defaultdict
 import locale
 
@@ -282,8 +287,10 @@ def getGenreByAgeData():
     #     users = users.filter(User.age >= min_age, User.age <= max_age)
 
     genre_counts = Counter()
+    print("length:", len(users))
 
     for user in users:
+
         if type(user.genre) != str:
             print("genre Type:", user.genre)
         if age_range:
@@ -439,7 +446,7 @@ def usersurvey(current_user):
 
     glist = glist[:-1]
     #genrelist_str = json.dumps(glist)
-    glist = [genre.strip().lower() for genre in glist.split(",")]
+    # glist = [genre.strip().lower() for genre in glist.split(",")]
 
     newUser = UserPreference(user_id = current_user.id, genre=glist)
     db.session.add(newUser)
@@ -502,6 +509,7 @@ def movieratings(current_user):
 
     query = UserPreference.query.filter_by(user_id=current_user.id).first()
     glist = query.genre
+    glist = [genre.strip().lower() for genre in glist.split(",")]
     # glist = ""
     
     #genrelist_str = json.dumps(glist)
@@ -518,6 +526,7 @@ def suggesttionfunction(current_user):
     print('hi')
     query = UserPreference.query.filter_by(user_id=current_user.id).first()
     glist = query.genre
+    glist = [genre.strip().lower() for genre in glist.split(",")]
     print('hi2')
     query2 = User.query.filter_by(id=current_user.id).first()
     age = query2.age
@@ -648,6 +657,7 @@ def get_movie_data():
     else:
         return jsonify({'message': 'No movie data found.'}), 404
     
+
 @app.route('/submit_rating', methods=['POST'])
 @token_required
 def submit_rating(current_user):
@@ -676,6 +686,7 @@ def get_news():
     articles = news_api.fetch_news()
     return jsonify(articles)
 
+
 @app.route('/recommendations', methods=['POST'])
 def get_recommendations():
     try:
@@ -692,8 +703,35 @@ def get_recommendations():
     recommendations_df['release_date'] = recommendations_df['release_date'].apply(lambda x: x.strftime('%Y-%m-%d'))
     recommendations_json = recommendations_df.to_dict(orient='records')
     recommendations_json_string = json.dumps(recommendations_json, indent=2)
-    
+
     return recommendations_json_string
+    
+
+
+@app.route('/submit_rating', methods=['POST'])
+def submit_rating():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    movie_id = data.get('movie_id')
+    new_rating = data.get('new_rating')
+    comment = data.get('comment')
+
+    movie_app = MovieList(db_params)
+    if movie_app.submit_rating(movie_id, new_rating):
+        if movie_app.insert_review(user_id, movie_id, new_rating, comment):
+            return 'Rating and review submitted successfully', 200
+        else:
+            return 'Failed to submit review', 500
+    else:
+        return 'Movie not found', 404
+
+
+@app.route('/news')
+def get_news():
+    articles = news_api.fetch_news()
+    return jsonify(articles)
+
+
 
 
 @app.route('/movieInfo', methods=["POST"])

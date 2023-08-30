@@ -2,7 +2,6 @@ import psycopg2
 import pandas as pd
 from surprise import Dataset, Reader, SVD
 from surprise.model_selection import train_test_split
-import random
 import json
 from datetime import datetime
 from flask import Flask, request, jsonify
@@ -30,22 +29,6 @@ class MovieRecommendationSystem:
     def fetch_movie_data(self):
         query = "SELECT title, genre, tagline, runtime, release_date, vote_average, rating FROM moviedetails"
         return pd.read_sql_query(query, self.conn)
-
-
-    def get_random_genre_recommendations(self, genres, n_recommendations=10):
-        genre_movie_indices = [
-            movie_idx for movie_idx, row in self.movie_data.iterrows() if any(genre in row['genre'] for genre in genres)
-        ]
-        random_movie_indices = random.sample(genre_movie_indices, n_recommendations)
-        
-        recommendations = []
-        for movie_idx in random_movie_indices:
-            movie_details = self.get_movie_details_by_idx(movie_idx)
-            recommendations.append(movie_details)
-        
-        return recommendations
-
-
 
     def get_movie_details_by_idx(self, movie_idx):
         return self.movie_data.loc[movie_idx].to_dict()
@@ -75,12 +58,12 @@ class MovieRecommendationSystem:
         query_watchlist = f"SELECT movie_id FROM user_watchlist WHERE user_id = {user_id}"
         watchlist_result = pd.read_sql_query(query_watchlist, self.conn)
         user_watchlist = watchlist_result['movie_id'].str.split('|', expand=True).values.flatten()
-    
+
         genre_preferences = self.get_genre_preferences(user_watchlist)
         genre_movie_indices = [
             movie_idx for movie_idx, row in self.movie_data.iterrows() if any(genre in row['genre'] for genre in genre_preferences)
         ]
-    
+
         if len(genre_movie_indices) < n_recommendations:
             n_recommendations = len(genre_movie_indices)
 
@@ -92,13 +75,13 @@ class MovieRecommendationSystem:
             return []
     
         recommendations = []
-        selected_indices = random.sample(genre_movie_indices, n_recommendations)
-        for movie_idx in selected_indices:
+        for movie_idx in genre_movie_indices[:n_recommendations]:
             movie_details = self.get_movie_details_by_idx(movie_idx)
             if user_age >= 13 or movie_details['rating'] <= user_age:  # Filter based on user's age
                 recommendations.append(movie_details)
-    
+        
         return recommendations
+
 
 
 movie_system = MovieRecommendationSystem()
