@@ -17,14 +17,8 @@ const darkTheme = createTheme({
   },
 });
 
-const jsonfile = [
-  {
-    id: 1,
-    title: "Movie 1",
-    genres: "Action",
-    vote_average: 9.5,
-    Rated: "PG-13",
-  }
+const jsonfile1 = [
+  {'title': 'The Kid', 'genre': 'Comedy-Drama', 'vote_count': 1758.0, 'vote_average': 8.212, 'rated': 'PG', 'backdrop_path': '/mAhCW7QbpL5kwvCWGsfyY3ILoW6.jpg', 'poster_path': '/drgMcyTsySQBnUPGaBThCHGdlWT.jpg'}
  
   
 ];
@@ -59,18 +53,23 @@ const rows = [
 ];
 
 export default function MovieInfoApp({ moviename }) {
-  const [movieinfo, setmovieinfo] = useState(jsonfile);
+  const [movieinfo, setmovieinfo] = useState(jsonfile1);
   const [reviews, setreviews] = useState([]);
   const [streaminfo, setstreaminfo] = useState({});
 
   const moviedata = async () => {
     try {
+      console.log(moviename)
       const res = await axios.post(
-        "http://localhost:8003/movieInfo",
-        moviename
+        `http://localhost:8003/movieInfo?moviename=${moviename}`,
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem('authToken')
+          }
+        }
       );
-      console.log(res.data);
-      setmovieinfo(res.data);
+      setmovieinfo([res.data]);
       if (res.status === 200) {
       } else {
         alert("Failed to Retrieve");
@@ -83,7 +82,7 @@ export default function MovieInfoApp({ moviename }) {
   const revmovie = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8003/reviews", moviename,
+        `http://localhost:8003/reviews?moviename=${moviename}`, {},
       );
       console.log(res.data);
       setreviews(res.data);
@@ -99,7 +98,7 @@ export default function MovieInfoApp({ moviename }) {
   const getstream = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8003/streaminfo", moviename,
+        `http://localhost:8003/streaminfo?moviename=${moviename}`, {},
       );
       console.log(res.data);
       setreviews(res.data);
@@ -115,6 +114,7 @@ export default function MovieInfoApp({ moviename }) {
   useEffect(() => {
     moviedata();
     revmovie();
+    getstream();
   }, []);
 
 
@@ -124,11 +124,11 @@ export default function MovieInfoApp({ moviename }) {
         <CssBaseline />
 
         <Box
-          alignItems={"center"}
+          alignItems={"left"}
           sx={{
             display: "flex",
-            marginTop: "5%",
-            marginLeft: "5%",
+            marginTop: "auto",
+            marginLeft: "auto",
             marginRight: "auto",
             marginBottom: "auto",
             justifyContent: "flex-reverse",
@@ -143,12 +143,12 @@ export default function MovieInfoApp({ moviename }) {
           {movieinfo.map((m, index) => {
             return (
               <>
-              <Card sx={{ maxWidth: 2000 ,minWidth: 1000 }}>
+              <Card sx={{ maxWidth: 700 ,minWidth: 400 }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
                     height="400"
-                    image=""
+                    image= {`https://image.tmdb.org/t/p/w500/${m.poster_path}`}
                     alt="pic of movie"
                   />
                   <CardContent>
@@ -183,7 +183,7 @@ export default function MovieInfoApp({ moviename }) {
                 </CardActionArea>
               </Card>
               <h1>Reviews:</h1>
-               <Box alignItems={"center"} sx={{  marginLeft: "21%", height: 400, width: '80%' }}>
+               <Box alignItems={"left"} sx={{  marginLeft: "1%", height: 400, width: '100%' }}>
                <DataGrid
                  rows={rows}
                  columns={columns}

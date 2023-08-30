@@ -18,6 +18,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import MovieInfoApp from "./movieinfo";
 
 const lightTheme = createTheme({
   palette: {
@@ -30,7 +31,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const jsonfile = [
-  { id: 1, title: "Movie 1", genres: "Action", vote_average: 9.5, Rated: "PG-13" },
+  {
+    id: 1,
+    title: "Movie 1",
+    genres: "Action",
+    vote_average: 9.5,
+    Rated: "PG-13",
+  },
   { id: 2, title: "Movie 2", genres: "Drama", vote_average: 8.7, Rated: "R" },
   // ...
 ];
@@ -50,6 +57,7 @@ export default function MovieshowerFromInterests() {
   const [reviewedMovies, setReviewedMovies] = useState(new Set()); // Use a Set
   const [movies, setMovies] = useState(jsonfile); // State to hold movie data
   const [openmovie, setopenmovie] = useState(false);
+  const [moviename, setmoviename] = useState('Test');
 
   const isMovieReviewed = (movie) => reviewedMovies.has(movie.id);
 
@@ -107,16 +115,17 @@ export default function MovieshowerFromInterests() {
 
   const getData3 = async () => {
     try {
-      console.log('before')
+      console.log("before");
       const res = await axios.post(
-        "http://localhost:8003/suggestions", {},
+        "http://localhost:8003/suggestions",
+        {},
         {
           headers: {
             Authorization: localStorage.getItem("authToken"),
           },
         }
       );
-      console.log('after')
+      console.log("after");
       setMovies(res.data);
       console.log(res.data);
     } catch (err) {
@@ -128,9 +137,9 @@ export default function MovieshowerFromInterests() {
     getData3();
   }, []);
 
-  
-
   const handleOpeninfo = (value) => {
+    console.log("pressed");
+    setmoviename(value);
     setopenmovie(true);
   };
 
@@ -153,9 +162,7 @@ export default function MovieshowerFromInterests() {
             padding: "20px",
           }}
         >
-          <h1 style={{ textAlign: "center" }}>
-            Suggestions Based on Ratings
-          </h1>
+          <h1 style={{ textAlign: "center" }}>Suggestions Based on Ratings</h1>
           <TableContainer style={{ width: "70%", textAlign: "center" }}>
             <Table stickyHeader>
               <caption>Generated from User Survey</caption>
@@ -172,17 +179,18 @@ export default function MovieshowerFromInterests() {
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-
-                {movies.map((list, index) => {       
-                  return(           
+                {movies.map((list, index) => {
+                  return (
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell><Button
+                      <TableCell>
+                        <Button
                           variant="outlined"
                           onClick={() => handleOpeninfo(list.title)}
                         >
                           {list.title}
-                        </Button></TableCell>
+                        </Button>
+                      </TableCell>
                       <TableCell>{list.genres}</TableCell>
                       <TableCell>{list.vote_average}</TableCell>
                       <TableCell>
@@ -207,7 +215,8 @@ export default function MovieshowerFromInterests() {
                       </TableCell>
                     </TableRow>
                   );
-                  })};
+                })}
+                ;
               </TableBody>
             </Table>
           </TableContainer>
@@ -254,25 +263,22 @@ export default function MovieshowerFromInterests() {
         </Dialog>
       )}
 
-       { !openmovie && <Dialog onClose={handleCloseinfo}>
-          <DialogTitle>Review Movie</DialogTitle>
+      {openmovie && (
+        <Dialog
+          fullWidth
+          maxWidth="lg"
+          open={openmovie}
+          onClose={handleCloseinfo}
+        >
+          <DialogTitle>Movie Info</DialogTitle>
           <DialogContent>
-            <DialogContentText>Please rate the movie below:</DialogContentText>
-            <Typography gutterBottom>Rating: {sliderValue}</Typography>
-            <Slider
-              value={sliderValue}
-              onChange={(event, newValue) => setSliderValue(newValue)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={10}
-              step={0.1}
-            />
+            <MovieInfoApp moviename={moviename}/>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmitReview}>Submit Review</Button>
+            <Button onClick={handleCloseinfo} >Cancel</Button>
           </DialogActions>
-        </Dialog> }
+        </Dialog>
+      )}
     </>
   );
 }
