@@ -472,6 +472,8 @@ def submit_rating(current_user):
     new_rating = data.get('new_rating')
     c = data.get('comment')
 
+    print("params:", c, movie_title, new_rating)
+
     movie_app = MovieList(db_params)
 
     query = moviedetails.query.filter_by(title=movie_title).first()
@@ -566,12 +568,20 @@ def get_streammovie():
     print(response.json())
     print('here4')
     resp_dict = response.json()
+    result = []
     for item in resp_dict["result"]["streamingInfo"]["ca"]:
         print(item)
-        print(item.get['se'])
+        element = {}
+        element['service'] = item.get('service', 'None')
+        element['streamingType'] = item.get('streamingType', 'None')
+        result.append(element)
+        print(item.get('service', 'None'))
+        print(item.get('streamingType', 'None'))
+        # print(item['service'], item['streamingType'])
+        # print(item.get['services'])
         
-        
-    return response.json()
+    response = jsonify(result)
+    return response
 
 # Route for seeing a data
 @app.route('/data')
