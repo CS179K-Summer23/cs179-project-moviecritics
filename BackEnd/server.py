@@ -510,17 +510,18 @@ def get_users():
 @app.route('/getlist', methods=['POST'])
 def get_list():
     movielist=[]
-    print('here')
-    data = request.json
+    print('here1373723819832781')
+    data = request.args.get('jsonchoose')
     print(data)
-    print('hi2')
-    name = data.get('user_id')  
-    print(name)
-    query = db.session.query(UserWatchlist).filter_by(user_id = name)
-
-    for movie in query.all():
-        moviename = movie.user_id
-        movielist.append(moviename)
+    query = User.query.filter_by(name=data).first()
+    print('nowhere')
+    print(query.id)
+    #query2 = UserWatchlist.query.filter_by(user_id=query.id).first()
+    #listq = query2.movie_id
+    #listq = listq.split('|')
+    #print(type(listq))
+    #print(listq)
+    
     
     return movielist
 
