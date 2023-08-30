@@ -298,7 +298,7 @@ export default function MovieshowerFromInterests() {
             <MovieInfoApp moviename={moviename}/>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseinfo} >Cancel</Button>
+            <Button onClick={handleCloseinfo} >Close</Button>
           </DialogActions>
         </Dialog>
       )}

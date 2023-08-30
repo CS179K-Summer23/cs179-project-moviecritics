@@ -114,7 +114,7 @@ export default function MovieInfoApp({ moviename }) {
   useEffect(() => {
     moviedata();
     revmovie();
-    getstream();
+    //getstream();
   }, []);
 
 
