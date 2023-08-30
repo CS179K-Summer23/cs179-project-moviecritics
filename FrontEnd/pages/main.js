@@ -329,7 +329,10 @@ export default function MainApp({ setsignout, email }) {
                 <ListItemIcon>
                   <DescriptionIcon />
                 </ListItemIcon>
-                <ListItemText primary="Analytics" />
+                <ListItemText
+                  primary="Analytics"
+                  style={{ color: "#178582", fontWeight: "bold" }}
+                />
               </ListItemButton>
             </ListItem>
           </List>

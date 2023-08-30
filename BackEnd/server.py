@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
-from models import db, User, UserPreference, moviedetails, UserWatchlist
+from models import db, User, UserPreference, moviedetails, UserWatchlist, MovieReviews
 import datetime
 #from datetime import datetime
 from movie_critics import MovieAnalyzerApp
@@ -15,6 +15,8 @@ from sqlalchemy import or_
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
+import requests
+import pandas as pd
 #from surprise import Dataset, Reader, SVD
 #from surprise.model_selection import train_test_split
 #from movie_recommendation import MovieRecommendationSystem
@@ -24,7 +26,7 @@ NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'
 
 news_api = NewsAPI(NEWS_API_KEY)
 
-
+streamurl = "https://streaming-availability.p.rapidapi.com/get"
 
 # Initializing flask app
 app = Flask(__name__)
@@ -81,6 +83,8 @@ def todays_hottest(target_genres, movie_ids, age=None, min_vote_count=1000, limi
         vote_count = movie.vote_count
         vote_average = movie.vote_average
         release_date = movie.release_date
+        backdrop_path = movie.backdrop_path
+        poster_path = movie.poster_path
         movie_rating = movie.rated
         
         if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')) and movie_title not in movie_ids:
@@ -91,7 +95,9 @@ def todays_hottest(target_genres, movie_ids, age=None, min_vote_count=1000, limi
                 'vote_count': vote_count,
                 'vote_average': vote_average,
                 'release_date': date_string,
-                'rated': movie_rating
+                'rated': movie_rating,
+                'backdrop_path': backdrop_path,
+                'poster_path' : poster_path
             }
             movies_list.append(movie_info)
     
@@ -459,12 +465,20 @@ def get_movie_data():
         return jsonify({'message': 'No movie data found.'}), 404
     
 @app.route('/submit_rating', methods=['POST'])
-def submit_rating():
+@token_required
+def submit_rating(current_user):
     data = request.get_json()
     movie_title = data.get('movie_title')
     new_rating = data.get('new_rating')
+    c = data.get('comment')
 
     movie_app = MovieList(db_params)
+
+    query = moviedetails.query.filter_by(title=movie_title).first()
+    mid = query.id
+    newrev = MovieReviews( user_id=current_user.id , movie_id=mid , rating  = new_rating, comment = c)
+    db.session.add(newrev)
+    db.session.commit()
 
     if movie_app.submit_rating(movie_title, new_rating):
         return 'Rating submitted successfully', 200
@@ -495,6 +509,69 @@ def get_recommendations():
     
     return recommendations_json_string
 
+
+@app.route('/movieInfo', methods=["POST"])
+def get_movieinfo():
+    name = request.args.get('moviename')
+    data = moviedetails.query.filter_by(title=name).first()
+    movie_info = {
+                'title': data.title,
+                'genre': data.genre,
+                'vote_count': data.vote_count,
+                'vote_average': data.vote_average,
+                'rated': data.rated,
+                'backdrop_path': data.backdrop_path,
+                'poster_path' : data.poster_path
+            }
+    
+    print(movie_info)
+    return movie_info
+
+@app.route('/reviews', methods=["POST"])
+def get_revmovie():
+    review_list=[]
+    name = request.args.get('moviename')
+    mid = moviedetails.query.filter_by(title=name).first()
+    data = MovieReviews.query.filter_by(movie_id=mid.id)
+
+    for movie in data.all():
+        rating = data.rating
+        comment = data.coimment
+        
+        rev = {
+            'rating': rating,
+            'comment': comment
+        }
+        review_list.append(rev)
+
+    print('list: \n')
+    print(review_list)
+    return review_list
+
+@app.route('/streaminfo', methods=["POST"])
+def get_streammovie():
+    name = request.args.get('moviename')
+    data = moviedetails.query.filter_by(title=name).first()
+    moviequery = "movie/" + str(data.id)
+
+    querystring = {"output_language":"en","tmdb_id":moviequery}
+    print('here1')
+    headers = {
+	"X-RapidAPI-Key": "47ad9b6b77msh34cac8546bb13aap15d9adjsnca028ecdf187",
+	"X-RapidAPI-Host": "streaming-availability.p.rapidapi.com"
+    }
+    print('here2')
+    response = requests.get(streamurl, headers=headers, params=querystring)
+    print('here3')
+    print(response.json())
+    print('here4')
+    resp_dict = response.json()
+    for item in resp_dict["result"]["streamingInfo"]["ca"]:
+        print(item)
+        print(item.get['se'])
+        
+        
+    return response.json()
 
 # Route for seeing a data
 @app.route('/data')
