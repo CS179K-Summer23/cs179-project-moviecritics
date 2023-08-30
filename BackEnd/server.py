@@ -483,10 +483,25 @@ def get_recommendations():
     
     return recommendations_json_string
 
+# Sample data
+total_movies = 1000
+total_users = 5000
+
 @app.route('/totalMovies', methods=['GET'])
 def get_total_movies():
-    total_movies = moviedetails.query.count()  # Assuming 'moviedetails' is your movie table
-    return jsonify({'total_movies': total_movies})
+    # You can fetch this data from a database or any other source
+    response_data = {
+        'total_movies': total_movies
+    }
+    return jsonify(response_data)
+
+@app.route('/totalUsers', methods=['GET'])
+def get_total_users():
+    # You can fetch this data from a database or any other source
+    response_data = {
+        'total_users': total_users
+    }
+    return jsonify(response_data)
 
 # Route for seeing a data
 @app.route('/data')
