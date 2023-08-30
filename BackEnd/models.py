@@ -15,7 +15,7 @@ class UserPreference(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    genre = db.Column(db.Text, nullable=False)  # Store serialized JSON as text
+    genre = db.Column(db.String(10000), nullable=False)  # Store serialized JSON as text
 
     def __init__(self, user_id, genre):
         self.user_id = user_id
@@ -73,6 +73,7 @@ class moviedetails(db.Model):
 class RequestedMovies(db.Model):
     __tablename__ = 'requested_movies'
     
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     movie_name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(50), nullable=True)

@@ -33,6 +33,18 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { styled } from "@mui/system";
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormGroup,
+  TextField
+} from "@mui/material";
+import DialogActions from "@mui/material/DialogActions";
+
 
 function AccountMenu({ logoutfunction, toggleTheme, themeMode }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -203,6 +215,36 @@ export default function MainApp({ setsignout, email }) {
 
   // Determine which theme object to use based on the themeMode state
   const theme = themeMode === "dark" ? darkTheme : lightTheme;
+
+  const handleSubmitReview = async () => {
+
+    const params = {
+      "comment": reviewText,
+      "movie_title": moviename
+    }
+    
+
+    handleClose();
+    console.log("params:", params);
+    try {
+      const res = await axios.post(
+        "http://localhost:8003/submit_request",
+        params,
+        {
+          headers: {
+            Authorization: localStorage.getItem('authToken'),
+          },
+        }
+      );
+      
+      
+      if (res.data && res.status === 200) {
+        console.log("success")
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>

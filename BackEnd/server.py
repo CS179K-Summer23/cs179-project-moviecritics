@@ -33,8 +33,8 @@ import psycopg2
 #from surprise.model_selection import train_test_split
 #from movie_recommendation import MovieRecommendationSystem
 
-#NEWS_API_KEY = " "
-NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
+NEWS_API_KEY = " "
+#NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
 
 news_api = NewsAPI(NEWS_API_KEY)
 
@@ -211,36 +211,60 @@ def login():
     token = jwt.encode({'user_id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
                        app.config['SECRET_KEY'], algorithm='HS256')
     
-    pref = UserPreference.query.filter_by(user_id = user.id).first()
-    print("pref:", pref.genre)
-    genrelist = json.loads(pref.genre)
-    glist = ""
-    if(genrelist.get('Action')) : glist += "Action,"
-    if(genrelist.get('Adventure')) : glist += "Adventure,"
-    if(genrelist.get('Animation')) : glist += "Animation,"
-    if(genrelist.get('Comedy')) : glist += "Comedy,"
-    if(genrelist.get('Crime')) : glist += "Crime,"
-    if(genrelist.get('Documentary')) : glist += "Documentary,"
-    if(genrelist.get('Drama')) : glist += "Drama,"
-    if(genrelist.get('Family')) : glist += "Family,"
-    if(genrelist.get('Fantasy')) : glist += "Fantasy,"
-    if(genrelist.get('History')) : glist += "History,"
-    if(genrelist.get('Horror')) : glist += "Horror,"
-    if(genrelist.get('Music')) : glist += "Music,"
-    if(genrelist.get('Mystery')) : glist += "Mystery,"
-    if(genrelist.get('Romance')) : glist += "Romance,"
-    if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
-    if(genrelist.get('TVMovie')) : glist += "TVMovie,"
-    if(genrelist.get('Thriller')) : glist += "Thriller,"
-    if(genrelist.get('War')) : glist += "War,"
-    if(genrelist.get('Western')) : glist += "Western,"
+    # pref = UserPreference.query.filter_by(user_id = user.id).first()
+    # print("pref:", pref.genre)
+    # genrelist = json.loads(pref.genre)
+    # glist = ""
+    # if(genrelist.get('Action')) : glist += "Action,"
+    # if(genrelist.get('Adventure')) : glist += "Adventure,"
+    # if(genrelist.get('Animation')) : glist += "Animation,"
+    # if(genrelist.get('Comedy')) : glist += "Comedy,"
+    # if(genrelist.get('Crime')) : glist += "Crime,"
+    # if(genrelist.get('Documentary')) : glist += "Documentary,"
+    # if(genrelist.get('Drama')) : glist += "Drama,"
+    # if(genrelist.get('Family')) : glist += "Family,"
+    # if(genrelist.get('Fantasy')) : glist += "Fantasy,"
+    # if(genrelist.get('History')) : glist += "History,"
+    # if(genrelist.get('Horror')) : glist += "Horror,"
+    # if(genrelist.get('Music')) : glist += "Music,"
+    # if(genrelist.get('Mystery')) : glist += "Mystery,"
+    # if(genrelist.get('Romance')) : glist += "Romance,"
+    # if(genrelist.get('ScienceFiction')) : glist += "ScienceFiction,"
+    # if(genrelist.get('TVMovie')) : glist += "TVMovie,"
+    # if(genrelist.get('Thriller')) : glist += "Thriller,"
+    # if(genrelist.get('War')) : glist += "War,"
+    # if(genrelist.get('Western')) : glist += "Western,"
 
 
-    glist = glist[:-1]
-    glist = [genre.strip().lower() for genre in glist.split(",")]
-    result = todays_hottest(glist, [])
+    # glist = glist[:-1]
+    # glist = [genre.strip().lower() for genre in glist.split(",")]
+    # result = todays_hottest(glist, [])
 
-    return jsonify({"message": "Login Successful", "token": token, "result": result}), 200
+    # return jsonify({"message": "Login Successful", "token": token, "result": result}), 200
+    return jsonify({"message": "Login Successful", "token": token}), 200
+
+@app.route('/updateaccount', methods=['POST'])
+@token_required
+def updateaccount(current_user):
+    data=request.get_json()
+    u = data.get(':r1u:')
+    p = data.get(':r1v:')
+    print('\n something')
+    print(u)
+    print(p)
+    print('\n')
+    hashed_password = bcrypt.generate_password_hash(p).decode('utf-8')
+    print('\n else')
+    print(hashed_password)
+    print('\n')
+    query = User.query.filter_by(id=current_user.id).first()
+    query.email = u
+    query.password = hashed_password
+    db.session.add(query)
+    # db.session.flush()
+    db.session.commit()
+    return jsonify({'message': 'Account Credentials Updated'}), 201
+
 
 @app.route('/addToWatchList/<string:movie_title>', methods=['POST'])
 @token_required
@@ -464,6 +488,9 @@ def usersurveyupdate(current_user):
     print("current user: ", current_user)
     print("genrelist: ", genrelist)
     glist = ""
+    user = UserPreference.query.filter_by(user_id = current_user.id).first()
+    print(user.genre)
+    print('something else')
     
     if(genrelist.get('Action')) : glist += "Action,"
     if(genrelist.get('Adventure')) : glist += "Adventure,"
@@ -489,12 +516,12 @@ def usersurveyupdate(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-    connection = psycopg2.connect(db_params)
-    cursor = connection.cursor()
-
-    avg_query = "UPDATE user_preferenve SET rating = %s;"
-    cursor.execute(avg_query, (glist))
-    connection.commit()
+    user.genre = glist
+    print(glist)
+    print('\n')
+    db.session.add(user)
+    # db.session.flush()
+    db.session.commit()
     
     return jsonify({'message': 'Genre Preference Has Been Set'}), 200
 
@@ -563,32 +590,16 @@ def get_top_movies():
     return jsonify(records)
 
 
-@app.route('/saveprofile', methods=['POST'])
-def set_saveprofile():
-    data = request.json  
-
-    #data.Email find in user detail database
-    #encrypt given data.Password
-    #replace password
-
-    return  
 
 @app.route('/getwatched', methods=['POST'])
 @token_required
 def get_watched(current_user):
-    result = []
-    watchlist = UserWatchlist.query.filter_by(user_id=current_user.id)
-    for movie in watchlist.all():
-        movie_title = movie.title
-         
-        movie_info = {
-            'title': movie_title,
-        }
-        result.append(movie_info)
-    #data.Email find in user detail database
-    # return list of titles
+
+    watchlist = UserWatchlist.query.filter_by(user_id=current_user.id).first()
+    listq = watchlist.movie_id
+    listq = listq.split('|')
     
-    return watchlist
+    return listq
 
 @app.route('/getreviews', methods=['POST'])
 @token_required
@@ -596,7 +607,10 @@ def get_reviews(current_user):
     result = []
     query = MovieReviews.query.filter_by(user_id=current_user.id)
     for movie in query.all():
-        query2 = moviedetails.query.filter_by(id=movie.movie_id)
+        print('\n')
+        print(movie.movie_id)
+        print('\n')
+        query2 = moviedetails.query.filter_by(id=movie.movie_id).first()
         movie_title = query2.title
         movie_rating = movie.rating
         movie_comment = movie.comment   
@@ -632,20 +646,27 @@ def get_users():
 @app.route('/getlist', methods=['POST'])
 def get_list():
     movielist=[]
-    print('here1373723819832781')
     data = request.args.get('jsonchoose')
+    print('\n')
     print(data)
+    print('\n')
     query = User.query.filter_by(name=data).first()
-    print('nowhere')
-    print(query.id)
-    #query2 = UserWatchlist.query.filter_by(user_id=query.id).first()
-    #listq = query2.movie_id
-    #listq = listq.split('|')
+    print('\n')
+    newid = query.id
+    print('\n')
+    print(newid)
+    print('\n')
+    query2 = UserWatchlist.query.filter_by(user_id=newid).first()
+    print('\n')
+    print(query2)
+    print('\n')
+    listq = query2.movie_id
+    listq = listq.split('|')
     #print(type(listq))
     #print(listq)
     
     
-    return movielist
+    return listq
 
 @app.route('/movie_data', methods=['POST'])
 def get_movie_data():
@@ -824,8 +845,6 @@ def request_movie():
    
     return jsonify({'message': 'Movie Requested'})
 
-
-@app.route()
 
 # Route for seeing a data
 @app.route('/data')

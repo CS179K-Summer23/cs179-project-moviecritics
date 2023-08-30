@@ -43,13 +43,15 @@ export default function Login({ onLogin, setSurveySubmitted, setemail, setsignou
       const res = await axios.post("http://localhost:8003/login", formData);
       console.log(res);
       alert(res.data);
-      if(res.data === true)
+      if(res.staus === 200)
       {
-        setonlogin(true);
         setSurveySubmitted(true);
+        setsignout(false);
+        setonlogin(true);
+        onLogin();
+        setemail(formData)
       }
       if (res.data && res.status === 200) {
-        setSurveySubmitted(true);
         const token = res.data.token;
         localStorage.setItem('authToken', token);
         if (onLogin) {
@@ -57,6 +59,7 @@ export default function Login({ onLogin, setSurveySubmitted, setemail, setsignou
           setsignout(false);
           onLogin(); // Call the callback function passed to the component
         }
+        
       }
     } catch (err) {
       alert("Invalid username or password. Please try again.");
@@ -103,7 +106,7 @@ export default function Login({ onLogin, setSurveySubmitted, setemail, setsignou
               onChange={handleChange}
             />
             <p></p>
-            <Button variant="contained" type="submit">
+            <Button variant="contained" type="submit" >
               Login
             </Button>
             <p></p>
