@@ -105,7 +105,7 @@ def todays_hottest(target_genres, movie_ids, age=None, min_vote_count=1000, limi
     return sorted_movies[:limit]
 
 
-def top25_by_genre(target_genres, age, min_vote_count=1000, limit=25):
+def top25_by_genre(target_genres, age, movielist, min_vote_count=1000, limit=25):
     movies_list = []
 
     ilike_conditions = [
@@ -114,24 +114,25 @@ def top25_by_genre(target_genres, age, min_vote_count=1000, limit=25):
     query = db.session.query(moviedetails).filter(or_(*ilike_conditions))
 
     for movie in query.all():
-        movie_title = movie.title
-        movie_genres = movie.genre
-        vote_count = movie.vote_count
-        vote_average = movie.vote_average
-        movie_rating = movie.rated
-        
-        if age is not None and age < 13 and movie_rating == 'PG-13':
-            continue
-        
-        if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')):
-            movie_info = {
-                'title': movie_title,
-                'genre': movie_genres,
-                'vote_count': vote_count,
-                'vote_average': vote_average,
-                'rated': movie_rating
-            }
-            movies_list.append(movie_info)
+        if movie.title not in movielist:
+            movie_title = movie.title
+            movie_genres = movie.genre
+            vote_count = movie.vote_count
+            vote_average = movie.vote_average
+            movie_rating = movie.rated
+            
+            if age is not None and age < 13 and movie_rating == 'PG-13':
+                continue
+            
+            if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')):
+                movie_info = {
+                    'title': movie_title,
+                    'genre': movie_genres,
+                    'vote_count': vote_count,
+                    'vote_average': vote_average,
+                    'rated': movie_rating
+                }
+                movies_list.append(movie_info)
     
     sorted_movies = sorted(movies_list, key=lambda x: x['vote_average'], reverse=True)
     return sorted_movies[:limit]
@@ -269,12 +270,21 @@ def getGenreByAgeData():
     genre_counts = Counter()
 
     for user in users:
+        if type(user.genre) != str:
+            print("genre Type:", user.genre)
         if age_range:
             if user.age >= min_age and user.age <= max_age:
-                genres = json.loads(user.genre)
-                for genre, value in genres.items():
-                    genre_counts.update({genre: int(value)})
-                user_data.append({"user_id": user.id, "age": user.age, "genres": user.genre})
+                try:
+                    genres = json.loads(user.genre)
+                
+                    for genre, value in genres.items():
+                        genre_counts.update({genre: int(value)})
+                    user_data.append({"user_id": user.id, "age": user.age, "genres": user.genre})
+                except:
+                    genres = set(user.genre[1:-1].split(','))
+                    for genre in genres:
+                        genre_counts[genre] += 1
+                    user_data.append({"user_id": user.id, "age": user.age, "genres": user.genre})
         else:
             user_data.append({"user_id": user.id, "age": user.age, "genres": user.genre})
     print("genre_counts:", str(genre_counts))
@@ -356,8 +366,10 @@ def suggesttionfunction(current_user):
     print('hi2')
     query2 = User.query.filter_by(id=current_user.id).first()
     age = query2.age
+    watchlist = UserWatchlist.query.filter_by(user_id=current_user.id).first()
+    movielist = watchlist.movie_id.split('|') if watchlist else []
     print('hi3')
-    result = top25_by_genre(glist, age)
+    result = top25_by_genre(glist, age, movielist = movielist)
     print('hi4')
     print(result)
     return result

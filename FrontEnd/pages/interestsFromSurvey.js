@@ -120,17 +120,39 @@ export default function MovieshowerFromInterests() {
     setOpenWatchedConfirmation(false);
   };
 
-  const handleConfirmWatched = () => {
+  const handleConfirmWatched = async () => {
     // Mark the movie as watched or perform other actions
     // You can add your logic here to update the state or perform any other actions.
     // For example, you can set a "watched" flag for the selected movie.
 
     // Remove the selected movie from the state
-    if (selectedMovie) {
-      setMovies((prevMovies) =>
-        prevMovies.filter((movie) => movie.id !== selectedMovie.id)
+    // if (selectedMovie) {
+    //   setMovies((prevMovies) =>
+    //     prevMovies.filter((movie) => movie.id !== selectedMovie.id)
+    //   );
+    // }
+    console.log("handleConfirmWatched")
+    try {
+      const response = await axios.post(
+        `http://localhost:8003/addToWatchList/${selectedMovie.title}`,
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem('authToken')
+          }
+        }
       );
+  
+      if (response.status === 201) {
+        getData3();
+        handleCloseWatchedConfirmation();
+      } else {
+        console.error("API call failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
+    
 
     setSelectedMovie(null); // Reset the selectedMovie state
     handleCloseWatchedConfirmation();
