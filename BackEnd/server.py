@@ -372,6 +372,7 @@ def suggesttionfunction(current_user):
     result = top25_by_genre(glist, age, movielist = movielist)
     print('hi4')
     print(result)
+    print(type(result))
     return result
 
 # Route to fetch top movies based on choice and display as JSON
@@ -523,7 +524,12 @@ def get_movieinfo():
                 'vote_average': data.vote_average,
                 'rated': data.rated,
                 'backdrop_path': data.backdrop_path,
-                'poster_path' : data.poster_path
+                'poster_path' : data.poster_path,
+                'language' : data.language,
+                'overview' : data.overview,
+                'productioncompanies' : data.productioncompanies,
+                'releasedate' : data.release_date,
+                'credits' : data.credits
             }
     
     print(movie_info)
@@ -537,8 +543,8 @@ def get_revmovie():
     data = MovieReviews.query.filter_by(movie_id=mid.id)
 
     for movie in data.all():
-        rating = data.rating
-        comment = data.coimment
+        rating = movie.rating
+        comment = movie.comment
         
         rev = {
             'rating': rating,
@@ -548,6 +554,7 @@ def get_revmovie():
 
     print('list: \n')
     print(review_list)
+    print(type(review_list))
     return review_list
 
 @app.route('/streaminfo', methods=["POST"])
