@@ -205,7 +205,7 @@ const toggleChartType = () => {
           marginRight: "auto",
         }}
       >
-        <h1>Analytics</h1>
+        <h1 style={{ textAlign: 'center', color: '#B2B5E0' }}>ANALYTICS</h1>
       </Box>
       <Container
         sx={{

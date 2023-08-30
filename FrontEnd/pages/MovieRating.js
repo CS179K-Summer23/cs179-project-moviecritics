@@ -129,7 +129,7 @@ export default function MovieRatings() {
             flexDirection: "column",
             backgroundColor: "white",
             align: "center",
-            width: "950px",
+            width: "90%",
             borderRadius: 8,
             marginLeft: "auto",
             marginRight: "auto",
@@ -151,12 +151,12 @@ export default function MovieRatings() {
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                {jsonfile.map((movie) => {
+                {jsonfile.map((movie, index) => {
                   return(
                   <TableRow key={movie.id}>
-                    <TableCell>{movie.id}</TableCell>
+                    <TableCell>{index}</TableCell>
                     <TableCell>{movie.title}</TableCell>
-                    <TableCell>{movie.genres}</TableCell>
+                    <TableCell>{movie.genre}</TableCell>
                     <TableCell>{movie.vote_count}</TableCell>
                     <TableCell>{movie.vote_average}</TableCell>
                     <TableCell>{movie.release_date}</TableCell>

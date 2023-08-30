@@ -176,6 +176,9 @@ def signup():
     age = user.get('age')
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    user = User.query.filter_by(email = email).first()
+    if user:
+        return jsonify({'message': 'User Already Exists'}), 201
 
     newUser = User(name = name, email = email, password = hashed_password, age = age, sharewatchlist = False)
     db.session.add(newUser)
@@ -428,11 +431,11 @@ def getTopGenresAndCompanies():
             company_sums[company]["rating"] = round(company_sums[company]["rating"], 2)  
 
     top_genres = [{"genre": genre, **data} for genre, data in genre_sums.items()]
-    top_genres.sort(key=lambda x: x["votes"], reverse=True)
+    top_genres.sort(key=lambda x: x["rating"], reverse=True)
     top_genres = top_genres[:5]
 
     top_companies = [{"company": company, **data} for company, data in company_sums.items()]
-    top_companies.sort(key=lambda x: x["votes"], reverse=True)
+    top_companies.sort(key=lambda x: x["rating"], reverse=True)
     top_companies = top_companies[:5]
     
     #print('top_genres:', top_genres)

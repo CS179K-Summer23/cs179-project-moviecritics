@@ -34,7 +34,7 @@ const PaginationApp = () => {
     const totalTableHeight = 30 + data.length * 30 + 1;
 
     return (
-      <div style={{ marginTop: '20px', border: '1px solid #ccc' }}>
+      <div style={{ marginTop: '20px', border: '1px solid #ccc', textAlign: 'center', color: '#178582' }}>
         <Table
           width={1200}
           height={totalTableHeight}
@@ -49,7 +49,7 @@ const PaginationApp = () => {
           <Column label="Title" dataKey="title" width={250} />
           <Column label={getColumnName()} dataKey={getColumnKey()} width={120} cellRenderer={renderRatingCell} />
           <Column label="" dataKey="empty" width={30} />
-          <Column label="Genres" dataKey="genres" width={300} />
+          <Column label="Genres" dataKey="genre" width={300} />
           <Column label="Release Date" dataKey="release_date" width={120} />
         </Table>
       </div>

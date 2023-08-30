@@ -58,16 +58,22 @@ export default function AccountCreation({setsignout, setemail, onSuccess}) {
       return;
     }
 
-    if(formData.email.indexOf('@') === -1 )
-    {
-      console.log("email must be valid");
-      return;
-    }
+    // if(formData.email.indexOf('@') === -1 )
+    // {
+    //   console.log("email must be valid");
+    //   return;
+    // }
+
+    
 
     try {
       const res = await axios.post('http://localhost:8003/signup', formData);
       console.log(res);
       if(res.status === 201){
+        if(res.data.message === "User Already Exists"){
+          alert("Email already Exists!")
+        }
+        else{
         alert('Signup Successful');
         const token = res.data.token;
         localStorage.setItem('authToken', token);
@@ -76,6 +82,7 @@ export default function AccountCreation({setsignout, setemail, onSuccess}) {
           setsignout(false);
           onSuccess();
         }
+      }
       }
       else{
         alert('Signup Failed')
