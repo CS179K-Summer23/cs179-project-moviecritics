@@ -453,12 +453,20 @@ def get_movie_data():
         return jsonify({'message': 'No movie data found.'}), 404
     
 @app.route('/submit_rating', methods=['POST'])
-def submit_rating():
+@token_required
+def submit_rating(current_user):
     data = request.get_json()
     movie_title = data.get('movie_title')
     new_rating = data.get('new_rating')
+    c = data.get('comment')
 
     movie_app = MovieList(db_params)
+
+    query = moviedetails.query.filter_by(title=movie_title).first()
+    mid = query.id
+    newrev = MovieReviews( user_id=current_user.id , movie_id=mid , rating  = new_rating, comment = c)
+    db.session.add(newrev)
+    db.session.commit()
 
     if movie_app.submit_rating(movie_title, new_rating):
         return 'Rating submitted successfully', 200
