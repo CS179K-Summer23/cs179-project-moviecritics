@@ -38,10 +38,17 @@ const jsonfile1 = [
   },
 ];
 
+const jsonfile2 = [
+  {
+    rating: 8,
+    comment: "test"
+  }
+];
+
 
 export default function MovieInfoApp({ moviename }) {
   const [movieinfo, setmovieinfo] = useState(jsonfile1);
-  const [reviews, setreviews] = useState([]);
+  const [reviews, setreviews] = useState(jsonfile2);
   const [streaminfo, setstreaminfo] = useState([
     { service: "Test1", streamingType: "Test2" },
   ]);
@@ -92,7 +99,7 @@ export default function MovieInfoApp({ moviename }) {
         {}
       );
       console.log(res.data);
-      setreviews(res.data);
+      setstreaminfo(res.data);
       if (res.status === 200) {
       } else {
         alert("Failed to Retrieve");
@@ -104,7 +111,7 @@ export default function MovieInfoApp({ moviename }) {
 
   useEffect(() => {
     moviedata();
-    revmovie();
+   revmovie();
     getstream();
   }, []);
 
@@ -191,13 +198,13 @@ export default function MovieInfoApp({ moviename }) {
               <TableBody>
                 {reviews.map((list, index) => {
                   return (
-                    <TableRow key={index}>
+                    <StyledTableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{list.rating}</TableCell>
                       <TableCell>
                         {list.comment}
                       </TableCell>
-                    </TableRow>
+                    </StyledTableRow>
                   );
                 })}
                 

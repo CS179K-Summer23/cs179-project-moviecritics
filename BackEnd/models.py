@@ -73,6 +73,7 @@ class moviedetails(db.Model):
 class RequestedMovies(db.Model):
     __tablename__ = 'requested_movies'
     
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     movie_name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(50), nullable=True)

@@ -60,7 +60,7 @@ const watchedlist1 = [
 
 const revlist1 = [
   { id: 1, title: "Movie1", rating: "8", comment: "test1" },
-  { id: 2, title: "Movie2", rating: "9", comment: "test2" } },
+  { id: 2, title: "Movie2", rating: "9", comment: "test2" }
   
 ];
 export default function ProfilePage(email) {

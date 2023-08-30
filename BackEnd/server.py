@@ -674,8 +674,6 @@ def request_movie():
     return jsonify({'message': 'Movie Requested'})
 
 
-@app.route()
-
 # Route for seeing a data
 @app.route('/data')
 def get_time():
