@@ -343,7 +343,7 @@ export default function MainApp({ setsignout, email }) {
           {page === 1 && <MovieshowerFromInterests />}
           {page === 2 && <PaginationApp />}
           {page === 3 && <MovieRatings />}
-          {page === 4 && <ProfilePage />}
+          {page === 4 && <ProfilePage email={email} />}
           {page === 5 && <MovieList />}
           {page === 6 && <ThreadList />}
           {page === 7 && <Analytics />}
