@@ -19,7 +19,7 @@ const lightTheme = createTheme({
 });
 
 export default function Threadlist() {
-
+  const [jsonchoose, setjsonchoose] = React.useState('Test');
   const [listchoose, setlistchoose] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [lists, setLists] = React.useState(['0', '1', '2', '3']);
@@ -27,6 +27,7 @@ export default function Threadlist() {
   const [boolval, setboolval] = React.useState(false);
 
   const handleClickOpen = () => {
+    getUsers();
     setOpen(true);
   };
 
@@ -37,7 +38,9 @@ export default function Threadlist() {
 
   const handleViewList = temp => {
     setlistchoose(temp);
+    console.log(temp);
     setboolval(true);
+    setjsonchoose(temp);
     getList();
   };
 
@@ -61,9 +64,9 @@ export default function Threadlist() {
   const getList = async () => {
 
     try {
-
-      jsonchoose = "{ \"id\" : "+ " \"" + listchoose + "\" }" 
-      const res = await axios.post('http://localhost:8003/getlist', jsonchoose);
+      console.log(listchoose)
+      console.log(jsonchoose)
+      const res = await axios.post(`http://localhost:8003/getlist?jsonchoose=${jsonchoose}`);
       console.log('Here is listchoose')
       console.log(listchoose)
       console.log(res.data);
