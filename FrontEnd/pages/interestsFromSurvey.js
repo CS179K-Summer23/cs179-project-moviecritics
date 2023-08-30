@@ -19,6 +19,7 @@ import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import MovieInfoApp from "./movieinfo";
+import {TextField} from "@mui/material";
 
 const lightTheme = createTheme({
   palette: {
@@ -49,6 +50,17 @@ const theme = createTheme({
 });
 
 export default function MovieshowerFromInterests() {
+  const [formData, setFormData] = useState({
+    rating: "",
+    movie_title: "",
+    comment: ""
+  });
+  const handleChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.id]: event.target.value,
+    });
+  };
   const [openReview, setOpenReview] = useState(false);
   const [openWatched, setOpenWatched] = useState(false);
   const [openWatchedConfirmation, setOpenWatchedConfirmation] = useState(false);
@@ -58,6 +70,9 @@ export default function MovieshowerFromInterests() {
   const [movies, setMovies] = useState(jsonfile); // State to hold movie data
   const [openmovie, setopenmovie] = useState(false);
   const [moviename, setmoviename] = useState('Test');
+  const [rating, setRating] = useState('');
+  const [reviewText, setReviewText] = useState('');
+  const [ratingMovieTitle, setRatingMovieTitle] = useState('');
 
   const isMovieReviewed = (movie) => reviewedMovies.has(movie.id);
 
@@ -66,7 +81,13 @@ export default function MovieshowerFromInterests() {
       setSelectedMovie(movie);
       setSliderValue(0); // Initialize the slider value
       setOpenReview(true);
+      setmoviename(movie)
     }
+  };
+
+  const handleRateFilm = (movieTitle) => {
+    setRatingMovieTitle(movieTitle);
+    setOpenReview(true);
   };
 
   const handleOpenWatched = (movie) => {
@@ -80,7 +101,15 @@ export default function MovieshowerFromInterests() {
     setSelectedMovie(null); // Reset the selectedMovie state
   };
 
-  const handleSubmitReview = () => {
+  
+
+  const handleSubmitReview = async () => {
+
+    const params = {
+      "new_rating": rating,
+      "comment": reviewText,
+      "movie_title": moviename
+    }
     // Perform any review submission logic here
 
     // Mark the selected movie as reviewed
@@ -91,11 +120,11 @@ export default function MovieshowerFromInterests() {
     }
 
     handleClose();
-
+    console.log("params:", params);
     try {
       const res = await axios.post(
         "http://localhost:8003/submit_rating",
-        [],
+        params,
         {
           headers: {
             Authorization: localStorage.getItem('authToken'),
@@ -105,9 +134,7 @@ export default function MovieshowerFromInterests() {
       
       
       if (res.data && res.status === 200) {
-        if (onSuccess) {
-          onSuccess();
-        }
+        console.log("success")
       }
     } catch (err) {
       console.error(err);
@@ -183,9 +210,10 @@ export default function MovieshowerFromInterests() {
   }, []);
 
   const handleOpeninfo = (value) => {
-    console.log("pressed");
+    console.log("pressed", value);
     setmoviename(value);
     setopenmovie(true);
+    setFormData.movie_title = value;
   };
 
   const handleCloseinfo = (value) => {
@@ -220,7 +248,6 @@ export default function MovieshowerFromInterests() {
                   <TableCell>Watched?</TableCell>
                   <TableCell>Review?</TableCell>
                   <TableCell>Rated</TableCell>
-                  <TableCell>Reviewed</TableCell>
                 </StyledTableRow>
               </TableHead>
               <TableBody>
@@ -236,8 +263,8 @@ export default function MovieshowerFromInterests() {
                           {list.title}
                         </Button>
                       </TableCell>
-                      <TableCell>{list.genres}</TableCell>
-                      <TableCell>{list.vote_average}</TableCell>
+                      <TableCell>{list.genre}</TableCell>
+                      <TableCell>{(Math.round(list.vote_average * 100) / 100).toFixed(2)}</TableCell>
                       <TableCell>
                         <Button
                           variant="outlined"
@@ -249,19 +276,16 @@ export default function MovieshowerFromInterests() {
                       <TableCell>
                         <Button
                           variant="outlined"
-                          onClick={() => handleOpenReview(list)}
+                          onClick={() => handleOpenReview(list.title)}
                         >
                           Review
                         </Button>
                       </TableCell>
-                      <TableCell>{list.Rated}</TableCell>
-                      <TableCell>
-                        {reviewedMovies.has(list.id) ? "True" : "False"}
-                      </TableCell>
+                      <TableCell>{list.rated}</TableCell>
                     </TableRow>
                   );
                 })}
-                ;
+                
               </TableBody>
             </Table>
           </TableContainer>
@@ -269,23 +293,53 @@ export default function MovieshowerFromInterests() {
       </ThemeProvider>
 
       {selectedMovie && (
+        // <Dialog open={openReview} onClose={handleClose}>
+        //   <DialogTitle>Review Movie</DialogTitle>
+        //   <DialogContent>
+        //     <DialogContentText>Please rate the movie below:</DialogContentText>
+        //     <Typography gutterBottom>Rating: {sliderValue}</Typography>
+        //     <Slider
+        //       value={sliderValue}
+        //       onChange={(event, newValue) => setSliderValue(newValue)}
+        //       valueLabelDisplay="auto"
+        //       min={0}
+        //       max={10}
+        //       step={0.1}
+        //     />
+        //   </DialogContent>
+        //   <DialogActions>
+        //     <Button onClick={handleClose}>Cancel</Button>
+        //     <Button onClick={handleSubmitReview}>Submit Review</Button>
+        //   </DialogActions>
+        // </Dialog>
         <Dialog open={openReview} onClose={handleClose}>
-          <DialogTitle>Review Movie</DialogTitle>
+          <DialogTitle style={{ textAlign: 'center', color: '#178582' }}>Rate and Review</DialogTitle>
           <DialogContent>
-            <DialogContentText>Please rate the movie below:</DialogContentText>
-            <Typography gutterBottom>Rating: {sliderValue}</Typography>
-            <Slider
-              value={sliderValue}
-              onChange={(event, newValue) => setSliderValue(newValue)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={10}
-              step={0.1}
-            />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <p style={{ fontSize: '18px' }}>Be our critic and rate: {ratingMovieTitle} </p>
+              <TextField
+                type="number"
+                min="0"
+                max="10"
+                value={rating}
+                onChange={(e) => setRating(e.target.value)}
+                id="rating"
+              />
+              <p style={{ fontSize: '18px', marginTop: '20px' }}>Write a review:</p>
+              <TextField
+                multiline
+                minRows={3}
+                style={{ width: '100%' }} // Set the background color to grey here
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                variant="outlined" // Add this line to match the styling
+                id="comment"
+              />
+            </div>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmitReview}>Submit Review</Button>
+          <DialogActions style={{ justifyContent: 'space-between' }}>
+            <Button onClick={handleClose} style={{ marginRight: 'auto' }}>Cancel</Button>
+            <Button onClick={handleSubmitReview}>Submit</Button>
           </DialogActions>
         </Dialog>
       )}

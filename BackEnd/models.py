@@ -26,7 +26,7 @@ class UserWatchlist(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    movie_id = db.Column(db.ARRAY(db.Text))
+    movie_id = db.Column(db.String(10000))
 
     user = db.relationship('User', backref=db.backref('watchlist', lazy=True))
     
@@ -39,8 +39,8 @@ class MovieReviews(db.Model):
     rating = db.Column(db.Float, nullable=False)
     comment = db.Column(db.String(1000))
 
-    def __init__(self, user_id, genre):
-        self.user_id = user_id
+    # def __init__(self, user_id, genre):
+    #     self.user_id = user_id
 
 
 
