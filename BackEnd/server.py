@@ -16,12 +16,12 @@ from sqlalchemy import func
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
-from surprise import Dataset, Reader, SVD
-from surprise.model_selection import train_test_split
-from movie_recommendation import MovieRecommendationSystem
+# from surprise import Dataset, Reader, SVD
+# from surprise.model_selection import train_test_split
+
 import pandas as pd
 
-movie_system = MovieRecommendationSystem()
+
 from collections import defaultdict
 import locale
 

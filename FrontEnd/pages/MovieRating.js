@@ -99,7 +99,7 @@ export default function MovieRatings() {
   const getData2 = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8003/recommendations",  // Use the correct URL for your Flask server
+        "http://localhost:8003/movierating",  // Use the correct URL for your Flask server
         { user_id: 1 },  // Replace with the appropriate user ID
         {
           headers: {
@@ -146,9 +146,8 @@ export default function MovieRatings() {
                   <TableCell>Votes</TableCell>
                   <TableCell>Rating</TableCell>
                   <TableCell>Release Date</TableCell>
-                  <TableCell>Watched?</TableCell>
-                  <TableCell>Review?</TableCell>
-                  <TableCell>Reviewed</TableCell>
+                  
+                 
                 </StyledTableRow>
               </TableHead>
               <TableBody>
@@ -161,25 +160,10 @@ export default function MovieRatings() {
                     <TableCell>{movie.vote_count}</TableCell>
                     <TableCell>{movie.vote_average}</TableCell>
                     <TableCell>{movie.release_date}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outlined"
-                        onClick={() => handleOpenWatched(movie)}
-                      >
-                        Watch
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outlined"
-                        onClick={() => handleOpenReview(movie)}
-                      >
-                        Review
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      {reviewedMovies.includes(movie.id) ? "True" : "False"}
-                    </TableCell>
+                   
+                    
+                   
+                   
                   </TableRow>
                   );
                   })};
