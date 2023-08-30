@@ -383,10 +383,10 @@ function Analytics() {
           </BarChart>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Button variant="outlined" onClick={openTotalUsersChartDialog}>
-              Open Total Users Chart
+              Open Users Chart
             </Button>
             <Dialog open={isTotalUsersChartOpen} onClose={closeTotalUsersChartDialog}>
-              <DialogTitle>Total Users Chart</DialogTitle>
+              <DialogTitle> Users Chart</DialogTitle>
               <DialogContent>
                 <BarChart width={300} height={200} data={[{ label: "Total Users", value: totalUsers }]}>
                   <CartesianGrid strokeDasharray="3 3" />
