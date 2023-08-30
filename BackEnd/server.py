@@ -674,7 +674,7 @@ def get_movie_data():
     movie_data = movie_app.read_movie_data()
 
     if movie_data:
-        return jsonify({'movie_data': movie_data})
+        return jsonify({'movie_data': movie_data}), 200
     else:
         return jsonify({'message': 'No movie data found.'}), 404
     
@@ -716,10 +716,11 @@ def get_recommendations():
         return jsonify({'error': 'Invalid input'}), 400
 
     user_recommendations = movie_system.generate_recommendations_for_user(user_id)
-
+    print('userecommend')
+    print(user_recommendations)
     recommendations_df = pd.DataFrame(user_recommendations)
     columns_to_drop = ['runtime', 'vote_average']
-    recommendations_df = recommendations_df.drop(columns=columns_to_drop)
+    #recommendations_df = recommendations_df.drop(columns=columns_to_drop)
     recommendations_df['rating'] = recommendations_df['rating'].apply(lambda x: round(x, 2))
     recommendations_df['release_date'] = recommendations_df['release_date'].apply(lambda x: x.strftime('%Y-%m-%d'))
     recommendations_json = recommendations_df.to_dict(orient='records')
@@ -727,31 +728,6 @@ def get_recommendations():
 
     return recommendations_json_string
     
-
-
-@app.route('/submit_rating', methods=['POST'])
-def submit_rating():
-    data = request.get_json()
-    user_id = data.get('user_id')
-    movie_id = data.get('movie_id')
-    new_rating = data.get('new_rating')
-    comment = data.get('comment')
-
-    movie_app = MovieList(db_params)
-    if movie_app.submit_rating(movie_id, new_rating):
-        if movie_app.insert_review(user_id, movie_id, new_rating, comment):
-            return 'Rating and review submitted successfully', 200
-        else:
-            return 'Failed to submit review', 500
-    else:
-        return 'Movie not found', 404
-
-
-@app.route('/news')
-def get_news():
-    articles = news_api.fetch_news()
-    return jsonify(articles)
-
 
 
 

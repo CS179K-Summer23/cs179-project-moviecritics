@@ -52,7 +52,7 @@ export default function HomeAccount() {
   const [reviewedMovies, setReviewedMovies] = useState([]);
   const [isBackdropView, setIsBackdropView] = useState({});
 
-  const [jsonfile, setjsonfile] = useState({});
+  const [jsonfile, setjsonfile] = useState(jsonfile1);
   const [currentMovies, setcurrentMovies] = useState([]);
 
   const [totalMovies, settotalMovies] = useState(0);

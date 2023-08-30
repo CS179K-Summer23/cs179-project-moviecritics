@@ -27,7 +27,7 @@ class MovieRecommendationSystem:
         self.model.fit(self.trainset)
 
     def fetch_movie_data(self):
-        query = "SELECT title, genre, tagline, runtime, release_date, vote_average, rating FROM moviedetails"
+        query = "SELECT * FROM moviedetails"
         return pd.read_sql_query(query, self.conn)
 
     def get_movie_details_by_idx(self, movie_idx):
@@ -55,7 +55,7 @@ class MovieRecommendationSystem:
         return None
     
     def generate_recommendations_for_user(self, user_id, n_recommendations=10):
-        query_watchlist = f"SELECT movie_id FROM user_watchlist WHERE user_id = {user_id}"
+        query_watchlist = f"SELECT * FROM user_watchlist WHERE user_id = {user_id}"
         watchlist_result = pd.read_sql_query(query_watchlist, self.conn)
         user_watchlist = watchlist_result['movie_id'].str.split('|', expand=True).values.flatten()
 
