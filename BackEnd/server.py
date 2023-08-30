@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
-from models import db, User, UserPreference, moviedetails, UserWatchlist, MovieReviews
+from models import db, User, UserPreference, moviedetails, UserWatchlist, MovieReviews, RequestedMovies
 import datetime
 #from datetime import datetime
 from movie_critics import MovieAnalyzerApp

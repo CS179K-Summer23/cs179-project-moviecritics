@@ -1,19 +1,74 @@
 import pandas as pd
-from models import db, User, UserPreference, moviedetails, UserWatchlist
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import or_
+from models import db, User, UserPreference, moviedetails, UserWatchlist, MovieReviews, RequestedMovies
 from movie_list import MovieList
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, jsonify, make_response
+from flask_cors import CORS
+import psycopg2
+
+db = SQLAlchemy()
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost/postgres'
+app.config['SQLALCHEMY_ECHO'] = True
+db.init_app(app)
+CORS(app)
 
 def seereqmovies():
-    #print requested movies
-    #approve or disapprove
-    #remove from requested movies
+    a = 0
+    query = RequestedMovies.query
+    for movie in query.all():
+        print(movie)
+        a = input("(1) Approve \n (2) Disapprove \n (3) Exit")
+        if (a == 1):
+            approvemovie()
+        if (a == 2):
+            disaprovemovie()
+        if (a == 3):
+            break
+        if (a < 1):
+            break
+        if (a > 3):
+            break
+
+def disaprovemovie():
+    connection = psycopg2.connect(db_params)
+    cursor = connection.cursor()
+    query = "DELETE;"
+    cursor.execute(query)
+    connection.commit()
 
 def viewmoviedatabase():
     #print movie database by writing a csv
 
-def addmovie():
+def addmovie(moviename):
+    a = input("Enter id:")
+    b = input("Enter genre(s): (Seperated by  '-'  ) ")
+    c = input("Enter language:")
+    d = input("Enter Overview:")
+    e = input("Enter Popularity:")
+    f = input("Enter ProductionCompanies:")
+    g = input("Enter ReleaseDate: (year-month-day)")
+    h = input("Enter budget:")
+    i = input("Enter revenue:") 
+    j = input("Enter runtime:")
+    k = input("Enter status:")
+    l = "none"
+    m = 5
+    n = 1
+    o = input("Enter credits:")
+    p =  "none"  #q and r are img so do not take
+    s = "1234"
+    t = input("Enter profit:")
+    u = input("Enter rating:")
+    v = input("Enter rated (PG or PG-13):")
+    w = 1
+
+    addm = moviedetails(id = a, title= moviename, genre = b, language = c, overview = d, popularity = e, productioncompanies = f, release_date = g, budget = h, revenue = i, runtime = j, status = k, tagline = l, vote_average = m, vote_count = n, credits = o, keywords = p, recommendations = s, profit = t, rating = u, rated = v , new_rating = w  ) 
+    db.session.add(addm)
+    db.session.commit()
+    print('Movie Added')
+    #Delete Request
+
 
 def deletemovie():
     #delete a movie in db

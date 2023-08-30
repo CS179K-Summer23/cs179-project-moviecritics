@@ -160,6 +160,11 @@ export default function MainApp({ setsignout, email }) {
   const [open, setOpen] = React.useState(false);
   const [page, setpage] = React.useState(0);
   const [themeMode, setThemeMode] = React.useState("dark"); // Default to dark theme
+  const [reqopen, setreqOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setreqOpen(false);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -220,6 +225,36 @@ export default function MainApp({ setsignout, email }) {
                 MovieCritics
               </Typography>
             </div>
+            <Dialog open={reqopen} onClose={handleClose}>
+          <DialogTitle style={{ textAlign: 'center', color: '#178582' }}>Request Movie</DialogTitle>
+          <DialogContent>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <p style={{ fontSize: '18px' }}>Enter the Movie Name: </p>
+              <TextField
+                multiline
+                minRows={3}
+                style={{ width: '100%' }} // Set the background color to grey here
+                value={name}
+                onChange={(e) => setmovie(e.target.value)}
+                id="name"
+              />
+              <p style={{ fontSize: '18px', marginTop: '20px' }}>Supporting Information:</p>
+              <TextField
+                multiline
+                minRows={3}
+                style={{ width: '100%' }} // Set the background color to grey here
+                value={Text}
+                onChange={(e) => setText(e.target.value)}
+                variant="outlined" // Add this line to match the styling
+                id="text"
+              />
+            </div>
+          </DialogContent>
+          <DialogActions style={{ justifyContent: 'space-between' }}>
+            <Button onClick={handleClose} style={{ marginRight: 'auto' }}>Cancel</Button>
+            <Button onClick={handleSubmitReview}>Submit</Button>
+          </DialogActions>
+        </Dialog>
             {/* AccountMenu on the right */}
             <AccountMenu
               logoutfunction={logoutfunction}
