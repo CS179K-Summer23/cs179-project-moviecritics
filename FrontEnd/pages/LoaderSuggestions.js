@@ -27,31 +27,15 @@ const darkTheme = createTheme({
 export default function Loadsuggestionapp({setSurveySubmitted}) {
 const [loading, setloading] = useState(true);
 
-    const CreateAccountAction = async (event) => {
+    const loadsug = async (event) => {
         event.preventDefault();
         try {
             setloading(true);
-            const res = await axios.post(
-            "http://localhost:8003/json1load",
-            id
-            );
-            const res2 = await axios.post(
-            "http://localhost:8003/json2load",
-            id
-            );
-            const jsonfileresult = res.data;
-            const jsonfileresult2 = res2.data;
-            setloading(false);
-            setjsonfile(jsonfileresult);
-            setjsonfile2(jsonfileresult2);
             setSurveySubmitted(true);
+            setloading(false);
             //setjsonfilevar(res.data);
             alert(res2.data);
-            if (res.data && res.status === 200) {
-            if (onSuccess) {
-                onSuccess();
-            }
-            }
+           
         } catch (err) {
             console.error(err);
         }

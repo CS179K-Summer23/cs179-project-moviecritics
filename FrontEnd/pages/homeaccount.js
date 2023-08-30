@@ -51,7 +51,10 @@ export default function HomeAccount() {
   const [sliderValue, setSliderValue] = useState(0);
   const [reviewedMovies, setReviewedMovies] = useState([]);
   const [isBackdropView, setIsBackdropView] = useState({});
-  const [jsonfile, setjsonfile] = useState(jsonfile1);
+
+  const [jsonfile, setjsonfile] = useState({});
+  const [currentMovies, setcurrentMovies] = useState([]);
+
   const [totalMovies, settotalMovies] = useState(0);
 
   const [news, setNews] = useState([]);
@@ -138,6 +141,7 @@ export default function HomeAccount() {
 
 
   
+
 
   return (
     <ThemeProvider theme={lightTheme}>

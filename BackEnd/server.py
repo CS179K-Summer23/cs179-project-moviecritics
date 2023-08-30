@@ -12,9 +12,15 @@ import csv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_
+from sqlalchemy import func
 from movie_list import MovieList
 from collections import Counter
 from news import NewsAPI
+from movie_recommendation import MovieRecommendationSystem
+from collections import defaultdict
+import locale
+
+
 import requests
 import pandas as pd
 import psycopg2
@@ -87,6 +93,8 @@ def todays_hottest(target_genres, movie_ids, age=None, min_vote_count=1000, limi
         backdrop_path = movie.backdrop_path
         poster_path = movie.poster_path
         movie_rating = movie.rated
+        poster = movie.poster_path
+        backdrop = movie.backdrop_path
         
         if any(genre.strip().lower() in target_genres for genre in movie_genres.split('-')) and movie_title not in movie_ids:
             date_string = movie.release_date.strftime("%a, %d %b %Y")  # Format the date without time and timezone
@@ -97,8 +105,10 @@ def todays_hottest(target_genres, movie_ids, age=None, min_vote_count=1000, limi
                 'vote_average': vote_average,
                 'release_date': date_string,
                 'rated': movie_rating,
+
                 'backdrop_path': backdrop_path,
                 'poster_path' : poster_path
+
             }
             movies_list.append(movie_info)
     
@@ -115,6 +125,7 @@ def top25_by_genre(target_genres, age, movielist, min_vote_count=1000, limit=25)
     query = db.session.query(moviedetails).filter(or_(*ilike_conditions))
 
     for movie in query.all():
+
         if movie.title not in movielist:
             movie_title = movie.title
             movie_genres = movie.genre
@@ -134,6 +145,7 @@ def top25_by_genre(target_genres, age, movielist, min_vote_count=1000, limit=25)
                     'rated': movie_rating
                 }
                 movies_list.append(movie_info)
+
     
     sorted_movies = sorted(movies_list, key=lambda x: x['vote_average'], reverse=True)
     return sorted_movies[:limit]
@@ -255,6 +267,7 @@ def add_to_watchlist(current_user, movie_title):
     
 @app.route('/genreDistribution', methods=['GET'])
 def getGenreByAgeData():
+    print('Par Chart Data')
     age_range = request.args.get('ageRange')
     user_data = []
 
@@ -263,7 +276,7 @@ def getGenreByAgeData():
         .join(UserPreference, User.id == UserPreference.user_id)
         .all()
     )
-    print("age_range:", age_range)
+    #print("age_range:", age_range)
     if age_range:
         min_age, max_age = map(int, age_range.split('-'))
     #     users = users.filter(User.age >= min_age, User.age <= max_age)
@@ -277,7 +290,7 @@ def getGenreByAgeData():
             if user.age >= min_age and user.age <= max_age:
                 try:
                     genres = json.loads(user.genre)
-                
+
                     for genre, value in genres.items():
                         genre_counts.update({genre: int(value)})
                     user_data.append({"user_id": user.id, "age": user.age, "genres": user.genre})
@@ -288,13 +301,112 @@ def getGenreByAgeData():
                     user_data.append({"user_id": user.id, "age": user.age, "genres": user.genre})
         else:
             user_data.append({"user_id": user.id, "age": user.age, "genres": user.genre})
-    print("genre_counts:", str(genre_counts))
+    #print("genre_counts:", str(genre_counts))
 
     genre_data = [{"genre": genre, "count": count} for genre, count in genre_counts.items()]
 
-
+    #print('genre_data:', genre_data)
     return jsonify(genre_data)
 
+
+#Bar Graph
+@app.route('/meanVotePerGenre', methods=['GET'])
+def getMeanVotePerGenre():
+    print('Bar Chart Data')
+    genre_sums = defaultdict(float)
+    genre_counts = Counter()
+
+    movies = db.session.query(moviedetails.genre, moviedetails.vote_average).all()
+
+    for movie_genre, mean_vote_average in movies:
+        individual_genres = movie_genre.split('-')
+        for genre in individual_genres:
+            genre_sums[genre] += mean_vote_average
+            genre_counts[genre] += 1
+    
+    #print('Genres', genre_counts)
+
+    genre_mean_vote_data = [
+        {
+            "genre": genre,
+            "mean_vote_average": round(genre_sums[genre] / genre_counts[genre], 2),
+            "total_movies": genre_counts[genre]
+        }
+        for genre in genre_counts.keys()
+    ]
+    genre_mean_vote_data.sort(key=lambda x: x["mean_vote_average"])
+    print('mean__vote_genres', genre_mean_vote_data)
+    return jsonify(genre_mean_vote_data)
+
+
+
+#Line Graph Chart
+@app.route('/topGenresAndCompanies', methods=['GET'])
+def getTopGenresAndCompanies():
+    print('Top Genres and Companies Data')
+    
+    # Set locale for formatting numbers with commas and currency symbol
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    
+    genre_sums = defaultdict(lambda: {"votes": 0, "budget": 0, "revenue": 0, "profit": 0, "rating": 0})
+    genre_counts = Counter()
+    company_sums = defaultdict(lambda: {"votes": 0, "budget": 0, "revenue": 0, "profit": 0, "rating": 0})
+    company_counts = Counter()
+
+    movies = db.session.query(
+        moviedetails.genre,
+        moviedetails.productioncompanies,
+        moviedetails.vote_average,
+        moviedetails.budget,
+        moviedetails.revenue
+    ).all()
+
+    for movie_genre, production_company, mean_vote_average, budget, revenue in movies:
+        individual_genres = movie_genre.split('-')
+        for genre in individual_genres:
+            genre_sums[genre]["votes"] += mean_vote_average
+            genre_sums[genre]["budget"] += budget
+            genre_sums[genre]["revenue"] += revenue
+            genre_sums[genre]["profit"] += (revenue - budget)
+            genre_counts[genre] += 1
+        
+        # Check if the production company has a name before processing
+        if production_company and production_company.strip():
+            cleaned_company = production_company.strip()
+            company_sums[cleaned_company]["votes"] += mean_vote_average
+            company_sums[cleaned_company]["budget"] += budget
+            company_sums[cleaned_company]["revenue"] += revenue
+            company_sums[cleaned_company]["profit"] += (revenue - budget)
+            company_counts[cleaned_company] += 1
+
+    for genre in genre_sums:
+        if genre_counts[genre] > 0:
+            genre_sums[genre]["rating"] = round(genre_sums[genre]["votes"] / genre_counts[genre], 2)
+            genre_sums[genre]["votes"] = round(genre_sums[genre]["votes"], 2)
+            genre_sums[genre]["budget"] = locale.currency(genre_sums[genre]["budget"], grouping=True)
+            genre_sums[genre]["revenue"] = locale.currency(genre_sums[genre]["revenue"], grouping=True)
+            genre_sums[genre]["profit"] = locale.currency(genre_sums[genre]["profit"], grouping=True)
+    
+    for company in company_sums:
+        if company_counts[company] > 0:
+            company_sums[company]["rating"] = round(company_sums[company]["votes"] / company_counts[company], 2)
+            company_sums[company]["votes"] = round(company_sums[company]["votes"], 2)
+            company_sums[company]["budget"] = locale.currency(company_sums[company]["budget"], grouping=True)
+            company_sums[company]["revenue"] = locale.currency(company_sums[company]["revenue"], grouping=True)
+            company_sums[company]["profit"] = locale.currency(company_sums[company]["profit"], grouping=True)
+            company_sums[company]["rating"] = round(company_sums[company]["rating"], 2)  
+
+    top_genres = [{"genre": genre, **data} for genre, data in genre_sums.items()]
+    top_genres.sort(key=lambda x: x["votes"], reverse=True)
+    top_genres = top_genres[:5]
+
+    top_companies = [{"company": company, **data} for company, data in company_sums.items()]
+    top_companies.sort(key=lambda x: x["votes"], reverse=True)
+    top_companies = top_companies[:5]
+    
+    #print('top_genres:', top_genres)
+    #print('top_companies:', top_companies)
+    return jsonify({"top_genres": top_genres, "top_companies": top_companies})
 
 @app.route('/usersurvey', methods=['POST'])
 @token_required
@@ -302,8 +414,9 @@ def usersurvey(current_user):
     genrelist = request.get_json()
     print("current user: ", current_user)
     print("genrelist: ", genrelist)
+
     glist = ""
-    
+
     if(genrelist.get('Action')) : glist += "Action,"
     if(genrelist.get('Adventure')) : glist += "Adventure,"
     if(genrelist.get('Animation')) : glist += "Animation,"
@@ -687,6 +800,37 @@ def get_time():
         "Date":x,
         "programming":"python"
         }
+    
+@app.route('/suggestions', methods=['POST'])
+def get_suggestions(current_user):
+    print('Here12132')
+    data = request.json
+    user = User.query.filter_by(id=current_user.id).first()
+    age = user.age
+    query = UserPreference.query.filter_by(user_id = current_user.id).first()
+    genre = query.genre
+
+    result = top25_by_genre(genre,age)
+
+    print(result)
+    return result
+
+# @app.route('/movieratings', methods=['POST'])
+# @token_required
+# def movieratings(current_user):
+
+#     query = UserPreference.query.filter_by(user_id=current_user.id).first()
+#     query2= User.query.filter_by(id = current_user.id).first()
+#     age = query2.age
+#     genre = query.genre
+
+
+
+#     result = todays_hottest(genre, age)
+#     print('Hot Arrivals: ')
+#     print(result)
+
+#     return result
  
      
 # Running app
