@@ -27,7 +27,22 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
   },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundImage: 'url("movies.jpg")', // Replace with the actual path
+          backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed', // Optional: You can remove this line if you don't want a fixed background
+          /* ... (Other body styles you want) */
+        },
+      },
+    },
+  },
 });
+
 
 export default function LaunchPage({setsignout, setemail, setSurveySubmitted}) {
 
@@ -65,6 +80,9 @@ export default function LaunchPage({setsignout, setemail, setSurveySubmitted}) {
     <ThemeProvider theme={darkTheme}>
     <CssBaseline />
 
+    
+
+
       <Box  display="flex" justifyContent="center" alignItems="center"
         sx={{
           display:'flex',
@@ -74,22 +92,34 @@ export default function LaunchPage({setsignout, setemail, setSurveySubmitted}) {
           marginBottom:'auto',
           justifyContent: 'flex-reverse',
           flexDirection: 'column',
-          backgroundColor: 'black',
+          backgroundColor: 'rgba(0, 0, 0, 0.9)', // Semi-transparent black background
           align: 'center',
-          width: '500px',
+          width: '650px',
+          height: '300px',
           borderRadius: 3,
           overflow:'hidden',
         }}
         
       >
+        <img src="/movie_logo(1).png" alt="movie" width="400" height="200"
+  style={{
+    display: 'block', // This ensures that the image is treated as a block element
+    margin: '0 auto', // This centers the image horizontally
+  }}
+/>
+       
+
     <form  onSubmit={onSubmit}>
-    <h1>Welcome to MovieCritic!</h1>
-    <img src="FrontEnd\pages\movie_logo.png" alt="movie" width="500" height="600"></img>
+    
       <Button
         onClick={() => (setbuttonstate(1))}
         type="submit"
         name="btn1"
         value="create"
+        style={{
+          fontSize: '30px',// Adjust the font size as needed
+          marginBottom: 'auto',
+        }}
       >
         Create Account
       </Button>
@@ -100,7 +130,8 @@ export default function LaunchPage({setsignout, setemail, setSurveySubmitted}) {
         value="login"
         style={{
           marginLeft:'auto',
-          
+          fontSize: '30px',
+          marginBottom: 'auto',
         }}
       >
         Login Account

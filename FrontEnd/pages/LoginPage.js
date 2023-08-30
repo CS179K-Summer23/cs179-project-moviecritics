@@ -78,9 +78,9 @@ export default function Login({ onLogin, setSurveySubmitted, setemail, setsignou
             marginBottom: "auto",
             justifyContent: "flex-reverse",
             flexDirection: "column",
-            backgroundColor: "black",
+            backgroundColor: 'rgba(0, 0, 0, 0.9)', // Semi-transparent black background
             align: "center",
-            width: "500px",
+            width: "650px",
             borderRadius: 3,
             overflow: "hidden",
           }}
