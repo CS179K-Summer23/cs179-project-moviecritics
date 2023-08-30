@@ -22,8 +22,8 @@ import psycopg2
 #from surprise.model_selection import train_test_split
 #from movie_recommendation import MovieRecommendationSystem
 
-#NEWS_API_KEY = " "
-NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
+NEWS_API_KEY = " "
+#NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
 
 news_api = NewsAPI(NEWS_API_KEY)
 
@@ -344,6 +344,9 @@ def usersurveyupdate(current_user):
     print("current user: ", current_user)
     print("genrelist: ", genrelist)
     glist = ""
+    user = UserPreference.query.filter_by(user_id = current_user.id).first()
+    print(user.genre)
+    print('something else')
     
     if(genrelist.get('Action')) : glist += "Action,"
     if(genrelist.get('Adventure')) : glist += "Adventure,"
@@ -369,12 +372,12 @@ def usersurveyupdate(current_user):
     #genrelist_str = json.dumps(glist)
     glist = [genre.strip().lower() for genre in glist.split(",")]
 
-    connection = psycopg2.connect(db_params)
-    cursor = connection.cursor()
-
-    avg_query = "UPDATE user_preferenve SET rating = %s;"
-    cursor.execute(avg_query, (glist))
-    connection.commit()
+    user.genre = glist
+    print(glist)
+    print('\n')
+    db.session.add(user)
+    # db.session.flush()
+    db.session.commit()
     
     return jsonify({'message': 'Genre Preference Has Been Set'}), 200
 
@@ -454,19 +457,12 @@ def set_saveprofile():
 @app.route('/getwatched', methods=['POST'])
 @token_required
 def get_watched(current_user):
-    result = []
-    watchlist = UserWatchlist.query.filter_by(user_id=current_user.id)
-    for movie in watchlist.all():
-        movie_title = movie.title
-         
-        movie_info = {
-            'title': movie_title,
-        }
-        result.append(movie_info)
-    #data.Email find in user detail database
-    # return list of titles
+
+    watchlist = UserWatchlist.query.filter_by(user_id=current_user.id).first()
+    listq = watchlist.movie_id
+    listq = listq.split('|')
     
-    return watchlist
+    return listq
 
 @app.route('/getreviews', methods=['POST'])
 @token_required
@@ -474,7 +470,10 @@ def get_reviews(current_user):
     result = []
     query = MovieReviews.query.filter_by(user_id=current_user.id)
     for movie in query.all():
-        query2 = moviedetails.query.filter_by(id=movie.movie_id)
+        print('\n')
+        print(movie.movie_id)
+        print('\n')
+        query2 = moviedetails.query.filter_by(id=movie.movie_id).first()
         movie_title = query2.title
         movie_rating = movie.rating
         movie_comment = movie.comment   

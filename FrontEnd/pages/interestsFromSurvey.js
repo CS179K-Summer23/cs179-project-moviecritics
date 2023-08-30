@@ -132,7 +132,9 @@ export default function MovieshowerFromInterests() {
         }
       );
       
-      
+      setOpenReview(false);
+      setOpenWatched(false);
+      setSelectedMovie(null); // Reset the selectedMovie state
       if (res.data && res.status === 200) {
         console.log("success")
       }

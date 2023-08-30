@@ -1,6 +1,6 @@
 import * as React from "react";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Box, TextField } from "@mui/material";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,6 +19,7 @@ import {
   DialogTitle,
   FormControlLabel,
   FormGroup,
+  Typography,
 } from "@mui/material";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -27,6 +28,10 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   textAlign: "center",
   color: theme.palette.text.secondary,
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  backgroundColor: theme.palette.common.black,
 }));
 
 const StyledInput = styled(TextField)`
@@ -46,22 +51,12 @@ const darkTheme = createTheme({
 });
 
 const watchedlist1 = [
-  { id: 1, title: "Movie1" },
-  { id: 2, title: "Movie2" },
-  { id: 3, title: "Movie3" },
-  { id: 4, title: "Movie4" },
-  { id: 5, title: "Movie5" },
-  { id: 6, title: "Movie6" },
-  { id: 7, title: "Movie7" },
-  { id: 8, title: "Movie8" },
-  { id: 9, title: "Movie9" },
-  { id: 10, title: "Movie10" },
+  "test1","test2"
 ];
 
 const revlist1 = [
   { id: 1, title: "Movie1", rating: "8", comment: "test1" },
-  { id: 2, title: "Movie2", rating: "9", comment: "test2" }
-  
+  { id: 2, title: "Movie2", rating: "9", comment: "test2" },
 ];
 export default function ProfilePage(email) {
   const [formdata, setformdata] = useState({
@@ -108,7 +103,7 @@ export default function ProfilePage(email) {
       console.log(preferences);
       setOpen(false);
       try {
-        setloading(true);
+        
         const res = await axios.post(
           "http://localhost:8003/usersurveyupdate",
           preferences,
@@ -163,16 +158,21 @@ export default function ProfilePage(email) {
   };
 
   const getWatched = async (event) => {
-    event.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8003/getwatched",  {});
-      setwatchedlist(res.data);
-
-      alert(res.data);
-      if (res.data && res.status === 200) {
-        if (onSuccess) {
-          onSuccess();
+      const res = await axios.post(
+        "http://localhost:8003/getwatched",
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("authToken"),
+          },
         }
+      );
+      setwatchedlist(res.data);
+      console.log("getwatched");
+      console.log(res.data);
+
+      if (res.data && res.status === 200) {
       }
     } catch (err) {
       console.error(err);
@@ -180,16 +180,19 @@ export default function ProfilePage(email) {
   };
 
   const getReviews = async (event) => {
-    event.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8003/getreviews",  {});
+      const res = await axios.post(
+        "http://localhost:8003/getreviews",
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("authToken"),
+          },
+        }
+      );
       setrevlist(res.data);
 
-      alert(res.data);
       if (res.data && res.status === 200) {
-        if (onSuccess) {
-          onSuccess();
-        }
       }
     } catch (err) {
       console.error(err);
@@ -522,16 +525,18 @@ export default function ProfilePage(email) {
           }}
         >
           <h1 align="center">My Watchlist of Movies</h1>
-          {watchedlist.map((list, index) => {
+          {watchedlist.map((l, index) => {
             return (
               <>
-                <h3>
-                  {index + 1} {list.title}
-                </h3>
+                <Typography
+                  
+                  sx={{ marginBottom: 2, color: "white" }}
+                >
+                  {l}
+                </Typography>
               </>
             );
           })}
-
         </Box>
         <Box
           alignItems={"center"}
@@ -554,6 +559,7 @@ export default function ProfilePage(email) {
               <TableHead>
                 <StyledTableRow>
                   <TableCell>Rank</TableCell>
+                  <TableCell>Movie</TableCell>
                   <TableCell>Rating</TableCell>
                   <TableCell>Comment</TableCell>
                 </StyledTableRow>
@@ -563,14 +569,12 @@ export default function ProfilePage(email) {
                   return (
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{list.rating}</TableCell>
-                      <TableCell>
-                        {list.comment}
-                      </TableCell>
+                      <TableCell>{r.title}</TableCell>
+                      <TableCell>{r.rating}</TableCell>
+                      <TableCell>{r.comment}</TableCell>
                     </TableRow>
                   );
                 })}
-                
               </TableBody>
             </Table>
           </TableContainer>
