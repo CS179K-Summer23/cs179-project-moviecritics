@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
-from models import db, User, UserPreference, moviedetails, UserWatchlist, MovieReviews
+from models import db, User, UserPreference, moviedetails, UserWatchlist, MovieReviews, RequestedMovies
 import datetime
 #from datetime import datetime
 from movie_critics import MovieAnalyzerApp
@@ -582,6 +582,22 @@ def get_streammovie():
         
     response = jsonify(result)
     return response
+
+@app.route('/requestmovie')
+def request_movie():
+    req = request.get_json()
+    id = req.get('user_id')
+    name = req.get('movie_name')
+    description = req.get('description')
+
+    newreq = User(user_id = id, movie_name = name, description = description)
+    db.session.add(newreq)
+    db.session.commit()
+   
+    return jsonify({'message': 'Movie Requested'})
+
+
+@app.route()
 
 # Route for seeing a data
 @app.route('/data')
