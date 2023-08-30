@@ -510,20 +510,27 @@ def get_users():
 @app.route('/getlist', methods=['POST'])
 def get_list():
     movielist=[]
-    print('here1373723819832781')
     data = request.args.get('jsonchoose')
+    print('\n')
     print(data)
+    print('\n')
     query = User.query.filter_by(name=data).first()
-    print('nowhere')
-    print(query.id)
-    #query2 = UserWatchlist.query.filter_by(user_id=query.id).first()
-    #listq = query2.movie_id
-    #listq = listq.split('|')
+    print('\n')
+    newid = query.id
+    print('\n')
+    print(newid)
+    print('\n')
+    query2 = UserWatchlist.query.filter_by(user_id=newid).first()
+    print('\n')
+    print(query2)
+    print('\n')
+    listq = query2.movie_id
+    listq = listq.split('|')
     #print(type(listq))
     #print(listq)
     
     
-    return movielist
+    return listq
 
 @app.route('/movie_data', methods=['POST'])
 def get_movie_data():

@@ -44,10 +44,6 @@ export default function Threadlist() {
     getList();
   };
 
-  useEffect(() => {
-    getList();
-  }, [boolval]);
-
   const getUsers = async () => {
 
     try {
@@ -153,12 +149,12 @@ export default function Threadlist() {
           );
         })}
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>{listchoose}</DialogTitle>
+          <DialogTitle>{listchoose} 's Watched List</DialogTitle>
           <DialogContent>
             <DialogContentText>________List:_________</DialogContentText>
             {movielists.map((m, index) => {
                   return (
-            <DialogContentText>{m.title}</DialogContentText>
+            <DialogContentText>{m}</DialogContentText>
             );
           })}
           </DialogContent>
