@@ -34,23 +34,22 @@ const PaginationApp = () => {
     const totalTableHeight = 30 + data.length * 30 + 1;
 
     return (
-      <div style={{ marginTop: '20px', border: '1px solid #ccc' }}>
+      <div style={{ marginTop: '20px', border: '1px solid #ccc', textAlign: 'center', color: '#178582' }}>
         <Table
-          width={1200}
+          width={1000}
           height={totalTableHeight}
           headerHeight={30}
           rowHeight={50}
           rowCount={data.length}
           rowGetter={({ index }) => data[index]}
           headerClassName="table-header"
-          rowClassName={({ index }) => index % 2 === 0 ? 'even-row' : 'odd-row'}
+          rowClassName={({ index }) => (index % 2 === 0 ? 'even-row' : 'odd-row')}
         >
-          <Column label="Rank" dataKey="rank" width={80} />
-          <Column label="Title" dataKey="title" width={250} />
-          <Column label={getColumnName()} dataKey={getColumnKey()} width={120} cellRenderer={renderRatingCell} />
-          <Column label="" dataKey="empty" width={30} />
-          <Column label="Genres" dataKey="genres" width={300} />
-          <Column label="Release Date" dataKey="release_date" width={120} />
+          <Column label="Rank" dataKey="rank" width={100} />
+          <Column label="Title" dataKey="title" width={300} />
+          <Column label={getColumnName()} dataKey={getColumnKey()} width={200} cellRenderer={renderRatingCell} />
+          <Column label="" dataKey="empty" width={100} />
+          <Column label="Release Date" dataKey="release_date" width={200} />
         </Table>
       </div>
     );
@@ -80,15 +79,15 @@ const PaginationApp = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
         <Stack spacing={2} direction="row">
-          <Button variant="contained" color="primary" onClick={() => fetchTopMovies('profits')}>
+          <Button variant="contained" color="primary" style={{ fontSize: '20px', width: '150px' }} onClick={() => fetchTopMovies('profits')}>
             Profits
           </Button>
-          <Button variant="contained" color="primary" onClick={() => fetchTopMovies('rating')}>
+          <Button variant="contained" color="primary" style={{ fontSize: '20px', width: '150px' }} onClick={() => fetchTopMovies('rating')}>
             Ratings
           </Button>
-          <Button variant="contained" color="primary" onClick={() => fetchTopMovies('revenue')}>
+          <Button variant="contained" color="primary" style={{ fontSize: '20px', width: '150px' }} onClick={() => fetchTopMovies('revenue')}>
             Revenue
           </Button>
         </Stack>

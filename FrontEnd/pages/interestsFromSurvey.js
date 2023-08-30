@@ -19,20 +19,37 @@ import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 
-const lightTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
-    mode: "light",
+    mode: "dark",
   },
 });
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  backgroundColor: theme.palette.common.black,
+  backgroundColor: "black", // Set the background color to black
+}));
+
+const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
+  color: "#178582",
+  fontWeight: "bold",
+  backgroundColor: "black", // Change this to your desired background color
+}));
+
+const CustomButton = styled(Button)(({ theme }) => ({
+  backgroundColor: "#178582",
+  color: "white",
+  "&:hover": {
+    backgroundColor: "#178582",
+  },
+}));
+
+const CustomTableCell = styled(TableCell)(({ theme }) => ({
+  color: "#178582",
+  fontWeight: "bold",
 }));
 
 const jsonfile = [
-  { id: 1, title: "Movie 1", genres: "Action", vote_average: 9.5, Rated: "PG-13" },
-  { id: 2, title: "Movie 2", genres: "Drama", vote_average: 8.7, Rated: "R" },
-  // ...
+  // ... (your movie data)
 ];
 
 const theme = createTheme({
@@ -47,15 +64,15 @@ export default function MovieshowerFromInterests() {
   const [openWatchedConfirmation, setOpenWatchedConfirmation] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [sliderValue, setSliderValue] = useState(0);
-  const [reviewedMovies, setReviewedMovies] = useState(new Set()); // Use a Set
-  const [movies, setMovies] = useState(jsonfile); // State to hold movie data
+  const [reviewedMovies, setReviewedMovies] = useState(new Set());
+  const [movies, setMovies] = useState(jsonfile);
 
   const isMovieReviewed = (movie) => reviewedMovies.has(movie.id);
 
   const handleOpenReview = (movie) => {
     if (!isMovieReviewed(movie)) {
       setSelectedMovie(movie);
-      setSliderValue(0); // Initialize the slider value
+      setSliderValue(0);
       setOpenReview(true);
     }
   };
@@ -68,19 +85,15 @@ export default function MovieshowerFromInterests() {
   const handleClose = () => {
     setOpenReview(false);
     setOpenWatched(false);
-    setSelectedMovie(null); // Reset the selectedMovie state
+    setSelectedMovie(null);
   };
 
   const handleSubmitReview = () => {
-    // Perform any review submission logic here
-
-    // Mark the selected movie as reviewed
     if (selectedMovie) {
       const updatedReviewedMovies = new Set(reviewedMovies);
       updatedReviewedMovies.add(selectedMovie.id);
       setReviewedMovies(updatedReviewedMovies);
     }
-
     handleClose();
   };
 
@@ -89,33 +102,28 @@ export default function MovieshowerFromInterests() {
   };
 
   const handleConfirmWatched = () => {
-    // Mark the movie as watched or perform other actions
-    // You can add your logic here to update the state or perform any other actions.
-    // For example, you can set a "watched" flag for the selected movie.
-
-    // Remove the selected movie from the state
     if (selectedMovie) {
       setMovies((prevMovies) =>
         prevMovies.filter((movie) => movie.id !== selectedMovie.id)
       );
     }
-
-    setSelectedMovie(null); // Reset the selectedMovie state
+    setSelectedMovie(null);
     handleCloseWatchedConfirmation();
   };
 
   const getData3 = async () => {
     try {
-      console.log('before')
+      console.log('before');
       const res = await axios.post(
-        "http://localhost:8003/suggestions", {},
+        "http://localhost:8003/suggestions",
+        {},
         {
           headers: {
             Authorization: localStorage.getItem("authToken"),
           },
         }
       );
-      console.log('after')
+      console.log('after');
       setMovies(res.data);
       console.log(res.data);
     } catch (err) {
@@ -127,8 +135,6 @@ export default function MovieshowerFromInterests() {
     getData3();
   }, []);
 
-  
-
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -138,62 +144,61 @@ export default function MovieshowerFromInterests() {
             marginTop: 8,
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "white",
-            alignItems: "center", // Center the content horizontally
+            alignItems: "center",
             borderRadius: 8,
             padding: "20px",
+            backgroundColor: "black", // Set the background color to black
           }}
         >
-          <h1 style={{ textAlign: "center" }}>
+          <h1 style={{ textAlign: "center", color: "#178582", backgroundColor: "black" }}>
             Suggestions Based on Ratings
           </h1>
-          <TableContainer style={{ width: "70%", textAlign: "center" }}>
+          <TableContainer style={{ width: "70%", textAlign: "center", color: "#178582", backgroundColor: "black" }}>
             <Table stickyHeader>
               <caption>Generated from User Survey</caption>
               <TableHead>
                 <StyledTableRow>
-                  <TableCell>Rank</TableCell>
-                  <TableCell>Movie</TableCell>
-                  <TableCell>Genre(s)</TableCell>
-                  <TableCell>Rating</TableCell>
-                  <TableCell>Watched?</TableCell>
-                  <TableCell>Review?</TableCell>
-                  <TableCell>Rated</TableCell>
-                  <TableCell>Reviewed</TableCell>
+                  <StyledTableHeaderCell>RANK</StyledTableHeaderCell>
+                  <StyledTableHeaderCell>MOVIE</StyledTableHeaderCell>
+                  <StyledTableHeaderCell>GENRES</StyledTableHeaderCell>
+                  <StyledTableHeaderCell>RATING</StyledTableHeaderCell>
+                  <StyledTableHeaderCell>WATCHED?</StyledTableHeaderCell>
+                  <StyledTableHeaderCell>REVIEW?</StyledTableHeaderCell>
+                  <StyledTableHeaderCell>RATED</StyledTableHeaderCell>
+                  <StyledTableHeaderCell>REVIEWED</StyledTableHeaderCell>
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-
-                {movies.map((list, index) => {       
-                  return(           
+                {movies.map((list, index) => {
+                  return (
                     <TableRow key={index}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{list.title}</TableCell>
-                      <TableCell>{list.genres}</TableCell>
-                      <TableCell>{list.vote_average}</TableCell>
+                      <CustomTableCell>{index + 1}</CustomTableCell>
+                      <CustomTableCell>{list.title}</CustomTableCell>
+                      <CustomTableCell>{list.genres}</CustomTableCell>
+                      <CustomTableCell>{list.vote_average}</CustomTableCell>
                       <TableCell>
-                        <Button
+                        <CustomButton
                           variant="outlined"
                           onClick={() => handleOpenWatched(list)}
                         >
                           Watched
-                        </Button>
+                        </CustomButton>
                       </TableCell>
                       <TableCell>
-                        <Button
+                        <CustomButton
                           variant="outlined"
                           onClick={() => handleOpenReview(list)}
                         >
                           Review
-                        </Button>
+                        </CustomButton>
                       </TableCell>
-                      <TableCell>{list.Rated}</TableCell>
-                      <TableCell>
+                      <CustomTableCell>{list.Rated}</CustomTableCell>
+                      <CustomTableCell>
                         {reviewedMovies.has(list.id) ? "True" : "False"}
-                      </TableCell>
+                      </CustomTableCell>
                     </TableRow>
                   );
-                  })};
+                })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -221,7 +226,6 @@ export default function MovieshowerFromInterests() {
           </DialogActions>
         </Dialog>
       )}
-
       {selectedMovie && (
         <Dialog
           open={openWatchedConfirmation}
