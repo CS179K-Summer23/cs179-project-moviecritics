@@ -170,7 +170,9 @@ export default function MainApp({ setsignout, email }) {
   };
 
   const logoutfunction = () => {
+    localStorage.removeItem('authToken');
     setsignout(true);
+    window.location.reload();
   };
 
   const toggleTheme = () => {
