@@ -34,7 +34,6 @@ import psycopg2
 #from movie_recommendation import MovieRecommendationSystem
 
 NEWS_API_KEY = " "
-#NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  
 
 news_api = NewsAPI(NEWS_API_KEY)
 
@@ -787,8 +786,8 @@ def get_streammovie():
     querystring = {"output_language":"en","tmdb_id":moviequery}
     print('here1')
     headers = {
-	"X-RapidAPI-Key": "47ad9b6b77msh34cac8546bb13aap15d9adjsnca028ecdf187",
-	"X-RapidAPI-Host": "streaming-availability.p.rapidapi.com"
+	"X-RapidAPI-Key": "",
+	"X-RapidAPI-Host": ""
     }
     print('here2')
     response = requests.get(streamurl, headers=headers, params=querystring)
