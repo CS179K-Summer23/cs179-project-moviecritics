@@ -43,6 +43,7 @@ A movie recommendation system that is modernized and friendly to use.
 7. Show news based on latest movies 
 8. Eighth, Graphical Analysis and Analytics based on User Data or Movie Suggestions
 9. Ninth, Age protection (Child mode and General Mode)
+10. Tenth, Review Movies 
 
 
 
