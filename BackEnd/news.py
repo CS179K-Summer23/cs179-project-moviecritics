@@ -32,7 +32,7 @@ class NewsAPI:
 
 app = Flask(__name__)
 
-NEWS_API_KEY = 'd4eda2ea08d54a95ac9265626d8d9eab'  # Replace with your actual NewsAPI key
+NEWS_API_KEY = ''  # Replace with your actual NewsAPI key
 news_api = NewsAPI(NEWS_API_KEY)
 
 @app.route('/news')
