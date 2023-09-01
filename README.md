@@ -27,9 +27,9 @@ A movie recommendation system that is modernized and friendly to use.
 
 # Technologoies:
 - VS code
-- Javascript and Python
-- MovieFone API
-- TMDB API
+- Javascript, Python, Flask, Postgresql
+- Streaming Availability using RapidApi  https://rapidapi.com/movie-of-the-night-movie-of-the-night-default/api/streaming-availability
+- TMDB API just to get movie dataset
 - Material UI with react
 
 # Major Features:
